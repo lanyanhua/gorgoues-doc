@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lancabbage.lancodeapi.mapper.ClassFieldMapper">
+  <resultMap id="BaseResultMap" type="com.lancabbage.lancodeapi.entity.ClassField">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="class_id" jdbcType="VARCHAR" property="classId" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
+    <result column="param_describe" jdbcType="VARCHAR" property="paramDescribe" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, class_id, param_name, param_describe, `type`, type_id, create_time
+  </sql>
+</mapper>
