@@ -41,7 +41,7 @@ public class gitTest {
      * @throws GitAPIException
      */
     @Test
-    public void testClone() throws IOException, GitAPIException {
+    public void testClone() throws GitAPIException {
         //设置远程服务器上的用户名和密码
         UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider =new
                 UsernamePasswordCredentialsProvider(username,password);
@@ -70,6 +70,7 @@ public class gitTest {
         Git git = new Git(new FileRepository(localPath+project+"/"+branch+"/.git"));
         git.pull().setRemoteBranchName(branch).
                 setCredentialsProvider(usernamePasswordCredentialsProvider).call();
+        System.out.println(git);
     }
 
     /**

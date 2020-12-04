@@ -1,4 +1,4 @@
-package com.lancabbage.lancodeapi.utils;
+package com.lancabbage.lancodeapi.utils.doc;
 
 /**
  * @ClassName: DocletUtils

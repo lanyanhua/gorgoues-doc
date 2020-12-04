@@ -1,20 +1,22 @@
 package com.lancabbage.lancodeapi;
 
-import com.lancabbage.lancodeapi.dto.ApiInfoDto;
-import com.lancabbage.lancodeapi.dto.ApiParamDto;
-import com.lancabbage.lancodeapi.dto.ClassInfoDto;
-import com.lancabbage.lancodeapi.dto.MenuDto;
+import com.lancabbage.lancodeapi.dto.*;
 import com.lancabbage.lancodeapi.entity.ApiParam;
 import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
+import com.lancabbage.lancodeapi.utils.doc.ClassKey;
+import com.lancabbage.lancodeapi.utils.doc.IsController;
 import com.sun.javadoc.*;
-import com.sun.tools.javadoc.ClassDocImpl;
-import com.sun.tools.javadoc.ParameterizedTypeImpl;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javadoc.*;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -28,15 +30,15 @@ public class DocletTest extends Doclet {
     public static String localPath = "/Users/lanyanhua/Desktop/gittest";//下载已有仓库到本地路径
     public static String branch = "master";
     public static String project = "lan-job";
-    public static String srcPath = "src/main/java";
-    public static String controllerPath = "com/lanyanhua/job/controller";
+//    public static String srcPath = "src/main/java";
+//    public static String controllerPath = "com/lanyanhua/job/controller";
 
     public static String[] controller = {"RestController", "Controller"};
     //1:post 2:get 3:delete 4:put
     public static String[] mapping = {"RequestMapping", "PostMapping", "GetMapping", "DeleteMapping", "PutMapping"};
 
-    public static String[] notClassType = {"void", "String", "Object", "List","Set", "byte", "Byte", "short", "Short","int", "Integer", "long", "Long",
-            "double", "Double", "float", "Float", "char", "Char",  "boolean", "Boolean"};
+    public static String[] notClassType = {"void", "String", "Object", "List", "Set", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
+            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean"};
     /**
      * 参数描述取值方式
      */
@@ -46,13 +48,17 @@ public class DocletTest extends Doclet {
      */
     public static List<String> classTag = Arrays.asList("@Description:");
     public static List<String> returnTag = Arrays.asList("@return");
+    /**
+     * class Map
+     */
+    public Map<ClassKey, ClassInfoDto> classMap = new HashMap<>();
 
 //    public static List<String> tagList = Arrays.asList("@param","@Description:","@return");
 
     /**
      * 参数传输方式 1：form-data 2：post json格式 3：path {id}
      */
-    public static String[] paramMode = { "RequestParam","RequestBody", "PathVariable"};
+    public static String[] paramMode = {"RequestParam", "RequestBody", "PathVariable"};
 //@RequestParam(value = "id",required = false)
 //@PathVariable(value = "id")
 
@@ -71,7 +77,26 @@ public class DocletTest extends Doclet {
 
     }
 
+    @Test
+    public void test(){
+        //范型
+        ArrayList<String> sources = new ArrayList<>();
+        sources.add("/Users/lanyanhua/Desktop/gittest/lan-job/master/src/main/java/com/lanyanhua/job/controller/EmailController.java");
+        sources.add("/Users/lanyanhua/Desktop/gittest/lan-job/master/src/main/java/com/lanyanhua/job/entity/Result.java");
 
+        ClassDoc[] classDoc = getClassDoc(sources);
+        for (MethodDoc method : classDoc[0].methods()) {
+            getMethod((ClassDocImpl) classDoc[0],"",method);
+        }
+    }
+
+
+    /**
+     * 获取classDoc
+     *
+     * @param sources1 class path
+     * @return classDoc
+     */
     private ClassDoc[] getClassDoc(List<String> sources1) {
         ArrayList<String> list1 = new ArrayList<>();
         list1.add("-doclet");
@@ -82,11 +107,16 @@ public class DocletTest extends Doclet {
         return DocletTest.root.classes();
     }
 
+    private ClassDoc getClassDoc(String sources1) {
+        return getClassDoc(Collections.singletonList(sources1))[0];
+    }
+
     @Test
     public void file() throws IOException {
         ///Users/lanyanhua/Desktop/gittest/lan-job/master/src/main/java/com/lanyanhua/job/controller
         //controller 路径
-        String basePath = localPath + "/" + project + "/" + branch + "/" + srcPath + "/" + controllerPath;
+        String basePath = localPath + "/" + project + "/" + branch ;//+ "/" + srcPath + "/" + controllerPath;
+//        String basePath = "/Users/lanyanhua/Documents/workspace/lan-job/" + srcPath;
         File file = new File(basePath);
 //        assert list != null;
         //获取路径下所有的java文件
@@ -95,31 +125,13 @@ public class DocletTest extends Doclet {
         ClassDoc[] classes = getClassDoc(sources);
         //组装对象
         List<MenuDto> menuList = new ArrayList<>();
-        //classMap
-        Map<ClassKey, ClassInfoDto> classMap = new HashMap<>();
+
         for (ClassDoc classDoc : classes) {
             System.out.println(classDoc);
             ClassDocImpl c = (ClassDocImpl) classDoc;
-
+            IsController controller = isController(c.annotations());
             //注解 判断是否是controller RestController 还有路径RequestMapping({"/jobGroup"})
-            AnnotationDesc[] annotations = c.annotations();
-            if (annotations == null || annotations.length == 0) {
-                continue;
-            }
-            String path = "";
-            boolean isController = false;
-            for (AnnotationDesc annotation : annotations) {
-                //注解名称
-                String name = annotation.annotationType().name();
-                if (isController(name)) {
-                    isController = true;
-                }
-                //获取注解
-                if (isMapping(name) != -1) {
-                    path = getMappingValue(annotation);
-                }
-            }
-            if (!isController) {
+            if (!controller.isController) {
                 continue;
             }
             //组装菜单
@@ -133,115 +145,131 @@ public class DocletTest extends Doclet {
             m.setApiInfos(apiInfos);
             //api
             for (MethodDoc method : c.methods()) {
-                AnnotationDesc[] mAnn = method.annotations();
-                if (mAnn == null || mAnn.length == 0) {
-                    continue;
-                }
-                int mappingType = -1;
-                String mappingValue = "";
-                //读取注解
-                for (AnnotationDesc annotation : mAnn) {
-                    String name = annotation.annotationType().name();
-                    int isMapping = isMapping(name);
-                    if (isMapping != -1) {
-                        mappingType = isMapping;
-                        mappingValue = getMappingValue(annotation);
-                    }
-                }
-                if (mappingType == -1) {
-                    continue;
-                }
-                //api信息
-                ApiInfoDto apiInfo = new ApiInfoDto();
-                apiInfos.add(apiInfo);
-                //接口名称
-                apiInfo.setName(s(method.commentText(), method.name()));
-                apiInfo.setMethod(method.name());
-                //接口类型
-                apiInfo.setType(mappingType);
-                apiInfo.setPath(path + mappingValue);
-                //参数信息
-                List<ApiParam> apiParams = new ArrayList<>();
-                apiInfo.setApiParams(apiParams);
-
-                //方法注解上的 @param jobGroup    * @return
-                Tag[] tags = method.tags();
-                //返回值 没有类的路径
-                ApiParamDto retParam = new ApiParamDto();
-                apiParams.add(retParam);
-                Type returnType = method.returnType();
-                //从类名称
-                String resClassName = returnType.typeName();
-                retParam.setParamName(resClassName);
-                retParam.setType(ParamTypeEnum.OUT_PARAM.getCode());
-                retParam.setParamDescribe(getReturnDesc(tags));
-                //赋值返回Class数据
-                if(!notClassType(resClassName)){
-                    ClassKey classKey = getClassInfo(c, resClassName);
-                    ClassInfoDto classInfoDto = getClassInfoDto(classMap, classKey);
-                    retParam.setClassInfo(classInfoDto);
-                }else{
-                    ClassInfoDto classInfoDto = new ClassInfoDto();
-                    classInfoDto.setClassName(resClassName);
-//                    ((ParameterizedTypeImpl) returnType).typeArguments(); //范型
-                    retParam.setClassInfo(classInfoDto);
-                }
-                //入参
-                Map<String, String> paramMap = getParamMap(tags);
-                Parameter[] parameters = method.parameters();
-                if(parameters == null || parameters.length == 0){
-                    continue;
-                }
-                for (Parameter parameter : parameters) {
-                    String name = parameter.name();
-                    ApiParamDto apiParamDto = new ApiParamDto();
-                    apiParams.add(apiParamDto);
-                    apiParamDto.setType(ParamTypeEnum.INPUT_PARAM.getCode());
-                    //参数名称，描述
-                    apiParamDto.setParamName(name);
-                    apiParamDto.setParamDescribe(paramMap.get(name));
-                    //参数传输方式 1：form-data 2：post json格式 3：path {id}
-                    apiParamDto.setParamMode(ParamModeEnum.FORM_DATA.getCode());
-                    for (AnnotationDesc annotation : parameter.annotations()) {
-                        String name1 = annotation.annotationType().name();
-                        int paramMode = getParamMode(name1);
-                        if(paramMode!= -1){
-                            apiParamDto.setParamMode(paramMode);
-                            String paramValue = getParamValue(annotation);
-                            if(StringUtils.isNotBlank(paramValue)){
-                                apiParamDto.setParamName(paramValue);
-                            }
-                        }
-                    }
-                    resClassName = parameter.typeName();
-                    //赋值返回Class数据
-                    if(!notClassType(resClassName)){
-                        ClassKey classKey = getClassInfo(c, resClassName);
-                        ClassInfoDto classInfoDto = getClassInfoDto(classMap, classKey);
-                        apiParamDto.setClassInfo(classInfoDto);
-                    }else{
-                        ClassInfoDto classInfoDto = new ClassInfoDto();
-                        classInfoDto.setClassName(resClassName);
-                        apiParamDto.setClassInfo(classInfoDto);
-                    }
+                ApiInfoDto apiInfoDto = getMethod(c, controller.path, method);
+                if (apiInfoDto != null) {
+                    apiInfos.add(apiInfoDto);
                 }
             }
         }
-
         System.out.println(menuList);
+
     }
 
-
-    private ClassInfoDto getClassInfoDto(Map<ClassKey, ClassInfoDto> classMap,ClassKey classKey) {
-        ClassInfoDto dto = classMap.get(classKey);
-        if(dto == null){
-            dto = new ClassInfoDto();
-            dto.setClassName(classKey.getName());
-            dto.setClassPath(classKey.getPath());
-            classMap.put(classKey,dto);
+    private ApiInfoDto getMethod(ClassDocImpl c, String path, MethodDoc method) {
+        AnnotationDesc[] mAnn = method.annotations();
+        if (mAnn == null || mAnn.length == 0) {
+            return null;
         }
-        return dto;
+        int mappingType = -1;
+        String mappingValue = "";
+        //读取注解
+        for (AnnotationDesc annotation : mAnn) {
+            String name = annotation.annotationType().name();
+            int isMapping = isMapping(name);
+            if (isMapping != -1) {
+                mappingType = isMapping;
+                mappingValue = getMappingValue(annotation);
+            }
+        }
+        if (mappingType == -1) {
+            return null;
+        }
+        //api信息
+        ApiInfoDto apiInfo = new ApiInfoDto();
+        //接口名称
+        apiInfo.setName(s(method.commentText(), method.name()));
+        apiInfo.setMethod(method.name());
+        //接口类型
+        apiInfo.setType(mappingType);
+        apiInfo.setPath(path + mappingValue);
+        //参数信息
+        List<ApiParam> apiParams = new ArrayList<>();
+        apiInfo.setApiParams(apiParams);
+        //返回参数
+        apiParams.add(getOutParam(c, method));
+        //入参
+        apiParams.addAll(getInputParam(c, method));
+        return apiInfo;
     }
+
+    /**
+     * 入参
+     *
+     * @param c      class
+     * @param method method
+     * @return 入参
+     */
+    private List<ApiParamDto> getInputParam(ClassDocImpl c, MethodDoc method) {
+        //参数注释信息
+        Map<String, String> paramMap = getParamMap(method.tags());
+        //参数
+        Parameter[] parameters = method.parameters();
+        List<ApiParamDto> apiParams = new ArrayList<>();
+        if (parameters == null || parameters.length == 0) {
+            return apiParams;
+        }
+        for (Parameter parameter : parameters) {
+            String name = parameter.name();
+            ApiParamDto apiParamDto = new ApiParamDto();
+            apiParams.add(apiParamDto);
+            apiParamDto.setType(ParamTypeEnum.INPUT_PARAM.getCode());
+            //参数名称，描述
+            apiParamDto.setParamName(name);
+            apiParamDto.setParamDescribe(paramMap.get(name));
+            //参数传输方式 1：form-data 2：post json格式 3：path {id}
+            apiParamDto.setParamMode(ParamModeEnum.FORM_DATA.getCode());
+            for (AnnotationDesc annotation : parameter.annotations()) {
+                String name1 = annotation.annotationType().name();
+                int paramMode = getParamMode(name1);
+                if (paramMode != -1) {
+                    apiParamDto.setParamMode(paramMode);
+                    String paramValue = getParamValue(annotation);
+                    if (StringUtils.isNotBlank(paramValue)) {
+                        apiParamDto.setParamName(paramValue);
+                    }
+                }
+            }
+            apiParamDto.setClassInfo(getClassInfo(c, parameter.type()));
+        }
+        return apiParams;
+    }
+
+    /**
+     * 出参
+     *
+     * @param c      class
+     * @param method method
+     * @return 出参
+     */
+    private ApiParamDto getOutParam(ClassDocImpl c, MethodDoc method) {
+        //返回值
+        ApiParamDto retParam = new ApiParamDto();
+        Type returnType = method.returnType();
+        try {
+
+            Class<? extends MethodDoc> aClass =  (method).getClass();
+            Class<?> clazz1 = aClass.getSuperclass();
+            Class<?> clazz2 = clazz1.getSuperclass();
+            Class<?> clazz3 = clazz2.getSuperclass();
+            Field symbol = clazz3.getDeclaredField("sym");
+            System.out.println(symbol.toString());
+
+            symbol.setAccessible(true);
+            Symbol.MethodSymbol sym = (Symbol.MethodSymbol) symbol.get(method);
+
+            System.out.println(sym.type);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        //返回值类名称
+        String resClassName = returnType.typeName();
+        retParam.setParamName(resClassName);
+        retParam.setType(ParamTypeEnum.OUT_PARAM.getCode());
+        retParam.setParamDescribe(getReturnDesc(method.tags()));
+        retParam.setClassInfo(getClassInfo(c, returnType));
+        return retParam;
+    }
+
 
 
     private Map<String, String> getParamMap(Tag[] tags) {
@@ -250,7 +278,7 @@ public class DocletTest extends Doclet {
             return map;
         }
         for (Tag tag : tags) {
-            if(parmTag.contains(tag.name())) {
+            if (parmTag.contains(tag.name())) {
                 String key = ((ParamTag) tag).parameterName();
                 String value = ((ParamTag) tag).parameterComment();
                 map.put(key, value);
@@ -258,19 +286,95 @@ public class DocletTest extends Doclet {
         }
         return map;
     }
-    public String getReturnDesc(Tag[] tags){
+
+    /**
+     * 获取返回值 描述
+     *
+     * @param tags 方法注解上的 @param jobGroup    * @return
+     * @return 描述
+     */
+    public String getReturnDesc(Tag[] tags) {
         if (tags == null || tags.length == 0) {
             return null;
         }
         for (Tag tag : tags) {
-            if(parmTag.contains(tag.name())) {
+            if (parmTag.contains(tag.name())) {
                 return tag.text();
             }
         }
         return null;
     }
 
-    public ClassKey getClassInfo(ClassDocImpl c, String className) {
+    /**
+     * 获取入参出餐 class
+     *
+     * @param c    class
+     * @param type class类型
+     * @return classInfo
+     */
+    private ClassInfoDto getClassInfo(ClassDocImpl c, Type type) {
+        ClassInfoDto classInfoDto;
+        String resClassName = type.typeName();
+        //赋值返回Class数据
+        if (!notClassType(resClassName)) {
+            ClassKey classKey = getClassPath(c, resClassName);
+            if(type instanceof ParameterizedTypeImpl) {
+                //范型 c.type.getTypeArguments()
+                Type[] types = ((ParameterizedTypeImpl) type).typeArguments();
+                if (types != null && types.length != 0) {
+                    classKey.setParadigms(new ClassKey[types.length]);
+                    //先申明范型对象
+                    for (int i = 0; i < types.length; i++) {
+                        //获取范型classKey
+                        classKey.getParadigms()[i] = getClassPath(c, types[i].typeName());
+                    }
+                }
+            }
+//从classMap中获取class
+            classInfoDto = classMap.get(classKey);
+            if (classInfoDto != null) {
+                return classInfoDto;
+            }
+            classInfoDto = new ClassInfoDto();
+            //先申明对象放入classMap中 解决循环依赖问题
+            classMap.put(classKey, classInfoDto);
+            classInfoDto.setClassName(classKey.getName());
+            if (classKey.getPath() == null) {
+                return classInfoDto;
+            }
+            //class路径不为null，价值class信息
+            classInfoDto.setClassPath(classKey.getPath());
+            classInfoDto.setPackagePath(classKey.getPackagePath());
+            //doc
+            ClassDocImpl doc = (ClassDocImpl) getClassDoc(classKey.getPath());
+            //描述
+            classInfoDto.setClassDescribe(doc.commentText());
+            //字段
+            List<ClassFieldDto> fieldDtoList = new ArrayList<>();
+            classInfoDto.setFieldList(fieldDtoList);
+            FieldDoc[] fields = doc.fields(false);
+            for (FieldDoc field : fields) {
+                ClassFieldDto fieldDto = new ClassFieldDto();
+                fieldDtoList.add(fieldDto);
+                fieldDto.setParamName(field.name());
+                fieldDto.setParamDescribe(field.commentText());
+                //数据类型
+                fieldDto.setClassInfo(getClassInfo(doc, field.type()));
+            }
+            //范型
+
+
+        } else {
+            classInfoDto = new ClassInfoDto();
+//                    ((ParameterizedTypeImpl) returnType).typeArguments(); //范型
+            if (type instanceof ClassDocImpl)
+                classInfoDto.setClassName(resClassName);
+            classInfoDto.setClassPath(type.toString());
+
+        }
+        return classInfoDto;
+    }
+    public ClassKey getClassPath(ClassDocImpl c, String className) {
         //所有导入 入参出参没有的就根据导包来获取
         ClassDoc[] classDocs = c.importedClasses();
         PackageDoc[] packageDocs = c.importedPackages();
@@ -278,23 +382,25 @@ public class DocletTest extends Doclet {
         info.setName(className);
         for (ClassDoc classDoc : classDocs) {
             String name = classDoc.name();
-            if(className.equals(name)){
-                String packages = classDoc.toString().replace(".","/")+".java";
-                String path = localPath + "/" + project + "/" + branch + "/" + srcPath +"/"+packages;
+            if (className.equals(name)) {
+                String packagePath = classDoc.toString();
+                String path = localPath + "/" + project + "/" + branch + "/" + srcPath + "/" + packagePath.replace(".", "/") + ".java";
                 File file = new File(path);
-                if(file.exists()){
+                if (file.exists()) {
                     info.setPath(path);
+                    info.setPackagePath(packagePath);
                     return info;
                 }
 
             }
         }
         for (PackageDoc packageDoc : packageDocs) {
-            String packages = packageDoc.name().replace(".","/")+"/"+className+".java";
-            String path = localPath + "/" + project + "/" + branch + "/" + srcPath +"/"+packages;
+            String packages = packageDoc.name().replace(".", "/") + "/" + className + ".java";
+            String path = localPath + "/" + project + "/" + branch + "/" + srcPath + "/" + packages;
             File file = new File(path);
-            if(file.exists()){
+            if (file.exists()) {
                 info.setPath(path);
+                info.setPackagePath(packageDoc.name() + "." + className);
                 return info;
             }
         }
@@ -304,16 +410,30 @@ public class DocletTest extends Doclet {
     /**
      * 判断是否controller
      *
-     * @param name 注解名称
-     * @return 是否
+     * @param annotations 注解
+     * @return 是否 path
      */
-    public boolean isController(String name) {
-        for (String s : controller) {
-            if (s.equals(name)) {
-                return true;
+    public IsController isController(AnnotationDesc[] annotations) {
+        IsController isController = new IsController();
+        if (annotations == null || annotations.length == 0) {
+            return isController;
+        }
+        for (AnnotationDesc annotation : annotations) {
+            //注解名称
+            String name = annotation.annotationType().name();
+            for (String s : controller) {
+                if (s.equals(name)) {
+                    isController.isController = true;
+                    break;
+                }
+            }
+            //获取注解
+            if (isMapping(name) != -1) {
+                isController.path = getMappingValue(annotation);
             }
         }
-        return false;
+
+        return isController;
     }
 
     /**
@@ -330,6 +450,7 @@ public class DocletTest extends Doclet {
         }
         return -1;
     }
+
     /**
      * 判断注解是否mapping
      *
@@ -339,7 +460,7 @@ public class DocletTest extends Doclet {
     public int getParamMode(String name) {
         for (int i = 0; i < paramMode.length; i++) {
             if (paramMode[i].equals(name)) {
-                return i+1;
+                return i + 1;
             }
         }
         return -1;
@@ -380,6 +501,7 @@ public class DocletTest extends Doclet {
 
         return "";
     }
+
     /**
      * 获取参数名称
      *
@@ -396,7 +518,6 @@ public class DocletTest extends Doclet {
             }
             //路径 只保留前面的斜杠/ 没有斜杠加斜杠 后面有斜杠去掉
         }
-
         return "";
     }
 
@@ -413,8 +534,9 @@ public class DocletTest extends Doclet {
             return sources;
         }
         for (File value : list) {
+
             if (value.isDirectory()) {
-                sources.addAll(getJavaFile(file));
+                sources.addAll(getJavaFile(value));
                 continue;
             }
             String path = value.getCanonicalPath();
@@ -429,57 +551,17 @@ public class DocletTest extends Doclet {
         return StringUtils.isBlank(s1) ? s2 : s1;
     }
 
-    public static class ClassKey {
-
-        /**
-         * 类名
-         */
-        private String name;
-        /**
-         * 路径
-         */
-        private String path;
-
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ClassKey classInfo = (ClassKey) o;
-            return Objects.equals(name, classInfo.name) &&
-                    Objects.equals(path, classInfo.path);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name, path);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-    }
-
 
     /**
      * 文档根节点
      */
     private static RootDoc root;
+
     public static LanguageVersion languageVersion() {
+
         return LanguageVersion.JAVA_1_5;
     }
+
     /**
      * javadoc调用入口
      */
