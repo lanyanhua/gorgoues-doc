@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lancabbage.lancodeapi.flow.mapper.ProjectMapper" >
-  <resultMap id="BaseResultMap" type="com.lancabbage.lancodeapi.entity.Project" >
+<mapper namespace="com.lancabbage.lancodeapi.mapper.ProjectMapper" >
+  <resultMap id="BaseResultMap" type="com.lancabbage.lancodeapi.bean.po.Project" >
     <!--
       WARNING - @mbggenerated
     -->
@@ -9,6 +9,7 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="remote_path" property="remotePath" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--

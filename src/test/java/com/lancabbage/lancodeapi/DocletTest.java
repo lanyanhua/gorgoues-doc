@@ -1,22 +1,19 @@
 package com.lancabbage.lancodeapi;
 
-import com.lancabbage.lancodeapi.dto.*;
-import com.lancabbage.lancodeapi.entity.ApiParam;
+import com.lancabbage.lancodeapi.bean.dto.*;
+import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
 import com.lancabbage.lancodeapi.utils.doc.ClassKey;
-import com.lancabbage.lancodeapi.utils.doc.IsController;
+import com.lancabbage.lancodeapi.utils.doc.AnnotationRes;
 import com.sun.javadoc.*;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javadoc.*;
+import com.sun.tools.javadoc.ClassDocImpl;
+import com.sun.tools.javadoc.ParameterizedTypeImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.annotation.Bean;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -37,8 +34,8 @@ public class DocletTest extends Doclet {
     //1:post 2:get 3:delete 4:put
     public static String[] mapping = {"RequestMapping", "PostMapping", "GetMapping", "DeleteMapping", "PutMapping"};
 
-    public static String[] notClassType = {"void", "String", "Object", "List", "Set", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
-            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean"};
+    public static String[] notSetField = {"void", "String", "Object", "List", "Set", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
+            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "HttpServletResponse"};
     /**
      * 参数描述取值方式
      */
@@ -78,7 +75,7 @@ public class DocletTest extends Doclet {
     }
 
     @Test
-    public void test(){
+    public void test() {
         //范型
         ArrayList<String> sources = new ArrayList<>();
         sources.add("/Users/lanyanhua/Desktop/gittest/lan-job/master/src/main/java/com/lanyanhua/job/controller/EmailController.java");
@@ -86,7 +83,7 @@ public class DocletTest extends Doclet {
 
         ClassDoc[] classDoc = getClassDoc(sources);
         for (MethodDoc method : classDoc[0].methods()) {
-            getMethod((ClassDocImpl) classDoc[0],"",method);
+            getMethod((ClassDocImpl) classDoc[0], "", method);
         }
     }
 
@@ -107,15 +104,11 @@ public class DocletTest extends Doclet {
         return DocletTest.root.classes();
     }
 
-    private ClassDoc getClassDoc(String sources1) {
-        return getClassDoc(Collections.singletonList(sources1))[0];
-    }
-
     @Test
     public void file() throws IOException {
         ///Users/lanyanhua/Desktop/gittest/lan-job/master/src/main/java/com/lanyanhua/job/controller
         //controller 路径
-        String basePath = localPath + "/" + project + "/" + branch ;//+ "/" + srcPath + "/" + controllerPath;
+        String basePath = localPath + "/" + project + "/" + branch;//+ "/" + srcPath + "/" + controllerPath;
 //        String basePath = "/Users/lanyanhua/Documents/workspace/lan-job/" + srcPath;
         File file = new File(basePath);
 //        assert list != null;
@@ -129,7 +122,7 @@ public class DocletTest extends Doclet {
         for (ClassDoc classDoc : classes) {
             System.out.println(classDoc);
             ClassDocImpl c = (ClassDocImpl) classDoc;
-            IsController controller = isController(c.annotations());
+            AnnotationRes controller = isController(c.annotations());
             //注解 判断是否是controller RestController 还有路径RequestMapping({"/jobGroup"})
             if (!controller.isController) {
                 continue;
@@ -229,7 +222,7 @@ public class DocletTest extends Doclet {
                     }
                 }
             }
-            apiParamDto.setClassInfo(getClassInfo(c, parameter.type()));
+            apiParamDto.setClassInfo(getClassInfo(parameter.type()));
         }
         return apiParams;
     }
@@ -245,31 +238,14 @@ public class DocletTest extends Doclet {
         //返回值
         ApiParamDto retParam = new ApiParamDto();
         Type returnType = method.returnType();
-        try {
-
-            Class<? extends MethodDoc> aClass =  (method).getClass();
-            Class<?> clazz1 = aClass.getSuperclass();
-            Class<?> clazz2 = clazz1.getSuperclass();
-            Class<?> clazz3 = clazz2.getSuperclass();
-            Field symbol = clazz3.getDeclaredField("sym");
-            System.out.println(symbol.toString());
-
-            symbol.setAccessible(true);
-            Symbol.MethodSymbol sym = (Symbol.MethodSymbol) symbol.get(method);
-
-            System.out.println(sym.type);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
         //返回值类名称
         String resClassName = returnType.typeName();
         retParam.setParamName(resClassName);
         retParam.setType(ParamTypeEnum.OUT_PARAM.getCode());
         retParam.setParamDescribe(getReturnDesc(method.tags()));
-        retParam.setClassInfo(getClassInfo(c, returnType));
+        retParam.setClassInfo(getClassInfo(returnType));
         return retParam;
     }
-
 
 
     private Map<String, String> getParamMap(Tag[] tags) {
@@ -308,47 +284,58 @@ public class DocletTest extends Doclet {
     /**
      * 获取入参出餐 class
      *
-     * @param c    class
      * @param type class类型
      * @return classInfo
      */
-    private ClassInfoDto getClassInfo(ClassDocImpl c, Type type) {
+    private ClassInfoDto getClassInfo(Type type) {
         ClassInfoDto classInfoDto;
         String resClassName = type.typeName();
         //赋值返回Class数据
-        if (!notClassType(resClassName)) {
-            ClassKey classKey = getClassPath(c, resClassName);
-            if(type instanceof ParameterizedTypeImpl) {
-                //范型 c.type.getTypeArguments()
-                Type[] types = ((ParameterizedTypeImpl) type).typeArguments();
-                if (types != null && types.length != 0) {
-                    classKey.setParadigms(new ClassKey[types.length]);
-                    //先申明范型对象
-                    for (int i = 0; i < types.length; i++) {
-                        //获取范型classKey
-                        classKey.getParadigms()[i] = getClassPath(c, types[i].typeName());
-                    }
+        ClassKey classKey = new ClassKey();
+        classKey.setName(type.typeName());
+        classKey.setPackagePath(type.toString());
+//从classMap中获取class
+        classInfoDto = classMap.get(classKey);
+        if (classInfoDto != null) {
+            return classInfoDto;
+        }
+        classInfoDto = new ClassInfoDto();
+        //先申明对象放入classMap中 解决循环依赖问题
+        classMap.put(classKey, classInfoDto);
+        classInfoDto.setClassName(classKey.getName());
+        //class路径不为null，价值class信息
+        classInfoDto.setClassPath(classKey.getPackagePath());
+        classInfoDto.setPackagePath(classKey.getPackagePath());
+        //doc
+        ClassDocImpl doc = (ClassDocImpl) type.asClassDoc();
+        if (doc == null) {
+            return classInfoDto;
+        }
+        //描述
+        classInfoDto.setClassDescribe(doc.commentText());
+        //不用赋值字段的赋值范型，用赋值字段的范型当字段数据类型用
+        Map<String, ClassInfoDto> paradigmMap = new HashMap<>();
+
+        if (type instanceof ParameterizedTypeImpl) {
+            //范型 c.type.getTypeArguments()
+            Type[] types = ((ParameterizedTypeImpl) type).typeArguments();
+            if (types != null && types.length != 0) {
+                List<ClassInfoDto> paradigmList = new ArrayList<>();
+                classInfoDto.setParadigmList(paradigmList);
+                //范型T
+                String s = doc.toString();
+                String[] key = s.substring(s.indexOf("<") + 1, s.lastIndexOf(">")).split(",");
+                //先申明范型对象
+                for (int i = 0; i < types.length; i++) {
+                    ClassInfoDto v = getClassInfo(types[i]);
+                    //获取范型classKey
+                    paradigmList.add(v);
+                    paradigmMap.put(key[i], v);
                 }
             }
-//从classMap中获取class
-            classInfoDto = classMap.get(classKey);
-            if (classInfoDto != null) {
-                return classInfoDto;
-            }
-            classInfoDto = new ClassInfoDto();
-            //先申明对象放入classMap中 解决循环依赖问题
-            classMap.put(classKey, classInfoDto);
-            classInfoDto.setClassName(classKey.getName());
-            if (classKey.getPath() == null) {
-                return classInfoDto;
-            }
-            //class路径不为null，价值class信息
-            classInfoDto.setClassPath(classKey.getPath());
-            classInfoDto.setPackagePath(classKey.getPackagePath());
-            //doc
-            ClassDocImpl doc = (ClassDocImpl) getClassDoc(classKey.getPath());
-            //描述
-            classInfoDto.setClassDescribe(doc.commentText());
+        }
+        //是否需要赋值字段
+        if (!isSetField(resClassName)) {
             //字段
             List<ClassFieldDto> fieldDtoList = new ArrayList<>();
             classInfoDto.setFieldList(fieldDtoList);
@@ -358,54 +345,22 @@ public class DocletTest extends Doclet {
                 fieldDtoList.add(fieldDto);
                 fieldDto.setParamName(field.name());
                 fieldDto.setParamDescribe(field.commentText());
-                //数据类型
-                fieldDto.setClassInfo(getClassInfo(doc, field.type()));
+                Type fType = field.type();
+                ClassInfoDto classInfoDto1;
+                // 类型变量
+                if (type instanceof ParameterizedTypeImpl && (classInfoDto1 = paradigmMap.get(fType.typeName())) != null) {
+                    //数据类型
+                    fieldDto.setClassInfo(classInfoDto1);
+                } else {
+                    //数据类型
+                    fieldDto.setClassInfo(getClassInfo(fType));
+                }
             }
-            //范型
-
-
-        } else {
-            classInfoDto = new ClassInfoDto();
-//                    ((ParameterizedTypeImpl) returnType).typeArguments(); //范型
-            if (type instanceof ClassDocImpl)
-                classInfoDto.setClassName(resClassName);
-            classInfoDto.setClassPath(type.toString());
-
         }
+
         return classInfoDto;
     }
-    public ClassKey getClassPath(ClassDocImpl c, String className) {
-        //所有导入 入参出参没有的就根据导包来获取
-        ClassDoc[] classDocs = c.importedClasses();
-        PackageDoc[] packageDocs = c.importedPackages();
-        ClassKey info = new ClassKey();
-        info.setName(className);
-        for (ClassDoc classDoc : classDocs) {
-            String name = classDoc.name();
-            if (className.equals(name)) {
-                String packagePath = classDoc.toString();
-                String path = localPath + "/" + project + "/" + branch + "/" + srcPath + "/" + packagePath.replace(".", "/") + ".java";
-                File file = new File(path);
-                if (file.exists()) {
-                    info.setPath(path);
-                    info.setPackagePath(packagePath);
-                    return info;
-                }
 
-            }
-        }
-        for (PackageDoc packageDoc : packageDocs) {
-            String packages = packageDoc.name().replace(".", "/") + "/" + className + ".java";
-            String path = localPath + "/" + project + "/" + branch + "/" + srcPath + "/" + packages;
-            File file = new File(path);
-            if (file.exists()) {
-                info.setPath(path);
-                info.setPackagePath(packageDoc.name() + "." + className);
-                return info;
-            }
-        }
-        return info;
-    }
 
     /**
      * 判断是否controller
@@ -413,8 +368,8 @@ public class DocletTest extends Doclet {
      * @param annotations 注解
      * @return 是否 path
      */
-    public IsController isController(AnnotationDesc[] annotations) {
-        IsController isController = new IsController();
+    public AnnotationRes isController(AnnotationDesc[] annotations) {
+        AnnotationRes isController = new AnnotationRes();
         if (annotations == null || annotations.length == 0) {
             return isController;
         }
@@ -466,8 +421,8 @@ public class DocletTest extends Doclet {
         return -1;
     }
 
-    public boolean notClassType(String name) {
-        for (String s : notClassType) {
+    public boolean isSetField(String name) {
+        for (String s : notSetField) {
             if (s.equals(name)) {
                 return true;
             }

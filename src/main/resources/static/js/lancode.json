@@ -1,0 +1,401 @@
+[{
+  "id": null,
+  "menuName": "JobServerApplication",
+  "className": "JobServerApplication",
+  "createTime": null,
+  "parentId": null,
+  "apiInfos": [
+    {
+      "id": null,
+      "name": "获取图片并显示在页面",
+      "type": 0,
+      "method": "queryPic",
+      "createTime": null,
+      "path": "/getImage/{fileName}",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "void",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": "void",
+          "classInfo": null
+        },
+        {
+          "id": null,
+          "type": 1,
+          "classId": null,
+          "paramMode": 2,
+          "paramName": "fileName",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": "String",
+          "classInfo": null
+        },
+        {
+          "id": null,
+          "type": 1,
+          "classId": null,
+          "paramMode": 0,
+          "paramName": "response",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": null,
+          "classInfo": {
+            "id": null,
+            "className": "HttpServletResponse",
+            "classDescribe": "",
+            "packagePath": "javax.servlet.http.HttpServletResponse",
+            "classPath": "javax.servlet.http.HttpServletResponse",
+            "createTime": null,
+            "fieldList": null,
+            "paradigmList": null,
+            "baseType": null
+          }
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": "contextLoads",
+      "type": 0,
+      "method": "contextLoads",
+      "createTime": null,
+      "path": "/sendEmail",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "void",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": "void",
+          "classInfo": null
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": "testJobA",
+      "type": 0,
+      "method": "testJobA",
+      "createTime": null,
+      "path": "/testJobA",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "Result",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": null,
+          "classInfo": {
+            "id": null,
+            "className": "Result",
+            "classDescribe": "",
+            "packagePath": "com.lanyanhua.job.Result",
+            "classPath": "com.lanyanhua.job.Result",
+            "createTime": null,
+            "fieldList": [
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "success",
+                "paramDescribe": "",
+                "type": "boolean",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "errorCode",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "message",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "data",
+                "paramDescribe": "",
+                "type": "Object",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              }
+            ],
+            "paradigmList": null,
+            "baseType": null
+          }
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": "testJobB",
+      "type": 0,
+      "method": "testJobB",
+      "createTime": null,
+      "path": "/testJobB",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "Result",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": null,
+          "classInfo": {
+            "id": null,
+            "className": "Result",
+            "classDescribe": "",
+            "packagePath": "com.lanyanhua.job.Result",
+            "classPath": "com.lanyanhua.job.Result",
+            "createTime": null,
+            "fieldList": [
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "success",
+                "paramDescribe": "",
+                "type": "boolean",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "errorCode",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "message",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "data",
+                "paramDescribe": "",
+                "type": "Object",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              }
+            ],
+            "paradigmList": null,
+            "baseType": null
+          }
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": "testJobC",
+      "type": 0,
+      "method": "testJobC",
+      "createTime": null,
+      "path": "/testJobC",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "Result",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": null,
+          "classInfo": {
+            "id": null,
+            "className": "Result",
+            "classDescribe": "",
+            "packagePath": "com.lanyanhua.job.Result",
+            "classPath": "com.lanyanhua.job.Result",
+            "createTime": null,
+            "fieldList": [
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "success",
+                "paramDescribe": "",
+                "type": "boolean",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "errorCode",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "message",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "data",
+                "paramDescribe": "",
+                "type": "Object",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              }
+            ],
+            "paradigmList": null,
+            "baseType": null
+          }
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": "testJobD",
+      "type": 0,
+      "method": "testJobD",
+      "createTime": null,
+      "path": "/testJobD",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "Result",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": null,
+          "classInfo": {
+            "id": null,
+            "className": "Result",
+            "classDescribe": "",
+            "packagePath": "com.lanyanhua.job.Result",
+            "classPath": "com.lanyanhua.job.Result",
+            "createTime": null,
+            "fieldList": [
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "success",
+                "paramDescribe": "",
+                "type": "boolean",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "errorCode",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "message",
+                "paramDescribe": "",
+                "type": "String",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              },
+              {
+                "id": null,
+                "classId": null,
+                "paramName": "data",
+                "paramDescribe": "",
+                "type": "Object",
+                "typeId": null,
+                "createTime": null,
+                "classInfo": null
+              }
+            ],
+            "paradigmList": null,
+            "baseType": null
+          }
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": "testServerCheck",
+      "type": 0,
+      "method": "testServerCheck",
+      "createTime": null,
+      "path": "/serverCheck",
+      "apiParams": [
+        {
+          "id": null,
+          "type": 2,
+          "classId": null,
+          "paramMode": null,
+          "paramName": "String",
+          "paramDescribe": null,
+          "createTime": null,
+          "apiId": null,
+          "baseType": "String",
+          "classInfo": null
+        }
+      ]
+    }
+  ]
+}]

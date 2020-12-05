@@ -8,7 +8,7 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  typeAliasesPackage: com.jaagro.qns.api.model
+  typeAliasesPackage: com.lancabbage.lancodeapi.entity
   configuration:
     map-underscore-to-camel-case: true
 

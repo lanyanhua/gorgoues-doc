@@ -2,6 +2,7 @@ package com.lancabbage.lancodeapi;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
@@ -68,9 +69,9 @@ public class gitTest {
                 UsernamePasswordCredentialsProvider(username,password);
         //git仓库地址
         Git git = new Git(new FileRepository(localPath+project+"/"+branch+"/.git"));
-        git.pull().setRemoteBranchName(branch).
+        PullResult call =git.pull().setRemoteBranchName(branch).
                 setCredentialsProvider(usernamePasswordCredentialsProvider).call();
-        System.out.println(git);
+        System.out.println(call);
     }
 
     /**

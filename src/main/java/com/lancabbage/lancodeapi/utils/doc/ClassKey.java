@@ -13,30 +13,19 @@ public class ClassKey {
      * 包地址
      */
     private String packagePath;
-    /**
-     * 路径
-     */
-    private String path;
-    /**
-     * 范型
-     */
-    private ClassKey[] paradigms;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClassKey classKey = (ClassKey) o;
-        return Objects.equals(name, classKey.name) &&
-                Objects.equals(packagePath, classKey.packagePath) &&
-                Arrays.equals(paradigms, classKey.paradigms);
+        return name.equals(classKey.name) &&
+                packagePath.equals(classKey.packagePath);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, packagePath);
-        result = 31 * result + Arrays.hashCode(paradigms);
-        return result;
+        return Objects.hash(name, packagePath);
     }
 
     public String getName() {
@@ -47,14 +36,6 @@ public class ClassKey {
         this.name = name;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public String getPackagePath() {
         return packagePath;
     }
@@ -63,11 +44,4 @@ public class ClassKey {
         this.packagePath = packagePath;
     }
 
-    public ClassKey[] getParadigms() {
-        return paradigms;
-    }
-
-    public void setParadigms(ClassKey[] paradigms) {
-        this.paradigms = paradigms;
-    }
 }

@@ -14,7 +14,29 @@
     border-radius: 57px;
     background: #7d8492;
     }
-.version{margin: 0;font-family: Titillium Web,sans-serif;color: #fff;}
+
+.version {
+    margin: 0;
+    height: 20px;
+    font-family: Titillium Web, sans-serif;
+    color: #fff;
+    position: relative;
+    font-size: 10px;
+
+    top: -15px;
+    padding: 1px 3px;
+    border-radius: 57px;
+    background: #7d8492;
+}
+
+.api-type {
+    margin: 0;
+    font-family: Titillium Web, sans-serif;
+    color: #fff;
+    background-color: #0f6ab4;
+    padding: 3px;
+    border-radius: 5px
+}
 .responseJson{padding: 0 0 50px 15px;}
 
 /* body */
@@ -70,9 +92,9 @@
 .layui-table{color:#282b33 !important;}
 .layui-table th {font-weight: 600 !important;}
 .layui-side-scroll {width: 320px !important;}
-.layui-nav-tree {width: 300px !important;}
-.layui-layout-admin .layui-side {width: 300px !important;}
-.layui-body{left:300px !important;}
+.layui-nav-tree {width: 220px !important;}
+.layui-layout-admin .layui-side {width: 220px !important;}
+.layui-body{left:220px !important;}
 .layui-this a cite{color:#fff !important; }
 .layui-nav-tree .layui-nav-child, .layui-nav-tree .layui-nav-child a:hover {
     background-color: #41444c !important;

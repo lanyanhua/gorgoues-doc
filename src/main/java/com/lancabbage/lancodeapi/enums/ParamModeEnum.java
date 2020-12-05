@@ -1,13 +1,15 @@
 package com.lancabbage.lancodeapi.enums;
 
+import java.util.Arrays;
+
 public enum ParamModeEnum {
 
     /**
-     * 参数传输方式 1：form-data 2：post json格式 3：path {id}
+     * 参数传输方式 0：form-data 1：post json格式 2：path {id}
      */
-    FORM_DATA(1, "FORM_DATA", "form-data"),
-    POST(2, "POST", "post"),
-    PATH(3, "PATH", "path");
+    FORM_DATA(0, "RequestParam", "form-data"),
+    POST(1, "RequestBody", "post"),
+    PATH(2, "PathVariable", "path");
 
     private final int code;
     private final String type;
@@ -46,6 +48,9 @@ public enum ParamModeEnum {
         return null;
     }
 
+    public static String[] typeALl() {
+        return (String[]) Arrays.stream(ApiTypeEnum.values()).map(ApiTypeEnum::getType).toArray();
+    }
     public static ParamModeEnum toEnum(int code) {
         for (ParamModeEnum type : ParamModeEnum.values()) {
             if (type.getCode() == code) {
@@ -54,7 +59,6 @@ public enum ParamModeEnum {
         }
         return null;
     }
-
     public int getCode() {
         return code;
     }
