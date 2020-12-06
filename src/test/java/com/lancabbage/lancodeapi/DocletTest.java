@@ -108,8 +108,8 @@ public class DocletTest extends Doclet {
     public void file() throws IOException {
         ///Users/lanyanhua/Desktop/gittest/lan-job/master/src/main/java/com/lanyanhua/job/controller
         //controller 路径
-        String basePath = localPath + "/" + project + "/" + branch;//+ "/" + srcPath + "/" + controllerPath;
-//        String basePath = "/Users/lanyanhua/Documents/workspace/lan-job/" + srcPath;
+//        String basePath = localPath + "/" + project + "/" + branch;//+ "/" + srcPath + "/" + controllerPath;
+        String basePath = "/Users/lanyanhua/Documents/workspace/lan-job/";
         File file = new File(basePath);
 //        assert list != null;
         //获取路径下所有的java文件
@@ -176,7 +176,7 @@ public class DocletTest extends Doclet {
         apiInfo.setType(mappingType);
         apiInfo.setPath(path + mappingValue);
         //参数信息
-        List<ApiParam> apiParams = new ArrayList<>();
+        List<ApiParamDto> apiParams = new ArrayList<>();
         apiInfo.setApiParams(apiParams);
         //返回参数
         apiParams.add(getOutParam(c, method));
@@ -350,10 +350,10 @@ public class DocletTest extends Doclet {
                 // 类型变量
                 if (type instanceof ParameterizedTypeImpl && (classInfoDto1 = paradigmMap.get(fType.typeName())) != null) {
                     //数据类型
-                    fieldDto.setClassInfo(classInfoDto1);
+                    fieldDto.setTypeClass(classInfoDto1);
                 } else {
                     //数据类型
-                    fieldDto.setClassInfo(getClassInfo(fType));
+                    fieldDto.setTypeClass(getClassInfo(fType));
                 }
             }
         }

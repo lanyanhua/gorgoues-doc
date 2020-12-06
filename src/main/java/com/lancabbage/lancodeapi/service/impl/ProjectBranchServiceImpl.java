@@ -1,11 +1,15 @@
 package com.lancabbage.lancodeapi.service.impl;
 
+import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchAddDto;
 import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
 import com.lancabbage.lancodeapi.mapper.ProjectBranchMapper;
 import com.lancabbage.lancodeapi.service.GitService;
+import com.lancabbage.lancodeapi.service.MenuService;
 import com.lancabbage.lancodeapi.service.ProjectBranchService;
+import com.lancabbage.lancodeapi.utils.doc.ApiInfoUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -20,10 +24,12 @@ import java.util.List;
 public class ProjectBranchServiceImpl implements ProjectBranchService {
     private final ProjectBranchMapper projectBranchMapper;
     private final GitService gitService;
+    private final MenuService menuService;
 
-    public ProjectBranchServiceImpl(ProjectBranchMapper projectBranchMapper, GitService gitService) {
+    public ProjectBranchServiceImpl(ProjectBranchMapper projectBranchMapper, GitService gitService, MenuService menuService) {
         this.projectBranchMapper = projectBranchMapper;
         this.gitService = gitService;
+        this.menuService = menuService;
     }
 
     @Override
@@ -33,16 +39,23 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         return projectBranchMapper.selectByExample(example);
     }
 
+    @Transactional
     @Override
     public int addProjectBranch(ProjectBranchAddDto branchAddDto) {
+        Integer projectId = branchAddDto.getProject().getId();
         //新增分支
         ProjectBranch branch = new ProjectBranch();
         branch.setName(branchAddDto.getName());
-        branch.setProjectId(branchAddDto.getProject().getId());
+        branch.setProjectId(projectId);
         branch.setCreateTime(new Date());
         projectBranchMapper.insert(branch);
         //同步git代码
         List<String> javaFile = gitService.cloneCode(branchAddDto.getProject(),branch.getName());
+        //解析api
+        ApiInfoUtils classDocUtils = new ApiInfoUtils();
+        List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
+        //保存
+        menuService.saveMenuList(menuDtoList,projectId,branch.getId());
         return branch.getId();
     }
 }

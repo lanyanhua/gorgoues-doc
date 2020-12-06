@@ -110,7 +110,7 @@ public class ClassInfoUtils {
                 }
                 //为基本数据类型
                 if(fieldDto.setType(dataType.getBaseType())==null){
-                    fieldDto.setClassInfo(dataType);
+                    fieldDto.setTypeClass(dataType);
                 }
             }
         }

@@ -110,8 +110,8 @@ public class ApiParam {
      *
      * @param classId 参数对应的 class
      */
-    public void setClassId(Integer classId) {
-        this.classId = classId;
+    public Integer setClassId(Integer classId) {
+       return this.classId = classId;
     }
 
     /**

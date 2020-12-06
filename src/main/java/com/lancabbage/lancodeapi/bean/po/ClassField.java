@@ -17,7 +17,7 @@ public class ClassField {
      * classId
      */
     @Column(name = "class_id")
-    private String classId;
+    private Integer classId;
 
     /**
      * 字段名称
@@ -40,7 +40,7 @@ public class ClassField {
      * ID不为null 关联class表
      */
     @Column(name = "type_id")
-    private String typeId;
+    private Integer typeId;
 
     /**
      * 创建时间
@@ -71,7 +71,7 @@ public class ClassField {
      *
      * @return class_id - classId
      */
-    public String getClassId() {
+    public Integer getClassId() {
         return classId;
     }
 
@@ -80,7 +80,7 @@ public class ClassField {
      *
      * @param classId classId
      */
-    public void setClassId(String classId) {
+    public void setClassId(Integer classId) {
         this.classId = classId;
     }
 
@@ -143,7 +143,7 @@ public class ClassField {
      *
      * @return type_id - ID不为null 关联class表
      */
-    public String getTypeId() {
+    public Integer getTypeId() {
         return typeId;
     }
 
@@ -152,8 +152,8 @@ public class ClassField {
      *
      * @param typeId ID不为null 关联class表
      */
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public Integer setTypeId(Integer typeId) {
+        return this.typeId = typeId;
     }
 
     /**

@@ -11,11 +11,12 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="api_id" jdbcType="INTEGER" property="apiId" />
+    <result column="branch_id" jdbcType="INTEGER" property="branchId" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbggenerated
     -->
-    id, menu_name, class_name, create_time, parent_id, api_id
+    id, menu_name, class_name, create_time, parent_id, api_id, branch_id
   </sql>
 </mapper>

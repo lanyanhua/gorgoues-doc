@@ -10,6 +10,7 @@ import com.lancabbage.lancodeapi.mapper.ProjectMapper;
 import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -51,6 +52,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectVos;
     }
 
+    @Transactional
     @Override
     public int addProject(ProjectAddVo vo) {
         Project project = projectDtoToVo.projectAddVoToPo(vo);

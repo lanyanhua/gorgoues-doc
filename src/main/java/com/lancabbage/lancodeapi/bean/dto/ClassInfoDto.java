@@ -48,4 +48,6 @@ public class ClassInfoDto extends ClassInfo {
     public void setBaseType(String baseType) {
         this.baseType = baseType;
     }
+
+
 }

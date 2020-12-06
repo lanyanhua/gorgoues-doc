@@ -40,6 +40,13 @@ public class Menu {
      */
     @Column(name = "api_id")
     private Integer apiId;
+
+    /**
+     * 分支ID
+     */
+    @Column(name = "branch_id")
+    private Integer branchId;
+
     /**
      * 获取ID
      *
@@ -136,5 +143,22 @@ public class Menu {
 
     public void setApiId(Integer apiId) {
         this.apiId = apiId;
+    }
+    /**
+     * 获取分支ID
+     *
+     * @return branch_id - 分支ID
+     */
+    public Integer getBranchId() {
+        return branchId;
+    }
+
+    /**
+     * 设置分支ID
+     *
+     * @param branchId 分支ID
+     */
+    public void setBranchId(Integer branchId) {
+        this.branchId = branchId;
     }
 }

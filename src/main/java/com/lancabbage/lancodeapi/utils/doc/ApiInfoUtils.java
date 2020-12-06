@@ -1,6 +1,9 @@
 package com.lancabbage.lancodeapi.utils.doc;
 
-import com.lancabbage.lancodeapi.bean.dto.*;
+import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
+import com.lancabbage.lancodeapi.bean.dto.ApiParamDto;
+import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
+import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
@@ -8,7 +11,10 @@ import com.sun.javadoc.*;
 import com.sun.tools.javadoc.ClassDocImpl;
 import tk.mybatis.mapper.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: lanyanhua
@@ -21,8 +27,7 @@ public class ApiInfoUtils {
     private final ClassInfoUtils classInfoUtils;
 
     public ApiInfoUtils() {
-        List<String> parmTag = Collections.singletonList("@param");
-        this.annotationUtils = new AnnotationUtils(parmTag);
+        this.annotationUtils = new AnnotationUtils();
         this.classInfoUtils = new ClassInfoUtils();
     }
 
@@ -50,8 +55,11 @@ public class ApiInfoUtils {
             menuList.add(m);
             //类名
             m.setClassName(c.name());
+            //tag描述
+            annotationUtils.setParmTag(Collections.singletonList("@Description:"));
+            String tagDesc = annotationUtils.getTagDesc(classDoc.tags());
             //获取注释
-            m.setMenuName(s(c.commentText(), c.name()));
+            m.setMenuName(s(c.commentText(), tagDesc, c.name()));
             //api
             m.setApiInfos(parsingMethod(controller, c.methods()));
 
@@ -84,7 +92,7 @@ public class ApiInfoUtils {
             apiInfo.setType(isApi.apiType);
             apiInfo.setPath(cc.path + isApi.path);
             //参数信息
-            List<ApiParam> apiParams = new ArrayList<>();
+            List<ApiParamDto> apiParams = new ArrayList<>();
             apiInfo.setApiParams(apiParams);
             //返回参数
             apiParams.add(getOutParam(method));
@@ -110,7 +118,9 @@ public class ApiInfoUtils {
         String resClassName = returnType.typeName();
         retParam.setParamName(resClassName);
         retParam.setType(ParamTypeEnum.OUT_PARAM.getCode());
-        retParam.setParamDescribe(annotationUtils.getReturnDesc(method.tags()));
+        //tag描述
+        annotationUtils.setParmTag(Collections.singletonList("@return"));
+        retParam.setParamDescribe(annotationUtils.getTagDesc(method.tags()));
         //赋值数据类型
         setDataType(retParam, returnType);
         return retParam;
@@ -124,6 +134,7 @@ public class ApiInfoUtils {
      */
     private List<ApiParamDto> getInputParam(MethodDoc method) {
         //参数注释信息
+        annotationUtils.setParmTag(Collections.singletonList("@param"));
         Map<String, String> paramMap = annotationUtils.getParamMap(method.tags());
         //参数
         Parameter[] parameters = method.parameters();
@@ -158,12 +169,12 @@ public class ApiInfoUtils {
         return apiParams;
     }
 
-    private void setDataType(ApiParamDto paramDto, Type type){
+    private void setDataType(ApiParamDto paramDto, Type type) {
         String typeName = type.typeName();
         ClassInfoDto classInfo = classInfoUtils.getClassInfo(type);
-        if (classInfo.getBaseType() !=null) {
+        if (classInfo.getBaseType() != null) {
             paramDto.setBaseType(typeName);
-        }else {
+        } else {
             paramDto.setClassInfo(classInfo);
         }
     }
@@ -171,6 +182,10 @@ public class ApiInfoUtils {
 
     private String s(String s1, String s2) {
         return StringUtil.isEmpty(s1) ? s2 : s1;
+    }
+
+    private String s(String s1, String s2, String s3) {
+        return StringUtil.isEmpty(s1) ? StringUtil.isEmpty(s2) ? s3 : s2 : s1;
     }
 
 }

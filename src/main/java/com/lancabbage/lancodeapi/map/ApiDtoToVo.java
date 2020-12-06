@@ -1,5 +1,9 @@
 package com.lancabbage.lancodeapi.map;
 
+import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
+import com.lancabbage.lancodeapi.bean.dto.ApiParamDto;
+import com.lancabbage.lancodeapi.bean.po.ApiInfo;
+import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import com.lancabbage.lancodeapi.bean.po.Project;
 import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectAddVo;
@@ -15,11 +19,10 @@ import java.util.List;
  * @Description:
  */
 @Mapper(componentModel = "spring")
-public interface ProjectDtoToVo {
+public interface ApiDtoToVo {
 
-    List<ProjectVo> listProjectToVo(List<Project> projects);
+    ApiInfo apiInfoDtoToPo(ApiInfoDto dto);
 
-    List<ProjectBranchVo> listProjectBranchToVo(List<ProjectBranch> collect);
+    List<ApiParam> listApiParamDtoToPo(List<ApiParamDto> paramDtoList);
 
-    Project projectAddVoToPo(ProjectAddVo vo);
 }

@@ -1,10 +1,14 @@
 package com.lancabbage.lancodeapi.service.impl;
 
+import com.lancabbage.lancodeapi.bean.po.GitInfo;
 import com.lancabbage.lancodeapi.bean.po.Project;
+import com.lancabbage.lancodeapi.exception.BusinessException;
 import com.lancabbage.lancodeapi.mapper.GitInfoMapper;
 import com.lancabbage.lancodeapi.service.GitService;
+import com.lancabbage.lancodeapi.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -15,7 +19,7 @@ import java.util.List;
 @Service
 public class GitServiceImpl implements GitService {
 
-    private GitInfoMapper gitInfoMapper;
+    private final GitInfoMapper gitInfoMapper;
 
     public GitServiceImpl(GitInfoMapper gitInfoMapper) {
         this.gitInfoMapper = gitInfoMapper;
@@ -23,6 +27,18 @@ public class GitServiceImpl implements GitService {
 
     @Override
     public List<String> cloneCode(Project project, String branch) {
-        return null;
+        GitInfo gitInfo = gitInfoMapper.selectAll().get(0);
+        GitUtils gitUtils = GitUtils.getInstance(project.getRemotePath(), gitInfo.getRepositoryPath()
+                , project.getName(), branch, gitInfo.getUsername(), gitInfo.getPassword());
+        try {
+            //啦代码
+            gitUtils.cloneCode();
+            String basePath = gitUtils.getPath();
+            //读取java
+            File file = new File(basePath);
+            return GitUtils.getJavaFile(file);
+        } catch (Exception e) {
+            throw new BusinessException("git 拉去代码失败");
+        }
     }
 }

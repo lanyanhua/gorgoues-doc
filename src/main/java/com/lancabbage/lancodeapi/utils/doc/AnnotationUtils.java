@@ -21,11 +21,7 @@ public class AnnotationUtils {
     /**
      * 参数描述取值方式
      */
-    private final List<String> parmTag ;
-
-    public AnnotationUtils(List<String> parmTag) {
-        this.parmTag = parmTag;
-    }
+    private List<String> parmTag ;
 
     /**
      * 判断是否controller
@@ -123,12 +119,12 @@ public class AnnotationUtils {
     }
 
     /**
-     * 获取返回值 描述
+     * 获取tag描述
      *
      * @param tags 方法注解上的 @param jobGroup    * @return
      * @return 描述
      */
-    public String getReturnDesc(Tag[] tags) {
+    public String getTagDesc(Tag[] tags) {
         if (tags == null || tags.length == 0) {
             return null;
         }
@@ -195,4 +191,7 @@ public class AnnotationUtils {
         return -1;
     }
 
+    public void setParmTag(List<String> parmTag) {
+        this.parmTag = parmTag;
+    }
 }

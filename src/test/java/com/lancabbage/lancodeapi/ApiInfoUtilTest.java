@@ -3,6 +3,7 @@ package com.lancabbage.lancodeapi;
 import com.alibaba.fastjson.JSON;
 import com.lancabbage.lancodeapi.utils.doc.ApiInfoUtils;
 import com.lancabbage.lancodeapi.utils.git.GitUtils;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class ApiInfoUtilTest {
 
+    @Test
     public void test() throws IOException {
         String basePath = "/Users/lanyanhua/Desktop/gittest/lan-job/master";
 //        String basePath = "/Users/lanyanhua/Documents/workspace/lan-job/" + srcPath;

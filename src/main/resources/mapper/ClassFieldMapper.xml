@@ -6,11 +6,11 @@
       WARNING - @mbggenerated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="class_id" jdbcType="VARCHAR" property="classId" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
     <result column="param_name" jdbcType="VARCHAR" property="paramName" />
     <result column="param_describe" jdbcType="VARCHAR" property="paramDescribe" />
     <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">

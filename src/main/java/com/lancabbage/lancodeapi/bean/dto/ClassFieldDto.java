@@ -11,13 +11,13 @@ import com.lancabbage.lancodeapi.bean.po.ClassField;
  */
 public class ClassFieldDto  extends ClassField {
 
-    private ClassInfoDto classInfo;
+    private ClassInfoDto typeClass;
 
-    public ClassInfoDto getClassInfo() {
-        return classInfo;
+    public ClassInfoDto getTypeClass() {
+        return typeClass;
     }
 
-    public void setClassInfo(ClassInfoDto classInfo) {
-        this.classInfo = classInfo;
+    public void setTypeClass(ClassInfoDto typeClass) {
+        this.typeClass = typeClass;
     }
 }

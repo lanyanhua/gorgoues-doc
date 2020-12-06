@@ -69,10 +69,14 @@ public class GitUtils {
 
         Git git = cloneCommand.setURI(remotePath) //设置远程URI
                 .setBranch(branch) //设置clone下来的分支
-                .setDirectory(new File(localPath + project + "/" + branch)) //设置下载存放路径
+                .setDirectory(new File(getPath())) //设置下载存放路径
                 .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
                 .call();
         System.out.print(git.tag());
+    }
+
+    public String getPath(){
+        return localPath + project + "/" + branch;
     }
 
 

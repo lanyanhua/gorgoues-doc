@@ -34,8 +34,7 @@ public class gitTest {
     public String branch = "master";
     public String username = "lanyanhua1024@163.com";
     public String password = "zxcvbnm5306";//下载已有仓库到本地路径
-    public String initPath = "D:\\te" +
-            "st\\";//本地路径新建
+    public String initPath = "/Users/lanyanhua/Desktop/gittest/createGit";//本地路径新建
     /**
      * 克隆远程库
      * @throws IOException
@@ -124,13 +123,4 @@ public class gitTest {
         git.push().setRemote("origin").     setCredentialsProvider(usernamePasswordCredentialsProvider).call();
     }
 
-    /**
-     * 那么阿道夫
-     * @param gitTest 阿斯顿发
-     * @return 阿斯顿发
-     */
-    @RequestMapping("/name")
-    public Date name(gitTest gitTest){
-        return null;
-    }
 }

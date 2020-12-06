@@ -14,13 +14,13 @@ import java.util.List;
  */
 public class ApiInfoDto extends ApiInfo {
 
-    private List<ApiParam> apiParams;
+    private List<ApiParamDto> apiParams;
 
-    public List<ApiParam> getApiParams() {
+    public List<ApiParamDto> getApiParams() {
         return apiParams;
     }
 
-    public void setApiParams(List<ApiParam> apiParams) {
+    public void setApiParams(List<ApiParamDto> apiParams) {
         this.apiParams = apiParams;
     }
 }
