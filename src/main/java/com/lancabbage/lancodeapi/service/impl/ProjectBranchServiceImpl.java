@@ -35,7 +35,7 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
     @Override
     public List<ProjectBranch> listProjectBranchById(List<Integer> id) {
         Example example = new Example(ProjectBranch.class);
-        example.createCriteria().andIn("projectId",id);
+        example.createCriteria().andIn("projectId", id);
         return projectBranchMapper.selectByExample(example);
     }
 
@@ -50,12 +50,12 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         branch.setCreateTime(new Date());
         projectBranchMapper.insert(branch);
         //同步git代码
-        List<String> javaFile = gitService.cloneCode(branchAddDto.getProject(),branch.getName());
+        List<String> javaFile = gitService.cloneCode(branchAddDto.getProject(), branch.getName());
         //解析api
         ApiInfoUtils classDocUtils = new ApiInfoUtils();
         List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
         //保存
-        menuService.saveMenuList(menuDtoList,projectId,branch.getId());
+        menuService.saveMenuList(menuDtoList, projectId, branch.getId());
         return branch.getId();
     }
 }

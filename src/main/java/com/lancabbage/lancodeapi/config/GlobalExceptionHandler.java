@@ -33,14 +33,14 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
-    public BaseResponse javaExceptionHandler(BusinessException e) {
+    public BaseResponse<?> javaExceptionHandler(BusinessException e) {
         log.error("全局异常来作妖了: " + e);
         return BaseResponse.errorInstance(e.getMessage());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseBody
-    private BaseResponse methodArgumentNotValidExceptionHandler(Exception ex) {
+    private BaseResponse<?> methodArgumentNotValidExceptionHandler(Exception ex) {
         //处理Validation异常
         StringBuilder errorMsg = new StringBuilder();
         MethodArgumentNotValidException c = (MethodArgumentNotValidException) ex;
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     @ResponseBody
-    private BaseResponse assertValidExceptionHandler(Exception ex) {
+    private BaseResponse<?> assertValidExceptionHandler(Exception ex) {
         //处理断言异常
         IllegalArgumentException c = (IllegalArgumentException) ex;
         log.error("全局异常来作妖了: " + ex);

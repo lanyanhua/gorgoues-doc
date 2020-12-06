@@ -3,13 +3,18 @@ package com.lancabbage.lancodeapi.service.impl;
 import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
 import com.lancabbage.lancodeapi.bean.dto.ApiParamDto;
 import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
+import com.lancabbage.lancodeapi.bean.po.ApiInfo;
+import com.lancabbage.lancodeapi.bean.po.ApiParam;
+import com.lancabbage.lancodeapi.bean.vo.api.ApiInfoVo;
 import com.lancabbage.lancodeapi.map.ApiDtoToVo;
 import com.lancabbage.lancodeapi.mapper.ApiInfoMapper;
 import com.lancabbage.lancodeapi.mapper.ApiParamMapper;
 import com.lancabbage.lancodeapi.service.ApiInfoService;
 import com.lancabbage.lancodeapi.service.ClassInfoService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,19 +54,42 @@ public class ApiInfoServiceImpl implements ApiInfoService {
                 i.setApiId(dto.getId());
                 i.setCreateTime(new Date());
                 //保存class
-//                ClassInfoDto classInfo = i.getClassInfo();
-//                //ID不等于null set 等于null保存再set
-//                if (classInfo != null && i.setClassId(classInfo.getId()) == null) {
-//                    classInfoService.saveClass(classInfo);
-//                    i.setClassId(classInfo.getId());
-//                }
-
+                ClassInfoDto classInfo = i.getClassInfo();
+                //ID不等于null set 等于null保存再set
+                if (classInfo != null && i.setClassId(classInfo.getId()) == null) {
+                    classInfo.setProjectId(projectId);
+                    classInfo.setBranchId(branchId);
+                    classInfoService.saveClass(classInfo);
+                    i.setClassId(classInfo.getId());
+                }
             }).collect(Collectors.toList());
-            apiParamMapper.insertList( apiDtoToVo.listApiParamDtoToPo(paramDtoList));
+            apiParamMapper.insertList(apiDtoToVo.listApiParamDtoToPo(paramDtoList));
         }
     }
 
-
+    @Override
+    public List<ApiInfoVo> listApiByBranchId(Integer branchId) {
+        Example example = new Example(ApiInfo.class);
+        example.createCriteria().andEqualTo("branchId", branchId);
+        List<ApiInfo> apiInfos = apiInfoMapper.selectByExample(example);
+        if (apiInfos.isEmpty()) {
+            return new ArrayList<>();
+        }
+        //查询参数
+        List<ApiInfoVo> apiInfoList = apiDtoToVo.listApiInfoToVo(apiInfos);
+        example = new Example(ApiParam.class);
+        example.createCriteria().andIn("apiId"
+                , apiInfos.stream().map(ApiInfo::getId).collect(Collectors.toList()));
+        List<ApiParam> apiParams = apiParamMapper.selectByExample(example);
+        //赋值参数
+        for (ApiInfoVo apiInfo : apiInfoList) {
+            apiInfo.setApiParamList(apiParams.stream()
+                    .filter(i -> i.getApiId().equals(apiInfo.getId()))
+                    .collect(Collectors.toList())
+            );
+        }
+        return apiInfoList;
+    }
 
 
 }

@@ -1,12 +1,10 @@
 package com.lancabbage.lancodeapi.enums;
 
-import java.util.Arrays;
-
 public enum ApiTypeEnum {
 
     /**
      * 0:all 1:post 2:get 3:delete 4:put
-     *  {"RequestMapping", "PostMapping", "GetMapping", "DeleteMapping", "PutMapping"}
+     * {"RequestMapping", "PostMapping", "GetMapping", "DeleteMapping", "PutMapping"}
      */
     ALL(0, "RequestMapping", "ALL"),
     POST(1, "PostMapping", "POST"),
@@ -59,6 +57,7 @@ public enum ApiTypeEnum {
         }
         return null;
     }
+
     public int getCode() {
         return code;
     }

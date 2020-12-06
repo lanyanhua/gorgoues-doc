@@ -51,6 +51,7 @@ public enum ParamModeEnum {
     public static String[] typeALl() {
         return (String[]) Arrays.stream(ApiTypeEnum.values()).map(ApiTypeEnum::getType).toArray();
     }
+
     public static ParamModeEnum toEnum(int code) {
         for (ParamModeEnum type : ParamModeEnum.values()) {
             if (type.getCode() == code) {
@@ -59,6 +60,7 @@ public enum ParamModeEnum {
         }
         return null;
     }
+
     public int getCode() {
         return code;
     }

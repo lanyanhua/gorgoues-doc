@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -11,6 +12,7 @@ public class ApiInfo {
      * ID
      */
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     /**
@@ -50,6 +52,7 @@ public class ApiInfo {
      */
     @Column(name = "branch_id")
     private Integer branchId;
+
     /**
      * 获取ID
      *

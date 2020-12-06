@@ -25,6 +25,7 @@ public class ClassInfoDto extends ClassInfo {
      * 基本数据类型
      */
     private String baseType;
+
     public List<ClassFieldDto> getFieldList() {
         return fieldList;
     }

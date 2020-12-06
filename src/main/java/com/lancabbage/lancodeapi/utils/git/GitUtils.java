@@ -55,52 +55,8 @@ public class GitUtils {
         this.password = password;
     }
 
-    public static GitUtils getInstance(String remotePath, String localPath, String project, String branch, String username, String password){
-        return new GitUtils(remotePath,localPath,project,branch,username,password);
-    }
-
-    public void cloneCode() throws GitAPIException {
-        //设置远程服务器上的用户名和密码
-        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
-                UsernamePasswordCredentialsProvider(username, password);
-
-        //克隆代码库命令
-        CloneCommand cloneCommand = Git.cloneRepository();
-
-        Git git = cloneCommand.setURI(remotePath) //设置远程URI
-                .setBranch(branch) //设置clone下来的分支
-                .setDirectory(new File(getPath())) //设置下载存放路径
-                .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
-                .call();
-        System.out.print(git.tag());
-    }
-
-    public String getPath(){
-        return localPath + project + "/" + branch;
-    }
-
-
-    /**
-     * 拉取远程仓库内容到本地
-     */
-    public void pull() throws IOException, GitAPIException {
-        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
-                UsernamePasswordCredentialsProvider(username, password);
-        //git仓库地址
-        Git git = new Git(new FileRepository(localPath + project + "/" + branch + "/.git"));
-        PullResult call = git.pull().setRemoteBranchName(branch).
-                setCredentialsProvider(usernamePasswordCredentialsProvider).call();
-
-    }
-
-    /**
-     * 获取java文件路径
-     * 项目分支下所有的java文件
-     */
-    public List<String> getJavaFile() throws IOException {
-        String basePath = localPath + "/" + project + "/" + branch;
-        File file = new File(basePath);
-        return getJavaFile(file);
+    public static GitUtils getInstance(String remotePath, String localPath, String project, String branch, String username, String password) {
+        return new GitUtils(remotePath, localPath, project, branch, username, password);
     }
 
     /**
@@ -127,6 +83,49 @@ public class GitUtils {
             }
         }
         return sources;
+    }
+
+    public void cloneCode() throws GitAPIException {
+        //设置远程服务器上的用户名和密码
+        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
+                UsernamePasswordCredentialsProvider(username, password);
+
+        //克隆代码库命令
+        CloneCommand cloneCommand = Git.cloneRepository();
+
+        Git git = cloneCommand.setURI(remotePath) //设置远程URI
+                .setBranch(branch) //设置clone下来的分支
+                .setDirectory(new File(getPath())) //设置下载存放路径
+                .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
+                .call();
+        System.out.print(git.tag());
+    }
+
+    public String getPath() {
+        return localPath + project + "/" + branch;
+    }
+
+    /**
+     * 拉取远程仓库内容到本地
+     */
+    public void pull() throws IOException, GitAPIException {
+        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
+                UsernamePasswordCredentialsProvider(username, password);
+        //git仓库地址
+        Git git = new Git(new FileRepository(localPath + project + "/" + branch + "/.git"));
+        PullResult call = git.pull().setRemoteBranchName(branch).
+                setCredentialsProvider(usernamePasswordCredentialsProvider).call();
+
+    }
+
+    /**
+     * 获取java文件路径
+     * 项目分支下所有的java文件
+     */
+    public List<String> getJavaFile() throws IOException {
+        String basePath = localPath + "/" + project + "/" + branch;
+        File file = new File(basePath);
+        return getJavaFile(file);
     }
 
 

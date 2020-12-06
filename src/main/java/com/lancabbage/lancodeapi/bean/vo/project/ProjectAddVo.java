@@ -1,7 +1,5 @@
 package com.lancabbage.lancodeapi.bean.vo.project;
 
-import javax.persistence.Column;
-
 /**
  * @author: lanyanhua
  * @date: 2020/12/5 5:26 下午

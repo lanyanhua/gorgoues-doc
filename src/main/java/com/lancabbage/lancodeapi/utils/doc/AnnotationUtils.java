@@ -21,7 +21,7 @@ public class AnnotationUtils {
     /**
      * 参数描述取值方式
      */
-    private List<String> parmTag ;
+    private List<String> parmTag;
 
     /**
      * 判断是否controller
@@ -82,7 +82,7 @@ public class AnnotationUtils {
      * @param name 注解名称
      * @return 是否
      */
-    private  int isMapping(String name) {
+    private int isMapping(String name) {
         for (ApiTypeEnum type : ApiTypeEnum.values()) {
             if (type.getType().equals(name)) {
                 return type.getCode();

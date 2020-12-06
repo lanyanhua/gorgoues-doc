@@ -13,10 +13,10 @@ public class AnnotationRes {
     /**
      * 访问路径
      */
-    public String path ="";
+    public String path = "";
     /**
      * 传参方式
      */
-    public int mode =1;
+    public int mode = 1;
 
 }

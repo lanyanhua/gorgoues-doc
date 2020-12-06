@@ -31,11 +31,15 @@ public class GitServiceImpl implements GitService {
         GitUtils gitUtils = GitUtils.getInstance(project.getRemotePath(), gitInfo.getRepositoryPath()
                 , project.getName(), branch, gitInfo.getUsername(), gitInfo.getPassword());
         try {
-            //啦代码
-            gitUtils.cloneCode();
             String basePath = gitUtils.getPath();
             //读取java
             File file = new File(basePath);
+            //啦代码
+            if (file.exists()) {
+                gitUtils.pull();
+            } else {
+                gitUtils.cloneCode();
+            }
             return GitUtils.getJavaFile(file);
         } catch (Exception e) {
             throw new BusinessException("git 拉去代码失败");

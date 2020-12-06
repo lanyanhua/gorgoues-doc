@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RouteController {
 
     @GetMapping("/docs")
-    public String doc(){
+    public String doc() {
         return "/docs";
     }
+
     @GetMapping("/template")
-    public String template(){
+    public String template() {
         return "/template";
     }
 }

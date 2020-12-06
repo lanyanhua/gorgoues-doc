@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ public class Menu {
      * ID
      */
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     /**
@@ -144,6 +146,7 @@ public class Menu {
     public void setApiId(Integer apiId) {
         this.apiId = apiId;
     }
+
     /**
      * 获取分支ID
      *

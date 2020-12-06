@@ -4,11 +4,7 @@ import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
 import com.lancabbage.lancodeapi.bean.dto.ApiParamDto;
 import com.lancabbage.lancodeapi.bean.po.ApiInfo;
 import com.lancabbage.lancodeapi.bean.po.ApiParam;
-import com.lancabbage.lancodeapi.bean.po.Project;
-import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
-import com.lancabbage.lancodeapi.bean.vo.project.ProjectAddVo;
-import com.lancabbage.lancodeapi.bean.vo.project.ProjectBranchVo;
-import com.lancabbage.lancodeapi.bean.vo.project.ProjectVo;
+import com.lancabbage.lancodeapi.bean.vo.api.ApiInfoVo;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -25,4 +21,5 @@ public interface ApiDtoToVo {
 
     List<ApiParam> listApiParamDtoToPo(List<ApiParamDto> paramDtoList);
 
+    List<ApiInfoVo> listApiInfoToVo(List<ApiInfo> apiInfos);
 }

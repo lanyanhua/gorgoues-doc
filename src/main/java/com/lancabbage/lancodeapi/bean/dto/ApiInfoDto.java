@@ -1,7 +1,6 @@
 package com.lancabbage.lancodeapi.bean.dto;
 
 import com.lancabbage.lancodeapi.bean.po.ApiInfo;
-import com.lancabbage.lancodeapi.bean.po.ApiParam;
 
 import java.util.List;
 

@@ -19,12 +19,17 @@ public class DocletUtils extends Doclet {
 
 
     /**
+     * 文档根节点
+     */
+    private static RootDoc root;
+
+    /**
      * 获取classDoc
      *
      * @param sources1 class path
      * @return classDoc
      */
-   public static ClassDoc[] getClassDoc(List<String> sources1) {
+    public static ClassDoc[] getClassDoc(List<String> sources1) {
         ArrayList<String> list1 = new ArrayList<>();
         list1.add("-doclet");
         list1.add(DocletUtils.class.getName());
@@ -33,11 +38,6 @@ public class DocletUtils extends Doclet {
         //组装对象
         return DocletUtils.root.classes();
     }
-
-    /**
-     * 文档根节点
-     */
-    private static RootDoc root;
 
     public static LanguageVersion languageVersion() {
         return LanguageVersion.JAVA_1_5;

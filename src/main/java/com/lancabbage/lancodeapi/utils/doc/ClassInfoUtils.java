@@ -16,14 +16,13 @@ import java.util.*;
  */
 public class ClassInfoUtils {
 
+    public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "List", "Set", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
+            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean");
+    public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest");
     /**
      * class Map
      */
     public Map<ClassKey, ClassInfoDto> classMap;
-
-    public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "List", "Set", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
-            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean");
-    public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest");
 
 
     public ClassInfoUtils() {
@@ -109,7 +108,7 @@ public class ClassInfoUtils {
                     dataType = getClassInfo(fType);
                 }
                 //为基本数据类型
-                if(fieldDto.setType(dataType.getBaseType())==null){
+                if (fieldDto.setType(dataType.getBaseType()) == null) {
                     fieldDto.setTypeClass(dataType);
                 }
             }

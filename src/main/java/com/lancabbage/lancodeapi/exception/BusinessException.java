@@ -2,22 +2,26 @@ package com.lancabbage.lancodeapi.exception;
 
 /**
  * 业务异常
+ *
  * @author yj
  * @date 2019/3/27 9:29
  */
-public class BusinessException extends RuntimeException{
-    private static final long serialVersionUID = 9045237586542073761L;
+public class BusinessException extends RuntimeException {
     public static final int FAIL = 500;
+    private static final long serialVersionUID = 9045237586542073761L;
     private int code;
     private String message;
-    public BusinessException(){
+
+    public BusinessException() {
         super();
     }
-    public BusinessException(String message){
+
+    public BusinessException(String message) {
         this.code = FAIL;
         this.message = message;
     }
-    public BusinessException(int code,String message){
+
+    public BusinessException(int code, String message) {
         this.code = code;
         this.message = message;
     }

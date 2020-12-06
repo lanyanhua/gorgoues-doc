@@ -1,9 +1,8 @@
 package com.lancabbage.lancodeapi.controller.project;
 
+import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectAddVo;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectVo;
-import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
-import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,16 +28,18 @@ public class ProjectController {
 
     /**
      * 添加项目
+     *
      * @return ID
      */
     @PostMapping("/addProject")
-    public BaseResponse<Integer> addProject(ProjectAddVo vo){
+    public BaseResponse<Integer> addProject(ProjectAddVo vo) {
         int id = projectService.addProject(vo);
         return BaseResponse.successInstance(id);
     }
 
     /**
      * 查询所有项目信息
+     *
      * @return 项目信息
      */
     @GetMapping("/listProjectAll")

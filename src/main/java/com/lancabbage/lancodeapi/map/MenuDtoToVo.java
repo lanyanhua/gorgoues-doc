@@ -2,7 +2,10 @@ package com.lancabbage.lancodeapi.map;
 
 import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.po.Menu;
+import com.lancabbage.lancodeapi.bean.vo.menu.MenuVo;
 import org.mapstruct.Mapper;
+
+import java.util.List;
 
 /**
  * @author: lanyanhua
@@ -13,4 +16,7 @@ import org.mapstruct.Mapper;
 public interface MenuDtoToVo {
 
     Menu menuDtoToPo(MenuDto menuDto);
+
+    List<MenuVo> listMenuToVo(List<Menu> menuList);
+
 }

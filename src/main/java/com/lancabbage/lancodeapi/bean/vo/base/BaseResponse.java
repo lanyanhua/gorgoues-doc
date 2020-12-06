@@ -14,6 +14,33 @@ public class BaseResponse<T> implements Serializable {
         this.statusMsg = ResponseStatusCode.OPERATION_SUCCESS.getMsg();
     }
 
+    public static <T> BaseResponse<T> successInstance(T data) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setStatusCode(ResponseStatusCode.OPERATION_SUCCESS);
+        return response.setData(data);
+    }
+
+    public static <T> BaseResponse<T> successInstanceMsg(String msg) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setStatusCode(ResponseStatusCode.OPERATION_SUCCESS);
+        response.setStatusMsg(msg);
+        return response;
+    }
+
+    public static <T> BaseResponse<T> errorInstance(String errorMsg) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setStatusCode(ResponseStatusCode.SERVER_ERROR);
+        response.setStatusMsg(errorMsg);
+        return response;
+    }
+
+    public static <T> BaseResponse<T> errorInstance(int status, String errorMsg) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setStatusCode(status);
+        response.setStatusMsg(errorMsg);
+        return response;
+    }
+
     public String getStatusMsg() {
         return this.statusMsg;
     }
@@ -48,33 +75,6 @@ public class BaseResponse<T> implements Serializable {
 
     public String toString() {
         return "BaseResponse{statusCode=" + this.statusCode + ", statusMsg='" + this.statusMsg + '\'' + ", data=" + this.data + '}';
-    }
-
-    public static <T> BaseResponse<T> successInstance(T data) {
-        BaseResponse<T> response = new BaseResponse<>();
-        response.setStatusCode(ResponseStatusCode.OPERATION_SUCCESS);
-        return response.setData(data);
-    }
-
-    public static <T> BaseResponse<T> successInstanceMsg(String msg) {
-        BaseResponse<T> response = new BaseResponse<>();
-        response.setStatusCode(ResponseStatusCode.OPERATION_SUCCESS);
-        response.setStatusMsg(msg);
-        return response;
-    }
-
-    public static <T> BaseResponse<T> errorInstance(String errorMsg) {
-        BaseResponse<T> response = new BaseResponse<>();
-        response.setStatusCode(ResponseStatusCode.SERVER_ERROR);
-        response.setStatusMsg(errorMsg);
-        return response;
-    }
-
-    public static <T> BaseResponse<T> errorInstance(int status, String errorMsg) {
-        BaseResponse<T> response = new BaseResponse<>();
-        response.setStatusCode(status);
-        response.setStatusMsg(errorMsg);
-        return response;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -11,6 +12,7 @@ public class ApiParam {
      * ID
      */
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     /**
@@ -111,7 +113,7 @@ public class ApiParam {
      * @param classId 参数对应的 class
      */
     public Integer setClassId(Integer classId) {
-       return this.classId = classId;
+        return this.classId = classId;
     }
 
     /**

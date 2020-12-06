@@ -11,6 +11,8 @@
     <result column="package_path" jdbcType="VARCHAR" property="packagePath" />
     <result column="class_path" jdbcType="VARCHAR" property="classPath" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="project_id" jdbcType="INTEGER" property="projectId" />
+    <result column="branch_id" jdbcType="INTEGER" property="branchId" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--

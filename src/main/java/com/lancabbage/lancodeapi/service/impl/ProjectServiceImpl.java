@@ -11,8 +11,8 @@ import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,15 +39,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectVo> listProjectAll() {
         List<Project> projects = projectMapper.selectAll();
-        List<ProjectVo> projectVos =  projectDtoToVo.listProjectToVo(projects);
-        List<ProjectBranch> projectBranches = projectBranchService.listProjectBranchById(projects.stream()
-                .map(Project::getId).collect(Collectors.toList())
-        );
-        for (ProjectVo projectVo : projectVos) {
-            List<ProjectBranch> collect = projectBranches.stream()
-                    .filter(i -> i.getProjectId().equals(projectVo.getId()))
-                    .collect(Collectors.toList());
-            projectVo.setBranchList(projectDtoToVo.listProjectBranchToVo(collect));
+        List<ProjectVo> projectVos = new ArrayList<>();
+        if (!projects.isEmpty()) {
+            //查询分支
+            projectVos = projectDtoToVo.listProjectToVo(projects);
+            List<ProjectBranch> projectBranches = projectBranchService.listProjectBranchById(projects.stream()
+                    .map(Project::getId).collect(Collectors.toList())
+            );
+            for (ProjectVo projectVo : projectVos) {
+                List<ProjectBranch> collect = projectBranches.stream()
+                        .filter(i -> i.getProjectId().equals(projectVo.getId()))
+                        .collect(Collectors.toList());
+                projectVo.setBranchList(projectDtoToVo.listProjectBranchToVo(collect));
+            }
         }
         return projectVos;
     }

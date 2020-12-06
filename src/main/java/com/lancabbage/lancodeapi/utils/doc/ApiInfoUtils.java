@@ -4,7 +4,6 @@ import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
 import com.lancabbage.lancodeapi.bean.dto.ApiParamDto;
 import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
 import com.lancabbage.lancodeapi.bean.dto.MenuDto;
-import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
 import com.sun.javadoc.*;

@@ -1,11 +1,9 @@
 package com.lancabbage.lancodeapi.map;
 
-import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
-import com.lancabbage.lancodeapi.bean.dto.ApiParamDto;
 import com.lancabbage.lancodeapi.bean.dto.ClassFieldDto;
-import com.lancabbage.lancodeapi.bean.po.ApiInfo;
-import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import com.lancabbage.lancodeapi.bean.po.ClassField;
+import com.lancabbage.lancodeapi.bean.po.ClassInfo;
+import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -20,4 +18,6 @@ public interface ClassDtoToVo {
 
 
     List<ClassField> listClassFieldDtoToPo(List<ClassFieldDto> fieldDtoList);
+
+    List<ClassInfoVo> listClassFieldToVo(List<ClassInfo> classInfos);
 }

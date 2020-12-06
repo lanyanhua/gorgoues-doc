@@ -1,6 +1,5 @@
 package com.lancabbage.lancodeapi.mapper.base;
 
-import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
 import tk.mybatis.mapper.common.Mapper;

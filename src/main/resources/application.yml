@@ -6,9 +6,19 @@ spring:
     username: root
     password: AAaa123456
 
+  thymeleaf:
+    mode: HTML5
+    encoding: utf-8
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   typeAliasesPackage: com.lancabbage.lancodeapi.entity
   configuration:
     map-underscore-to-camel-case: true
 
+logging:
+  level.com.lancabbage.lancodeapi: debug

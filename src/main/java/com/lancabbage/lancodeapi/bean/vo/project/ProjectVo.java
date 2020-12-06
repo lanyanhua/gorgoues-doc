@@ -1,6 +1,5 @@
 package com.lancabbage.lancodeapi.bean.vo.project;
 
-import javax.persistence.Column;
 import java.util.List;
 
 /**
