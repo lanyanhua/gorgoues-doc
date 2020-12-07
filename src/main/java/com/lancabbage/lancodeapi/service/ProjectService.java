@@ -1,5 +1,6 @@
 package com.lancabbage.lancodeapi.service;
 
+import com.lancabbage.lancodeapi.bean.po.Project;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectAddVo;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectVo;
 
@@ -28,4 +29,10 @@ public interface ProjectService {
      * @return id
      */
     int addProject(ProjectAddVo vo);
+
+    /**
+     * 查询项目信息
+     * @param projectId 项目ID
+     */
+    Project getProjectById(Integer projectId);
 }

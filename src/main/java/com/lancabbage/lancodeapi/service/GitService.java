@@ -1,6 +1,8 @@
 package com.lancabbage.lancodeapi.service;
 
+import com.lancabbage.lancodeapi.bean.po.GitInfo;
 import com.lancabbage.lancodeapi.bean.po.Project;
+import com.lancabbage.lancodeapi.bean.vo.git.GitInfoSaveVo;
 
 import java.util.List;
 
@@ -22,4 +24,13 @@ public interface GitService {
      */
     List<String> cloneCode(Project project, String branch);
 
+    /**
+     * 获取git配置信息
+     */
+    GitInfo getGitInfo();
+
+    /**
+     * 保存git信息
+     */
+    void save(GitInfoSaveVo gitInfo);
 }

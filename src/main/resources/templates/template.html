@@ -13,83 +13,53 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/jquery.json-viewer.css}">
 </head>
 <body>
+<div id="body">
 
-<div class="layui-layout layui-layout-admin"
-     style="border-bottom: solid 3px #1aa094;">
-    <div class="layui-header header ">
-
-        <div class="layui-logo">
-            <span style="font-size: 22px;color: #fff">项目名</span>
-            <small class="version">分支名</small>
-            <small class="version">环境</small>
-        </div>
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item">
-                <a href="javascript:;"><i class="iconfont icon-map-setting"></i> 切换</a>
-                <dl class="layui-nav-child">
-                    <dd>
-                        <a href="javascript:;"><i class="iconfont icon-map-setting"></i>项目</a>
-                        <ol>
-                            <dd><a href="">qns</a></dd>
-                            <dd><a href="">gyl</a></dd>
-                        </ol>
-                    </dd>
-                    <dd><a href="">分支</a></dd>
-                    <dd><a href="">环境</a></dd>
-                </dl>
-            </li>
-        </ul>
-    </div>
-    <div id="menu-dev"></div>
 </div>
 </body>
-<script th:src="@{/layui/layui.all.js}"></script>
+<div th:include="common/common.html"></div>
+<div th:include="menu/switchTemplate.html"></div>
+<div th:include="menu/menuTemplate.html"></div>
 <script th:src="@{/js/jquery.js}"></script>
 <script th:src="@{/js/jsrender.min.js}"></script>
 <script th:src="@{/js/jquery.json-viewer.js}"></script>
-<script th:src="@{/js/menu.js}"></script>
+<script th:src="@{/js/menu/menu.js}"></script>
+<script th:src="@{/js/project/project.js}"></script>
+<script th:src="@{/js/env/env.js}"></script>
+<script type="text/javascript">
+    let projectData;
+    let envData;
+    let currProject = getCurrProject();
+    let currProjectData = getCurrProject();
+    $(function () {
+        getEnvAll(data => envData = data)
+        projectAll(data => {
+            projectData = data;
+
+            if (currProject == null) {
+                currProjectData = {
+                    project: projectData[0],
+                    branch: projectData[0].branchList[0],
+                    env: envData[0],
+                }
+                currProject = setCurrProject(currProjectData.project.id, currProjectData.branch.id, currProjectData.env.id);
+            } else {
+                let project = projectData.find(i => i.id === currProject.projectId);
+                let branch = project.branchList.find(i => i.id === currProject.branchId);
+                let env = envData.find(i => i.id === currProject.envId);
+                currProjectData = {
+                    project: project,
+                    branch: branch,
+                    env: env,
+                }
+            }
+            //显示菜单
+            viewMenu(currProjectData.branch.id);
+
+        })
+
+    })
+</script>
+
 </html>
 
-
-<script id="template" type="text/template">
-    <div class="layui-side layui-bg-black" id="admin-side">
-        <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side">
-            <ul class="layui-nav layui-nav-tree  beg-navbar">
-                {{# $.each(d,(i,menu)=>{ }}
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a href="javascript:void(0);" data-class="{{menu.className}}">
-                        <i class="fa fa-cogs" aria-hidden="true" data-icon="fa-cogs"></i>
-                        <cite> {{menu.menuName }}</cite>
-                        <br>
-                        <span class="layui-nav-more"></span>
-                    </a>
-                    <dl class="layui-nav-child">
-                        {{# $.each(menu.apiInfos,(i,api)=>{ }}
-                        <dd title="{{api.method}}">
-                            <a href="javascript:void(0);" name="a_path" path="{{api.path}}" method="{{api.method}}"
-                               operationId="operationId">
-                                <i class="fa fa-navicon" data-icon="fa-navicon"></i>
-                                <cite class="">{{api.name}}</cite>
-                                <br>
-                                <small class="api-type">{{ApiType[api.type]}}</small>
-                                <cite class="key_font">{{api.path}}</cite>
-                            </a>
-                        </dd>
-                        {{# }) }}
-                    </dl>
-                </li>
-                {{# }) }}
-            </ul>
-        </div>
-    </div>
-    <div class="layui-body site-content" id="path-body"
-         style="border-left: solid 2px #1AA094;">
-        <!--        body 内容 $ref = temp_body-->
-    </div>
-
-    <!--    <div class="layui-footer footer">-->
-    <!--        <div class="layui-main">-->
-    <!--            <a href="info.license.ur" target="blank">info.license.name</a></p>-->
-    <!--        </div>-->
-    <!--    </div>-->
-</script>

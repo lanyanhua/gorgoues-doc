@@ -2,13 +2,17 @@ package com.lancabbage.lancodeapi.service.impl;
 
 import com.lancabbage.lancodeapi.bean.po.GitInfo;
 import com.lancabbage.lancodeapi.bean.po.Project;
+import com.lancabbage.lancodeapi.bean.vo.git.GitInfoSaveVo;
 import com.lancabbage.lancodeapi.exception.BusinessException;
+import com.lancabbage.lancodeapi.map.GitInfoDtoToVo;
 import com.lancabbage.lancodeapi.mapper.GitInfoMapper;
 import com.lancabbage.lancodeapi.service.GitService;
 import com.lancabbage.lancodeapi.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,9 +24,11 @@ import java.util.List;
 public class GitServiceImpl implements GitService {
 
     private final GitInfoMapper gitInfoMapper;
+    private final GitInfoDtoToVo gitInfoDtoToVo;
 
-    public GitServiceImpl(GitInfoMapper gitInfoMapper) {
+    public GitServiceImpl(GitInfoMapper gitInfoMapper, GitInfoDtoToVo gitInfoDtoToVo) {
         this.gitInfoMapper = gitInfoMapper;
+        this.gitInfoDtoToVo = gitInfoDtoToVo;
     }
 
     @Override
@@ -43,6 +49,26 @@ public class GitServiceImpl implements GitService {
             return GitUtils.getJavaFile(file);
         } catch (Exception e) {
             throw new BusinessException("git 拉去代码失败");
+        }
+    }
+
+    @Override
+    public GitInfo getGitInfo() {
+        List<GitInfo> gitInfo = gitInfoMapper.selectAll();
+        Assert.isTrue(!gitInfo.isEmpty(),"无git配置信息");
+        return gitInfo.get(0);
+    }
+
+    @Override
+    public void save(GitInfoSaveVo vo) {
+        List<GitInfo> gitInfoList = gitInfoMapper.selectAll();
+        GitInfo gitInfo = gitInfoDtoToVo.gitInfoSaveVoToPo(vo);
+        if(gitInfoList.isEmpty()){
+            gitInfo.setCreateTime(new Date());
+            gitInfoMapper.insert(gitInfo);
+        }else {
+            gitInfo.setId(gitInfoList.get(0).getId());
+            gitInfoMapper.updateByPrimaryKeySelective(gitInfo);
         }
     }
 }

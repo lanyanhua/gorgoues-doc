@@ -51,6 +51,9 @@ public class MenuServiceImpl implements MenuService {
             menuMapper.insertSelective(cMenu);
             //先保存API信息
             List<ApiInfoDto> apiInfos = cMenu.getApiInfos();
+            if(apiInfos.isEmpty()){
+                continue;
+            }
             apiInfoService.saveApiList(apiInfos, projectId, branchId);
             List<Menu> menuList = apiInfos.stream().map(i -> {
                 Menu m = new Menu();
@@ -94,6 +97,7 @@ public class MenuServiceImpl implements MenuService {
         for (MenuVo menu : menuList) {
             List<Menu> children = menuList1.stream().filter(i -> menu.getId().equals(i.getParentId())).collect(Collectors.toList());
             if (children.isEmpty()) {
+                menu.setChildrenMenu(new ArrayList<>(0));
                 continue;
             }
             List<MenuVo> menuVos = menuDtoToVo.listMenuToVo(children);

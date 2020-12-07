@@ -1,5 +1,7 @@
 package com.lancabbage.lancodeapi.bean.vo.project;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.Table;
 
 @Table(name = "project_branch")
@@ -12,11 +14,13 @@ public class ProjectBranchAddVo {
     /**
      * 项目ID
      */
+    @NotNull
     private Integer projectId;
 
     /**
      * 分支名称
      */
+    @NotNull
     private String name;
 
     /**

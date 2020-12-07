@@ -69,4 +69,9 @@ public class ProjectServiceImpl implements ProjectService {
         projectBranchService.addProjectBranch(branchAddDto);
         return project.getId();
     }
+
+    @Override
+    public Project getProjectById(Integer projectId) {
+        return projectMapper.selectByPrimaryKey(projectId);
+    }
 }

@@ -1,0 +1,68 @@
+<script id="switchTemplate" type="text/template">
+    <form id="switchForm" class="layui-form" action="">
+        项目
+        <hr>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目</label>
+            <div class="layui-input-block">
+                <select name="projectId" lay-verify="required">
+                    {{# $.each(d.projectList,(i,p)=>{ }}
+                    <option value="{{p.id}}" {{# if(p.id== d.projectId){ }}selected{{# } }}>{{p.name}}</option>
+                    {{# }) }}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择框</label>
+            <div class="layui-input-block">
+                <select name="branchId" lay-verify="required">
+                    {{# $.each(d.projectList,(i,p)=>{ }}
+                    <div class="branch-div branch-id-{{p.id}} {{# if(p.id == d.projectId){ }}layui-hide{{# } }}">
+                        {{# $.each(p.branchList,(i,b)=>{ }}
+                        <option value="{{b.id}}" {{# if(b.id== b.branchId){ }}selected{{# } }}>{{b.name}}</option>
+                        {{# }) }}
+                    </div>
+                    {{# }) }}
+                </select>
+            </div>
+        </div>
+        环境
+        <hr>
+        <div class="layui-form-item">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <select name="envId" lay-verify="required">
+                    {{# $.each(d.envList,(i,v)=>{ }}
+                    <option value="{{v.id}}" {{# if(v.id== d.envId){ }}selected{{# } }}>{{v.name}}</option>
+                    {{# }) }}
+                </select>
+            </div>
+        </div>
+
+        {{# $.each(d.envList,(i,e)=>{ }}
+        <div class="env-div env-id-{{e.id}} {{# if(e.id != d.envId){ }}layui-hide{{# } }}">
+            <div class="layui-form-item">
+                <label class="layui-form-label">域名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="domain" value="{{e.domain}}" required
+                           lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            {{# $.each(e.headerMap,(i,h)=>{ }}
+            <div class="layui-form-item">
+                <label class="layui-form-label">{{h.key}}</label>
+                <div class="layui-input-block">
+                    <input type="text" name="env-{{ e.id+'-'+h.key }}" value="{{h.value}}" required
+                           lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            {{# }); }}
+        </div>
+        {{# }) }}
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="switch">确认</button>
+            </div>
+        </div>
+    </form>
+</script>

@@ -1,5 +1,7 @@
 package com.lancabbage.lancodeapi.bean.vo.project;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * @author: lanyanhua
  * @date: 2020/12/5 5:26 下午
@@ -10,16 +12,19 @@ public class ProjectAddVo {
     /**
      * 项目名称
      */
+    @NotNull
     private String name;
 
     /**
      * 远程库路径
      */
+    @NotNull
     private String remotePath;
 
     /**
      * 分支名称
      */
+    @NotNull
     private String branchName;
 
     public String getName() {
