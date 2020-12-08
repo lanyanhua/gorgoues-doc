@@ -52,6 +52,17 @@ public class EnvController {
 
 
     /**
+     * 添加环境信息
+     * @return ID
+     */
+    @DeleteMapping("/deleteEnvById")
+    public BaseResponse<String> deleteEnvById(@RequestParam Integer id){
+        envInfoService.deleteEnvById(id);
+        return BaseResponse.successInstance("成功");
+    }
+
+
+    /**
      * 获取所有环境信息
      * @return 环境列表
      */

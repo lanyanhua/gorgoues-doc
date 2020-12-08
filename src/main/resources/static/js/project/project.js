@@ -8,7 +8,7 @@ function projectAll(fun) {
         dataType: 'json',
         success: function (data) {
             if (data.statusCode !== 200) {
-                layui.open(data.statusMsg);
+                layer.msg(data.statusMsg);
                 return;
             }
             if (data.data == null || data.data.length === 0) {
@@ -20,3 +20,28 @@ function projectAll(fun) {
     })
 }
 
+
+//添加项目
+function addProject(fun) {
+    //监听提交
+    form.on('submit(projectFormBtn)', function(data){
+        $.ajax({
+            type: 'post',
+            url: addProjectUrl,
+            data: JSON.stringify(data.field),
+            contentType: "application/json;charset=utf-8",
+            dataType: 'json',
+            success: function (data) {
+                if (data.statusCode !== 200) {
+                    layer.msg(data.statusMsg);
+                    return;
+                }
+                if(fun!= null ){
+                    fun(data.data);
+                }
+            }
+        })
+        return false;
+    });
+
+}

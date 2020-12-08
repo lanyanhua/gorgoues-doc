@@ -27,4 +27,9 @@ public interface EnvInfoService {
      */
     List<EnvInfo> listEnvAll();
 
+    /**
+     * 删除环境信息
+     * @param id ID
+     */
+    void deleteEnvById(Integer id);
 }

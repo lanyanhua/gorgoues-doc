@@ -24,7 +24,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public BaseResponse<?> javaExceptionHandler(Exception e) {
         log.error("Exception: ", e);
-        if (e.getMessage().contains("mysql")) {
+        if(e.getMessage() == null){
+            return BaseResponse.errorInstance("NullPointerException");
+        }
+        if ( e.getMessage().contains("mysql")) {
             log.error("全局异常来作妖了: " + e);
             return BaseResponse.errorInstance("数据库开小差啦，请稍后再试");
         }

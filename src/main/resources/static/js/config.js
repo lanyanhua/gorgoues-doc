@@ -5,14 +5,24 @@ let listMenuTest = context + 'js/lancode.json';
 
 //所有项目信息
 let listProjectAll = context + 'project/listProjectAll';
+//添加项目
+let addProjectUrl = context + 'project/addProject';
 
 
 //添加环境数据
 let addEnv = context + 'env/addEnv';
 //保存环境数据
-let saveEnv = context + 'env/saveEnv';
+let saveEnvUrl = context + 'env/saveEnv';
+//
+let deleteEnv = context + 'env/deleteEnv';
 //所有环境数据
 let listEnvAll = context + 'env/listEnvAll';
+
+
+//获取git信息
+let getGitInfoUrl = context + 'git/getGitInfo';
+//保存git信息
+let gitSaveUrl= context + 'git/save';
 
 
 /**
@@ -36,19 +46,33 @@ function getCurrProject() {
 }
 
 /**
- * 设置当前项目配置
+ * 设置当前项目ID
  */
 function setCurrProject(projectId, branchId, envId) {
-    let temp = {projectId: projectId, branchId: branchId, envId: envId};
-    localStorage.setItem("CurrProject", JSON.stringify(temp));
-    return temp;
+    currProject = {projectId: projectId, branchId: branchId, envId: envId};
+    localStorage.setItem("CurrProject", JSON.stringify(currProject));
+    return currProject;
+}
+
+/**
+ * 设置当前项目数据
+ */
+function setCurrProjectData(currProject) {
+    let project = projectData.find(i => i.id == currProject.projectId);
+    let branch = project.branchList.find(i => i.id == currProject.branchId);
+    let env = envData.find(i => i.id == currProject.envId);
+    currProjectData = {
+        project: project,
+        branch: branch,
+        env: env,
+    }
 }
 
 /**
  * 获取当前选中抬头菜单
  */
-function getCurrHeaderMenuId() {
-    let temp = localStorage.getItem("CurrHeaderMenuId");
+function getCurrHeaderMenuId(branchId) {
+    let temp = localStorage.getItem("CurrHeaderMenuId_"+branchId);
     return temp != null ? Number(temp) : null;
 }
 

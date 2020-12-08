@@ -30,32 +30,24 @@
     let projectData;
     let envData;
     let currProject = getCurrProject();
-    let currProjectData = getCurrProject();
+    let currProjectData;
     $(function () {
         getEnvAll(data => envData = data)
         projectAll(data => {
             projectData = data;
-
+            //设置当前项目
             if (currProject == null) {
                 currProjectData = {
                     project: projectData[0],
                     branch: projectData[0].branchList[0],
                     env: envData[0],
                 }
-                currProject = setCurrProject(currProjectData.project.id, currProjectData.branch.id, currProjectData.env.id);
-            } else {
-                let project = projectData.find(i => i.id === currProject.projectId);
-                let branch = project.branchList.find(i => i.id === currProject.branchId);
-                let env = envData.find(i => i.id === currProject.envId);
-                currProjectData = {
-                    project: project,
-                    branch: branch,
-                    env: env,
-                }
+                setCurrProject(currProjectData.project.id, currProjectData.branch.id, currProjectData.env.id);
+            }else{
+                setCurrProjectData(currProject);
             }
             //显示菜单
-            viewMenu(currProjectData.branch.id);
-
+            renderMenu();
         })
 
     })

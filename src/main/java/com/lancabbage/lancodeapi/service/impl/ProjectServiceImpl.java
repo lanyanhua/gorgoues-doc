@@ -11,6 +11,8 @@ import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +61,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     @Override
     public int addProject(ProjectAddVo vo) {
+        Example example = new Example(Project.class);
+        example.createCriteria().andEqualTo("name",vo.getName());
+        int count = projectMapper.selectCountByExample(example);
+        Assert.isTrue(count == 0,"项目名已存在，请选择新增分支");
         Project project = projectDtoToVo.projectAddVoToPo(vo);
         project.setCreateTime(new Date());
         projectMapper.insert(project);

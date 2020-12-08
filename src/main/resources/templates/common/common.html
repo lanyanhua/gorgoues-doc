@@ -6,6 +6,9 @@
     let form = layui.form;
     let laytpl = layui.laytpl;
     let context = [[@{/}]];
+    layui.extend({
+        steps: '{/}'+context+'layui/lay/steps/steps'
+    });
     let serverName =[[${#httpServletRequest.getServerName()}]];
     let serverPort =[[${#httpServletRequest.getServerPort()}]];
 </script>

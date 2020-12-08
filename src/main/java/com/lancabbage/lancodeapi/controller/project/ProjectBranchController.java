@@ -8,6 +8,7 @@ import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class ProjectBranchController {
      * 添加项目分支
      */
     @PostMapping("/addProjectBranch")
-    public BaseResponse<String> addProjectBranch(ProjectBranchAddVo vo) {
+    public BaseResponse<String> addProjectBranch(@RequestBody ProjectBranchAddVo vo) {
         ProjectBranchAddDto dto = new ProjectBranchAddDto();
         dto.setName(vo.getName());
         Project project = projectService.getProjectById(vo.getProjectId());

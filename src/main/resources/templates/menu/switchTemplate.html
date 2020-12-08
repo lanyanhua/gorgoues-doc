@@ -5,7 +5,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">项目</label>
             <div class="layui-input-block">
-                <select name="projectId" lay-verify="required">
+                <select name="projectId" lay-verify="required" lay-filter="projectIdFilter" >
                     {{# $.each(d.projectList,(i,p)=>{ }}
                     <option value="{{p.id}}" {{# if(p.id== d.projectId){ }}selected{{# } }}>{{p.name}}</option>
                     {{# }) }}
@@ -19,7 +19,7 @@
                     {{# $.each(d.projectList,(i,p)=>{ }}
                     <div class="branch-div branch-id-{{p.id}} {{# if(p.id == d.projectId){ }}layui-hide{{# } }}">
                         {{# $.each(p.branchList,(i,b)=>{ }}
-                        <option value="{{b.id}}" {{# if(b.id== b.branchId){ }}selected{{# } }}>{{b.name}}</option>
+                        <option value="{{b.id}}" {{# if(b.id == d.branchId){ }}selected{{# } }}>{{b.name}}</option>
                         {{# }) }}
                     </div>
                     {{# }) }}
@@ -31,7 +31,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">名称</label>
             <div class="layui-input-block">
-                <select name="envId" lay-verify="required">
+                <select name="envId" lay-verify="required" lay-filter="envIdFilter">
                     {{# $.each(d.envList,(i,v)=>{ }}
                     <option value="{{v.id}}" {{# if(v.id== d.envId){ }}selected{{# } }}>{{v.name}}</option>
                     {{# }) }}
@@ -44,7 +44,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">域名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="domain" value="{{e.domain}}" required
+                    <input type="text" readonly name="domain" value="{{e.domain}}" required
                            lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
@@ -52,17 +52,12 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">{{h.key}}</label>
                 <div class="layui-input-block">
-                    <input type="text" name="env-{{ e.id+'-'+h.key }}" value="{{h.value}}" required
+                    <input type="text" name="{{h.key}}" key="env-{{ e.id+'-'+h.key }}" value="{{h.value}}" required
                            lay-verify="required" autocomplete="off" class="layui-input">
                 </div>
             </div>
             {{# }); }}
         </div>
         {{# }) }}
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="switch">确认</button>
-            </div>
-        </div>
     </form>
 </script>

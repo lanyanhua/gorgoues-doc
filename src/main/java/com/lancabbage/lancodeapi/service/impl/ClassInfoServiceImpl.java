@@ -11,6 +11,7 @@ import com.lancabbage.lancodeapi.mapper.ClassInfoMapper;
 import com.lancabbage.lancodeapi.service.ClassInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ public class ClassInfoServiceImpl implements ClassInfoService {
     public void saveClass(ClassInfoDto classInfo) {
         classInfo.setCreateTime(new Date());
         classInfoMapper.insert(classInfo);
+        if(CollectionUtils.isEmpty(classInfo.getFieldList())){
+            return;
+        }
         //保存字段
         List<ClassFieldDto> fieldDtoList = classInfo.getFieldList().stream().peek(i -> {
             i.setClassId(classInfo.getId());

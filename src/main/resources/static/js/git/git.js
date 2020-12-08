@@ -1,40 +1,33 @@
 /**
- * 查询所有环境信息
+ * 获取git信息
  */
-function getEnvAll(fun) {
+function getGitInfo(fun) {
     $.ajax({
         type: 'get',
-        url: listEnvAll,
-        async: false,
+        url: getGitInfoUrl,
         dataType: 'json',
         success: function (data) {
             if (data.statusCode !== 200) {
                 layer.msg(data.statusMsg);
                 return;
             }
-            let envMap = getEnvMap();
-            $.each(data.data, (i, v) => {
-                let map = [];
-                if (v.header != null) {
-                    v.header.split(",").forEach((h) => {
-                        map.push({key: h, value: envMap['env-' + v.id + '-' + h] || ''});
-                    })
-                }
-                v['headerMap'] = map;
-            });
-            fun(data.data);
+            $('#gitForm [name=repositoryPath]').val(data.data.repositoryPath);
+            $('#gitForm [name=username]').val(data.data.username);
+            $('#gitForm [name=password]').val(data.data.password);
+
+            if(fun!= null ){
+                fun(data.data);
+            }
         }
     })
 }
-
-
 //保存git信息
-function saveEnv(fun) {
+function saveGit(fun) {
     //监听提交
-    form.on('submit(envFormBtn)', function(data){
+    form.on('submit(gitFormBtn)', function(data){
         $.ajax({
             type: 'put',
-            url: saveEnvUrl,
+            url: gitSaveUrl,
             data: JSON.stringify(data.field),
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
