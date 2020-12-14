@@ -53,6 +53,8 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             //赋值字段类型
             ClassInfoDto typeClass = i.getTypeClass();
             if (typeClass != null && i.setTypeId(typeClass.getId()) == null) {
+                typeClass.setBranchId(classInfo.getBranchId());
+                typeClass.setProjectId(classInfo.getProjectId());
                 saveClass(typeClass);
                 i.setTypeId(typeClass.getId());
             }

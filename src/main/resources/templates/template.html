@@ -10,47 +10,66 @@
     <link rel="stylesheet" type="text/css"
           th:href="@{/layui/css/layui.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/jquery.json-viewer.css}">
 </head>
 <body>
-<div id="body">
+<div class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
 
+        <div id="body">
+        </div>
+        <div class="layui-body lapi-body">
+            <!-- 内容主体区域 -->
+            <div class="layui-tab layui-tab-brief" lay-filter="api-tab" lay-allowClose="true">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">主页</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <h3 class="">hello world</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 </body>
 <div th:include="common/common.html"></div>
 <div th:include="menu/switchTemplate.html"></div>
 <div th:include="menu/menuTemplate.html"></div>
-<script th:src="@{/js/jquery.js}"></script>
-<script th:src="@{/js/jsrender.min.js}"></script>
-<script th:src="@{/js/jquery.json-viewer.js}"></script>
+<div th:include="api/apiTemplate.html"></div>
 <script th:src="@{/js/menu/menu.js}"></script>
+<script th:src="@{/js/class/class.js}"></script>
 <script th:src="@{/js/project/project.js}"></script>
 <script th:src="@{/js/env/env.js}"></script>
+<script th:src="@{/js/api/api.js}"></script>
 <script type="text/javascript">
     let projectData;
     let envData;
     let currProject = getCurrProject();
     let currProjectData;
-    $(function () {
+    layui.use('element', function () {
+        let element = layui.element;
         getEnvAll(data => envData = data)
         projectAll(data => {
             projectData = data;
             //设置当前项目
-            if (currProject == null) {
-                currProjectData = {
-                    project: projectData[0],
-                    branch: projectData[0].branchList[0],
-                    env: envData[0],
-                }
-                setCurrProject(currProjectData.project.id, currProjectData.branch.id, currProjectData.env.id);
-            }else{
-                setCurrProjectData(currProject);
-            }
+            setCurrProjectData(currProject);
             //显示菜单
             renderMenu();
+            //打开上次的菜单
+            let currMenuId = getCurrMenuId();
+            if(currMenuId){
+                openTab(currMenuId);
+            }
         })
 
-    })
+        //监听tab切换
+        element.on('tab(api-tab)', function () {
+            let mId = this.getAttribute('lay-id');
+            setCurrMenuId(mId)
+        });
+    });
 </script>
 
 </html>

@@ -13,13 +13,13 @@
     <result column="param_describe" jdbcType="VARCHAR" property="paramDescribe" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="api_id" jdbcType="INTEGER" property="apiId" />
-    <result column="base_type" jdbcType="VARCHAR" property="baseType" />
+    <result column="data_type" jdbcType="VARCHAR" property="dataType" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbggenerated
     -->
-    id, `type`, class_id, param_mode, param_name, param_describe, create_time, api_id, 
-    base_type
+    id, `type`, class_id, param_mode, param_name, param_describe, create_time, api_id,
+    data_type
   </sql>
 </mapper>

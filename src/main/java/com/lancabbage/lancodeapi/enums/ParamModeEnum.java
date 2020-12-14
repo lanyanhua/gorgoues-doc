@@ -5,10 +5,10 @@ import java.util.Arrays;
 public enum ParamModeEnum {
 
     /**
-     * 参数传输方式 0：form-data 1：post json格式 2：path {id}
+     * 参数传输方式 0：form-data 1：json格式 2：path {id}
      */
     FORM_DATA(0, "RequestParam", "form-data"),
-    POST(1, "RequestBody", "post"),
+    POST(1, "RequestBody", "json"),
     PATH(2, "PathVariable", "path");
 
     private final int code;

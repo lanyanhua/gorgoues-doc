@@ -172,8 +172,9 @@ public class ApiInfoUtils {
         String typeName = type.typeName();
         ClassInfoDto classInfo = classInfoUtils.getClassInfo(type);
         if (classInfo.getBaseType() != null) {
-            paramDto.setBaseType(typeName);
+            paramDto.setDataType(typeName);
         } else {
+            paramDto.setDataType(classInfo.getClassName());
             paramDto.setClassInfo(classInfo);
         }
     }

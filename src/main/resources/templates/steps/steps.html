@@ -72,28 +72,28 @@
         getGitInfo(function (data) {
             if (data) {
                 steps.next(); //下一步
+                //项目
+                projectAll(function (data) {
+                    if (data && data.length >0) {
+                        steps.next(); //下一步
+                        //环境
+                        getEnvAll(function (data) {
+                            if (data && data.length >0) {
+                                steps.next(); //下一步
+                                // window.location.href=context+"docs";
+                            }
+                        })
+                    }
+                });
             }
         });
         saveGit(function () {
             steps.next(); //下一步
         });
-        //项目
-        projectAll(function (data) {
-            if (data) {
-                steps.next(); //下一步
-            }
-        });
         addProject(function () {
+            debugger
             steps.next(); //下一步
         });
-
-        //环境
-        getEnvAll(function (data) {
-            if (data) {
-                steps.next(); //下一步
-                window.location.href=context+"docs";
-            }
-        })
         saveEnv(function () {
             steps.next(); //下一步
             window.location.href=context+"docs";

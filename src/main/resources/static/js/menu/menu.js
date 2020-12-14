@@ -28,6 +28,20 @@ function getMenuByBranchId(branchId) {
     }
 }
 
+function findMenu(branchMenuData, id) {
+    for (let m of branchMenuData) {
+        if (m.id === id) {
+            return m;
+        }
+        if (m.childrenMenu != null && m.childrenMenu.length !== 0) {
+            let cm = findMenu(m.childrenMenu, id);
+            if (cm != null) {
+                return cm;
+            }
+        }
+    }
+}
+
 //设置菜单API
 function setApi(menuList) {
     $.each(menuList, (i, o) => {
@@ -59,6 +73,46 @@ function renderMenu() {
     layui.element.render('nav', "");
 }
 
+//点击左边菜单在右边添加选项卡
+function openTab(id) {
+    //去重复选项卡
+    let $lapi = $('.api-tab-content');
+    for (let i = 0; i < $lapi.length; i++) {
+        if ($lapi.eq(i).attr('api-id') == id) {
+            element.tabChange("api-tab", id);
+            return;
+        }
+    }
+    //添加选项卡
+    let menu = findMenu(branchMenuData.menuList, id);
+    // class 入参 字段 - 出参
+    let typeArr = [];
+    for (let p of menu.api.apiParamList) {
+        if (p.classId != null) {
+            let c = branchMenuData.classInfoList.find(i => i.id == p.classId);
+            p.className = c.className;
+            let res = getParamAllClass(c.classFieldList,p.type);
+            typeArr.push($.extend({type: p.type,paramMode: p.paramMode,typeJson: res.typeJson}, c));
+            typeArr = typeArr.concat(res.typeList);
+        }
+    }
+    let data = $.extend({typeList: typeArr}, menu);
+    console.log(data);
+    let apiTemplate = $("#apiTemplate").html();
+    laytpl(apiTemplate).render(data, html => {
+        element.tabAdd("api-tab", {
+            title: menu.menuName,
+            content: html,
+            id: id
+        });
+
+        let json = formatJson("{'name':'ccy','age':18,'info':[{'address':'wuhan'},{'interest':'playCards'}]}");
+        $('#response-show').text(json);
+        // 切换选项卡
+        element.tabChange("api-tab", id);
+    });
+}
+
 //切换菜单
 function switchMenu(id) {
     setCurrHeaderMenuId(id);
@@ -81,11 +135,11 @@ function openSwitch() {
             , area: ['50%', '450px']
             , content: html
             , btn: ["提交"]
-            , yes: function (index, layero) {
+            , yes: function () {
                 //获取表单内容
                 let projectId = Number($('#switchForm [name=projectId]').val());
-                let branchId =  Number($('#switchForm [name=branchId]').val());
-                let envId = Number( $('#switchForm [name=envId]').val());
+                let branchId = Number($('#switchForm [name=branchId]').val());
+                let envId = Number($('#switchForm [name=envId]').val());
 
                 //色泽当前项目 ID
                 setCurrProject(projectId, branchId, envId);
@@ -93,11 +147,14 @@ function openSwitch() {
                 //保存环境数据
                 let envMap = {}
                 currProjectData.env.headerMap = [];
-                $('.env-id-' + envId+' input').each((i,v)=>{
+                $('.env-id-' + envId + ' input').each((i, v) => {
                     let key = $(v).attr('key');
-                    if(key != null){
+                    if (key != null) {
                         envMap[key] = v.value
-                        currProjectData.env.headerMap.push(JSON.parse('{ "'+v.name+'" : "'+ v.value+'" }'));
+                        currProjectData.env.headerMap.push(JSON.parse('{ "' + v.name + '" : "' + v.value + '" }'));
+                        // debugger
+                        //修改页面上显示的 值
+                        $('.show-' + v.name).text(v.value);
                     }
                 });
                 setEnvMap(envMap);

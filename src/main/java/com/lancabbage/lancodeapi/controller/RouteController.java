@@ -55,6 +55,10 @@ public class RouteController {
     public String steps() {
         return "/steps/steps";
     }
+    @GetMapping("/test")
+    public String docs1() {
+        return "/docs1";
+    }
 
 
 }

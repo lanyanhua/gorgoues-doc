@@ -241,3 +241,25 @@
 .footer a {
     padding: 0 5px;
 }
+
+.input-sm {
+    padding: 5px 2px;
+    height: 25px;
+}
+
+.json-text {
+    width: 200px;
+    height: 150px;
+    font-size: 13px;
+    min-height: 100px;
+    font-family: inherit;
+    line-height: 20px;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e6e6e6;
+    font-style: inherit;
+    font-weight: inherit;
+    padding: 6px 10px;
+    background-color: #fff;
+}

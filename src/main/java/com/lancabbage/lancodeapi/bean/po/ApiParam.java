@@ -57,10 +57,10 @@ public class ApiParam {
     private Integer apiId;
 
     /**
-     * 基本数据类型
+     * 数据类型
      */
-    @Column(name = "base_type")
-    private String baseType;
+    @Column(name = "data_type")
+    private String dataType;
 
     /**
      * 获取ID
@@ -206,21 +206,11 @@ public class ApiParam {
         this.apiId = apiId;
     }
 
-    /**
-     * 获取基本数据类型
-     *
-     * @return base_type - 基本数据类型
-     */
-    public String getBaseType() {
-        return baseType;
+    public String getDataType() {
+        return dataType;
     }
 
-    /**
-     * 设置基本数据类型
-     *
-     * @param baseType 基本数据类型
-     */
-    public void setBaseType(String baseType) {
-        this.baseType = baseType;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 }

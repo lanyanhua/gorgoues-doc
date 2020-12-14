@@ -40,7 +40,7 @@ public class EnvController {
     }
 
     /**
-     * 添加环境信息
+     * 保存环境信息
      * @return ID
      */
     @PutMapping("/saveEnv")
@@ -52,7 +52,7 @@ public class EnvController {
 
 
     /**
-     * 添加环境信息
+     * 删除环境信息
      * @return ID
      */
     @DeleteMapping("/deleteEnvById")

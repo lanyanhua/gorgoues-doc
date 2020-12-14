@@ -6,6 +6,7 @@ import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
 import com.sun.tools.javadoc.ClassDocImpl;
 import com.sun.tools.javadoc.ParameterizedTypeImpl;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -16,9 +17,10 @@ import java.util.*;
  */
 public class ClassInfoUtils {
 
-    public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "List", "Set", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
-            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean");
+    public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
+            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "Date", "MultipartFile");
     public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest");
+    public static List<String> arrayType = Arrays.asList("List", "Set","array");
     /**
      * class Map
      */
@@ -43,6 +45,9 @@ public class ClassInfoUtils {
             classInfoDto = new ClassInfoDto();
             classInfoDto.setBaseType(className);
             return classInfoDto;
+        }
+        if(arrayType.contains(className)){
+            type.typeName();
         }
         //赋值返回Class数据
         ClassKey classKey = new ClassKey();
@@ -87,8 +92,20 @@ public class ClassInfoUtils {
                 }
             }
         }
+        if(arrayType.contains(className)){
+            List<ClassFieldDto> fieldDtoList = new ArrayList<>();
+            classInfoDto.setFieldList(fieldDtoList);
+            ClassFieldDto fieldDto = new ClassFieldDto();
+            fieldDtoList.add(fieldDto);
+            fieldDto.setParamName("value");
+            fieldDto.setParamDescribe("");
+            fieldDto.setParamDescribe("");
+            ClassInfoDto c = paradigmMap.values().isEmpty() ? null : paradigmMap.values().iterator().next();
+            fieldDto.setTypeClass(c);
+            fieldDto.setType(c==null?"Object": c.getClassName());
+        }
         //是否需要赋值字段
-        if (!notSetField.contains(className)) {
+        else if (!notSetField.contains(className)) {
             //字段
             List<ClassFieldDto> fieldDtoList = new ArrayList<>();
             classInfoDto.setFieldList(fieldDtoList);
@@ -109,7 +126,9 @@ public class ClassInfoUtils {
                 }
                 //为基本数据类型
                 if (fieldDto.setType(dataType.getBaseType()) == null) {
+                    //为引用数据类型
                     fieldDto.setTypeClass(dataType);
+                    fieldDto.setType(dataType.getClassName());
                 }
             }
         }

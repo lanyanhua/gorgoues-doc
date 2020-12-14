@@ -1,10 +1,182 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<script id="apiTemplate" type="text/template">
+    <div class="api-tab-content api-tab-content-id-{{d.id}} " api-id="{{d.id}}">
+        <table class="layui-table" lay-size="sm">
+            <tr>
+                <td width="10%"><b>接口类型</b></td>
+                <td class="apiType">{{ApiType[d.api.type]}}</td>
+            </tr>
+            <tr>
+                <td><b>方法名</b></td>
+                <td class="api-method">{{d.api.method}}</td>
+            </tr>
+            <tr>
+                <td><b>接口地址</b></td>
+                <td class="api-path">{{getPath(d.api.path)}}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Header</b></td>
+            </tr>
+            {{# if(currProjectData.env.headerMap !=null){
+                    $.each(currProjectData.env.headerMap,(i,v)=>{
+            }}
+            <tr class="">
+                <td><b>{{v.key}}</b></td>
+                <td><span class="env-header" header-key="{{v.key}}">{{v.value}}</span></td>
+            </tr>
+            {{#     })
+                }
+            }}
+        </table>
+        <div class="layui-tab layui-tab-brief" lay-filter="tab-out-param">
+            <ul class="layui-tab-title">
+                <li class="layui-this">输出参数</li>
+                <li>JSON格式</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <table class="layui-table" lay-size="sm">
+                        <thead>
+                        <th width="10%">类型</th>
+                        <th>描述</th>
+                        </thead>
+                        {{# let op = d.api.apiParamList.find(i=>i.type==2);
+                        if(op != null){
+                        }}
+                        <tr>
+                            <td>{{op.paramName}}</td>
+                            <td>{{op.paramDescribe||''}}</td>
+                        </tr>
+                        {{# } else{ }}
+                        <tr>
+                            <td colspan="3">无</td>
+                        </tr>
+                        {{# } }}
+                    </table>
+                    {{# let jsonStr = "";
+                        d.typeList.filter(i=>i.type == 2).forEach(v=>{
+                        let classDesc = v.className+ (v.classDescribe? '：'+v.classDescribe :'');
+                        if(v.typeJson){
+                            jsonStr = v.typeJson;
+                        }
+                    }}
+                    <table class="layui-table" lay-size="sm">
+                        <thead>
+                        <tr>
+                            <th colspan="3">{{classDesc}}</th>
+                        </tr>
+                        <tr>
+                            <th width="10%">参数</th>
+                            <th width="10%">类型</th>
+                            <th>描述</th>
+                        </tr>
+                        </thead>
+                        {{# $.each(v.classFieldList,(i,v)=>{ }}
+                        <tr>
+                            <td>{{v.paramName}}</td>
+                            <td>{{v.type}}</td>
+                            <td>{{v.paramDescribe}}</td>
+                        </tr>
+                        {{# }) }}
+                    </table>
+                    {{# }) }}
+                </div>
+                <div class="layui-tab-item">
+                    <textarea class="json-text" style="width: 70%;">{{formatJson(jsonStr)}}</textarea>
+                </div>
+            </div>
+        </div>
+        请求参数
+        <hr>
+        <table class="layui-table" lay-size="sm">
+            <thead>
+            <th width="10%">参数</th>
+            <th width="10%">值</th>
+            <th width="10%">类型</th>
+            <th>描述</th>
+            </thead>
+            {{# let reqParam = d.api.apiParamList.filter(i=>i.type==1);
+                reqParam.forEach(v=>{
+            }}
+            <tr>
+                <td>{{v.paramName}}</td>
+                {{# let inputType = BaseType[v.dataType]; }}
 
-</body>
-</html>
+                {{# if(inputType){ }}
+                <td>
+                    <input class="layui-input input-sm param-value"
+                           api-paramMode="{{v.paramMode}}" api-type="{{v.dataType}}"
+                           name="{{v.paramName}}" type="{{inputType}}"/>
+                </td>
+                {{# }else{ }}
+                <td>{{v.type}}</td>
+                {{# } }}
+                <td>{{v.dataType}}</td>
+                <td>{{v.paramDescribe||''}}</td>
+            </tr>
+            {{# });
+            if(reqParam.length ==0){ }}
+            <tr>
+                <td colspan="4">无</td>
+            </tr>
+            {{# }else{ }}
+            {{# d.typeList.filter(i=>i.type == 1).forEach(v=>{ }}
+            <table class="layui-table" lay-size="sm">
+                <thead>
+                <tr>
+                    <th colspan="4">{{v.className+ (v.classDescribe? '：'+v.classDescribe :'')}}</th>
+                </tr>
+                <tr>
+                    <th width="10%">参数</th>
+                    <th width="10%">值</th>
+                    <th width="10%">类型</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                {{# $.each(v.classFieldList,(i,f)=>{ }}
+                <tr>
+                    <td>{{f.paramName}}</td>
+                    <td>
+                        {{# if(v.paramMode != ParamMode.json){ }}
+                        <input class="layui-input input-sm param-value" api-paramMode="{{v.paramMode}}"
+                              name="{{f.paramName}}" type="{{BaseType[f.type]}}"/>
+                        {{# } }}
+                    </td>
+                    <td>{{f.type}}</td>
+                    <td>{{f.paramDescribe}}</td>
+                </tr>
+                {{# }) }}
+            </table>
+            {{# if(v.paramMode == ParamMode.json){ }}
+            <table class="layui-table" lay-size="sm">
+                <thead>
+                <tr>
+                    <th>JSON参数</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td><textarea class="json-text req-json" >{{formatJson(v.typeJson)}}</textarea></td>
+                </tr>
+            </table>
+            {{# } }}
+            {{# }) }}
+            {{# } }}
+        </table>
+        <hr>
+        <button class="layui-btn" lay-filter="apiFormBtn" onclick="commitApi({{d.id}})">提交</button>
+        <div class="layui-hide">
+            <hr>
+            输出结果
+            <hr>
+            <table class="layui-table" lay-size="sm">
+                <tr>
+                    <td><b>请求路径</b></td>
+                    <td>http://localhost:8080/docs?lakdlfj</td>
+                </tr>
+                <tr>
+                    <td width="10%"><b>返回参数</b></td>
+                    <td><textarea class="json-text  " id="response-show"></textarea></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</script>
