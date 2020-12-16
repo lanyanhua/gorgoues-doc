@@ -10,7 +10,7 @@ let addProjectUrl = context + 'project/addProject';
 
 
 //添加环境数据
-let addEnv = context + 'env/addEnv';
+let addEnvUrl = context + 'env/addEnv';
 //保存环境数据
 let saveEnvUrl = context + 'env/saveEnv';
 //
@@ -188,6 +188,15 @@ function setCurrMenuId(id) {
 /**
  * 格式化json
  */
+function formatJson1(json) {
+    if (typeof json == 'string') {
+        json = JSON.parse(json);
+    }
+    return JSON.stringify(json,null,2)
+}
+/**
+ * 格式化json
+ */
 function formatJson(json) {
     let outStr = '',     //转换后的json字符串
         padIdx = 0,         //换行后是否增减PADDING的标识
@@ -218,4 +227,18 @@ function formatJson(json) {
         padIdx += indent;
     });
     return outStr;
+}
+
+function ajaxError(data){
+    layer.msg(data.responseJSON.message);
+}
+
+function parseData(data){
+    console.log(data);
+    return {
+        'code': data.statusCode == 200 ? 0 : 1,
+        'msg': data.statusMsg,
+        'data': data.data
+
+    };
 }

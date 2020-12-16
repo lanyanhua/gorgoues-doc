@@ -81,7 +81,7 @@
                     {{# }) }}
                 </div>
                 <div class="layui-tab-item">
-                    <textarea class="json-text" style="width: 70%;">{{formatJson(jsonStr)}}</textarea>
+                    <textarea class="json-text" >{{formatJson1(jsonStr)}}</textarea>
                 </div>
             </div>
         </div>
@@ -154,7 +154,7 @@
                 </tr>
                 </thead>
                 <tr>
-                    <td><textarea class="json-text req-json" >{{formatJson(v.typeJson)}}</textarea></td>
+                    <td><textarea class="json-text req-json" >{{formatJson1(v.typeJson)}}</textarea></td>
                 </tr>
             </table>
             {{# } }}
@@ -163,18 +163,18 @@
         </table>
         <hr>
         <button class="layui-btn" lay-filter="apiFormBtn" onclick="commitApi({{d.id}})">提交</button>
-        <div class="layui-hide">
+        <div class="api-response layui-hide">
             <hr>
             输出结果
             <hr>
             <table class="layui-table" lay-size="sm">
                 <tr>
                     <td><b>请求路径</b></td>
-                    <td>http://localhost:8080/docs?lakdlfj</td>
+                    <td class="response-path"></td>
                 </tr>
                 <tr>
                     <td width="10%"><b>返回参数</b></td>
-                    <td><textarea class="json-text  " id="response-show"></textarea></td>
+                    <td><textarea class="json-text response-show" ></textarea></td>
                 </tr>
             </table>
         </div>

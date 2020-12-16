@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.service;
 
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchAddDto;
+import com.lancabbage.lancodeapi.bean.dto.ProjectBranchDto;
 import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public interface ProjectBranchService {
      * @return ID
      */
     int addProjectBranch(ProjectBranchAddDto branchAddDto);
+
+    /**
+     * 拉git代码
+     */
+    void pullProjectBranch(ProjectBranchDto branch);
 }

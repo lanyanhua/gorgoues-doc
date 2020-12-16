@@ -24,6 +24,7 @@ $(function () {
         dataType: "json",
         type: "get",
         async: false,
+        error: ajaxError,
         success: function (data) {
             //layui init
             layui.use(['layer', 'jquery', 'element'], function () {
@@ -298,7 +299,7 @@ function appendParameterToUrl(url, parameter) {
         return url;
     }
     $.each(parameter, function (k, v) {
-        if (url.indexOf("?") == -1) {
+        if (url.indexOf("?") === -1) {
             url += "?";
         }
         url += k;

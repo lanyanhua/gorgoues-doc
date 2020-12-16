@@ -13,31 +13,34 @@
                 <a href="javascript:switchMenu({{menu.id}});">{{menu.menuName}}</a>
             </li>
             {{# }) }}
+            <li class="layui-nav-item1 layui-form component">
+                <input id="menu-filter" class="layui-input " onchange="menuFilter(this)" placeholder="筛选菜单-回车" />
+            </li>
+
+
         </ul>
+
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a href="javascript:openSwitch();">切换<!--弹框修改项目分支环境--></a>
             </li>
             <li class="layui-nav-item">
-                <a href="javascript:void(0);">设置</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">新增项目</a></dd>
-                    <dd><a href="javascript:;">项目管理</a></dd>
-                    <dd><a href="javascript:;">环境配置</a></dd>
-                    <dd><a href="javascript:;">git配置</a></dd>
-                </dl>
+                <a href="javascript:window.open(context+'manage','3');">更新</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:window.open(context+'manage','3');">设置</a>
             </li>
         </ul>
     </div>
     <div id="menu-div">
         {{# $.each(d.menuList,(i,menu)=>{ }}
-        <div class="layui-side layui-bg-black {{# if(menu.id != d.currHeaderMenuId){ }}layui-hide{{# } }}"
+        <div class="layui-side layui-bg-black {{# if(menu.id != d.currHeaderMenuId){ }}layui-hide{{# }else{ }} layui-show {{# } }}"
              id="menu-dev-{{menu.id}}" title="{{menu.menuName}}">
             <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side">
                 <ul class="layui-nav layui-nav-tree  beg-navbar">
                     {{# $.each(menu.childrenMenu,(i,menu)=>{ }}
                     <li class="layui-nav-item layui-nav-itemed">
-                        <a href="javascript:void(0);" data-class="{{menu.className}}">
+                        <a href="javascript:void(0);" data-class="{{menu.className}}" data-name="{{menu.menuName}}">
                             <i class="fa fa-cogs" aria-hidden="true" data-icon="fa-cogs"></i>
                             <cite> {{menu.menuName }}</cite>
                             <br>
@@ -45,15 +48,16 @@
                         </a>
                         <dl class="layui-nav-child">
                             {{# $.each(menu.childrenMenu,(j,cm)=>{ }}
-                            <dd title="{{cm.name}}">
-                                <a href="javascript:openTab({{cm.id}});" name="a_path"
-                                   operationId="operationId">
+                            <dd title="{{cm.menuName}}">
+                                <a href="javascript:openTab({{cm.id}});" >
                                     <i class="fa fa-navicon" data-icon="fa-navicon"></i>
                                     <cite class="">{{cm.menuName}}</cite>
                                     {{# if(cm.api != null){ }}
                                     <br/>
                                     <small class="api-type">{{ApiType[cm.api.type]}}</small>
                                     <cite class="key_font">{{cm.api.path}}</cite>
+                                    <api class="layui-hide" data-menuname="{{cm.menuName}}" data-name="{{cm.api.name}}"
+                                         data-method="{{cm.api.method}}" data-path="{{cm.api.path}}"></api>
                                     {{# } }}
                                 </a>
                             </dd>
@@ -72,7 +76,4 @@
         <!--         style="border-left: solid 2px #1AA094;">-->
         <!--        &lt;!&ndash;        body 内容 $ref = temp_body&ndash;&gt;-->
         <!--    </div>-->
-</script>
-<script id="test" type="text/template">
-
 </script>

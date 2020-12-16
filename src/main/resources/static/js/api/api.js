@@ -28,10 +28,12 @@ function commitApi(id) {
         headers[key] = v.text();
     })
     //json
-    let data = $api.find('.req-json').text();
+    let data = $api.find('.req-json').val();
+    //文件
     let formData = new FormData();
     let isFile = false;
     let param_value = $api.find('.param-value');
+
     $.each(param_value, (i, v) => {
         v = $(v);
         let name = v.attr('name');
@@ -45,31 +47,62 @@ function commitApi(id) {
         if (type == 'file') {
             isFile = true;
             val = v[0].files
+            formData.append(name, val);
+            return;
         }
-        formData.append(name, val);
+        if (url.contains("?")) {
+            url += '?';
+        }
+        url += name + '=' + val + '&';
     })
     let file = {
         data: formData,
         processData: false,
         contentType: false
     }
+    let fun = function (data) {
+        $api.find('.api-response').removeClass("layui-hide");
+        $api.find('.response-path').text(url);
+        $api.find('.response-show').text(formatJson1(data));
+    }
     let ajaxParam = {
         type: $api.find('.apiType').text(),
         url: url,
         headers: headers,
-        data: param_value.length > 0 ? formData : data,
+        contentType: "application/json;charset=utf-8",
+        data: data,
         dataType: 'json',
-        success: function (data) {
-
-        },
-        error: function (data) {
-
-        }
+        error: fun,
+        success: fun,
     }
     if (isFile) {
         ajaxParam = $.extend(ajaxParam, file);
     }
     debugger
-    // $.ajax(ajaxParam);
+    $.ajax(ajaxParam);
+
+
 }
 
+function test(){
+    $.ajax({
+        type: 'post'
+        ,url: 'https://test.jaagro.com:9030/externalApi/schemeReportExcel'
+        ,headers: {token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyVHlwZSI6ImVtcGxveWVlIiwidXNlciI6IjEiLCJpYXQiOjE2MDY5NjE3MTl9.ZiD_iVKXqyLUECsX5zi8Nmn4zK8siQDreZ_AkwcA34g'}
+        ,contentType: 'application/json;charset=UTF-8'
+        ,dataType: 'json'
+        ,data: JSON.stringify({
+            "startTime": "2020-12-01 00:00:00",
+            "endTime": "2021-01-30 00:00:00",
+            "adminPassword": "124"
+        })
+        ,success: data=>{
+            console.log('success')
+            console.log(data)
+        }
+        ,error: data=>{
+            console.log('error')
+            console.log(data)
+        }
+    })
+}

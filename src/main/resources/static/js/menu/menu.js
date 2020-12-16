@@ -10,12 +10,12 @@ function getMenuByBranchId(branchId) {
         //从新加载
         currBranchId = branchId;
         $.ajax({
-            // url: listMenuTest,
             url: listMenuByBranchId,
             type: "get",
             data: {branchId: branchId},
             dataType: "json",
             async: false,
+            error: ajaxError,
             success: function (data) {
                 if (data.statusCode !== 200) {
                     layer.msg(data.statusMsg);
@@ -70,7 +70,8 @@ function renderMenu() {
     //渲染
     laytpl(menuTemplate).render(data, (html) => $("#body").html(html));
     //事件
-    layui.element.render('nav', "");
+    element.render('nav', "");
+    element.init();
 }
 
 //点击左边菜单在右边添加选项卡
@@ -91,8 +92,8 @@ function openTab(id) {
         if (p.classId != null) {
             let c = branchMenuData.classInfoList.find(i => i.id == p.classId);
             p.className = c.className;
-            let res = getParamAllClass(c.classFieldList,p.type);
-            typeArr.push($.extend({type: p.type,paramMode: p.paramMode,typeJson: res.typeJson}, c));
+            let res = getParamAllClass(c.classFieldList, p.type);
+            typeArr.push($.extend({type: p.type, paramMode: p.paramMode, typeJson: res.typeJson}, c));
             typeArr = typeArr.concat(res.typeList);
         }
     }
@@ -106,8 +107,6 @@ function openTab(id) {
             id: id
         });
 
-        let json = formatJson("{'name':'ccy','age':18,'info':[{'address':'wuhan'},{'interest':'playCards'}]}");
-        $('#response-show').text(json);
         // 切换选项卡
         element.tabChange("api-tab", id);
     });
@@ -177,3 +176,42 @@ function openSwitch() {
     });
 
 }
+
+//菜单过滤
+function menuFilter(t) {
+    let content = $(t).val();
+    let $menu = $('#menu-div>div.layui-show');
+    if (!content) {
+        $menu.find('.layui-nav-item').removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
+        $menu.find('.layui-nav-item>.layui-nav-child>dd').removeClass('layui-hide').addClass('layui-show');
+        return;
+    }
+    // 菜单名称 controller类名 接口名称 接口路径
+    $menu.find('.layui-nav-item').each((i, v) => {
+        let m = $(v);
+        let a = m.children('a');
+        let isShow = false;
+        if( a.data('class').indexOf(content) !== -1 || a.data('name').indexOf(content) !== -1){
+            m.removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
+            m.children('.layui-nav-child>dd').removeClass('layui-hide ').addClass('layui-show');
+            return ;
+        }
+        for(let ci of m.find('.layui-nav-child>dd')) {
+            let c = $(ci);
+            let api = c.find('api');
+            if (api.data('menuname').indexOf(content) !== -1 || api.data('name').indexOf(content) !== -1
+                || api.data('method').indexOf(content) !== -1 || api.data('path').indexOf(content) !== -1) {
+                c.removeClass('layui-hide').addClass('layui-show');
+                isShow = true;
+            } else {
+                c.removeClass('layui-show').addClass('layui-hide');
+            }
+        }
+        if(isShow){
+            m.removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
+        }else{
+            m.removeClass('layui-show layui-nav-itemed').addClass('layui-hide');
+        }
+    })
+}
+

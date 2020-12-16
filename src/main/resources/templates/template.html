@@ -48,8 +48,8 @@
     let envData;
     let currProject = getCurrProject();
     let currProjectData;
-    layui.use('element', function () {
-        let element = layui.element;
+    $(function () {
+
         getEnvAll(data => envData = data)
         projectAll(data => {
             projectData = data;
@@ -59,7 +59,7 @@
             renderMenu();
             //打开上次的菜单
             let currMenuId = getCurrMenuId();
-            if(currMenuId){
+            if (currMenuId) {
                 openTab(currMenuId);
             }
         })

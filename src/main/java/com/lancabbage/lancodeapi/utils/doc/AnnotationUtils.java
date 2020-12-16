@@ -40,7 +40,6 @@ public class AnnotationUtils {
             if (controllerAnnotation.contains(name)) {
                 res.isController = true;
                 res.mode = "RestController".equals(name) ? 2 : 1;
-                break;
             }
             //获取注解
             if (isMapping(name) != -1) {

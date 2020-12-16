@@ -7,6 +7,7 @@ function getEnvAll(fun) {
         url: listEnvAll,
         async: false,
         dataType: 'json',
+        error: ajaxError,
         success: function (data) {
             if (data.statusCode !== 200) {
                 layer.msg(data.statusMsg);
@@ -28,22 +29,44 @@ function getEnvAll(fun) {
 }
 
 
-//保存git信息
+//保存环境信息
 function saveEnv(fun) {
+    $.ajax({
+        type: 'put',
+        url: saveEnvUrl,
+        data: JSON.stringify(data.field),
+        contentType: "application/json;charset=utf-8",
+        dataType: 'json',
+        error: ajaxError,
+        success: function (data) {
+            if (data.statusCode !== 200) {
+                layer.msg(data.statusMsg);
+                return;
+            }
+            if (fun != null) {
+                fun(data.data);
+            }
+        }
+    })
+}
+
+//添加环境信息
+function addEnv(fun) {
     //监听提交
-    form.on('submit(envFormBtn)', function(data){
+    form.on('submit(envFormBtn)', function (data) {
         $.ajax({
-            type: 'put',
-            url: saveEnvUrl,
+            type: 'post',
+            url: addEnvUrl,
             data: JSON.stringify(data.field),
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
+            error: ajaxError,
             success: function (data) {
                 if (data.statusCode !== 200) {
                     layer.msg(data.statusMsg);
                     return;
                 }
-                if(fun!= null ){
+                if (fun != null) {
                     fun(data.data);
                 }
             }

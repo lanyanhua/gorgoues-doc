@@ -44,4 +44,5 @@ public class ProjectController {
         List<ProjectVo> projectVos = projectService.listProjectAll();
         return BaseResponse.successInstance(projectVos);
     }
+
 }

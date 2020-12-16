@@ -6,10 +6,6 @@ import javax.persistence.Table;
 
 @Table(name = "project_branch")
 public class ProjectBranchAddVo {
-    /**
-     * ID
-     */
-    private Integer id;
 
     /**
      * 项目ID
@@ -22,24 +18,6 @@ public class ProjectBranchAddVo {
      */
     @NotNull
     private String name;
-
-    /**
-     * 获取ID
-     *
-     * @return id - ID
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * 设置ID
-     *
-     * @param id ID
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getProjectId() {
         return projectId;
