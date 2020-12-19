@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,11 +40,10 @@ public class ClassInfoServiceImpl implements ClassInfoService {
     }
 
     @Transactional
-    @Override
     public void saveClass(ClassInfoDto classInfo) {
         classInfo.setCreateTime(new Date());
         classInfoMapper.insert(classInfo);
-        if(CollectionUtils.isEmpty(classInfo.getFieldList())){
+        if (CollectionUtils.isEmpty(classInfo.getFieldList())) {
             return;
         }
         //保存字段
@@ -60,6 +60,54 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             }
         }).collect(Collectors.toList());
         classFieldMapper.insertList(classDtoTovo.listClassFieldDtoToPo(fieldDtoList));
+    }
+
+    @Transactional
+    @Override
+    public synchronized void addClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId) {
+        int id = classInfoMapper.selectId();
+        for (ClassInfoDto c : classInfo) {
+            c.setId(++id);
+            c.setProjectId(projectId);
+            c.setBranchId(branchId);
+            c.setCreateTime(new Date());
+        }
+        classInfoMapper.insertList(classDtoTovo.listClassInfoDtoToPo(classInfo));
+        saveFieldDto(classInfo);
+    }
+
+    @Transactional
+    @Override
+    public synchronized void saveClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId) {
+        Example example = new Example(ClassInfo.class);
+        example.createCriteria().andEqualTo("branchId", branchId);
+        List<ClassInfo> classInfos = classInfoMapper.selectByExample(example);
+        //删除当前所有类的字段
+        List<ClassInfoDto> addList = new ArrayList<>();
+        int id = classInfoMapper.selectId();
+        for (ClassInfoDto c : classInfo) {
+            List<ClassInfo> collect = classInfos.stream()
+                    .filter(i -> i.getClassPath().equals(c.getClassPath()))
+                    .collect(Collectors.toList());
+            if (collect.isEmpty()) {
+                c.setId(++id);
+                addList.add(c);
+                continue;
+            }
+            ClassInfo classInfo1 = collect.get(0);
+            //赋值ID
+            c.setId(classInfo1.getId());
+            //修改
+            classInfo1.setClassDescribe(c.getClassDescribe());
+            classInfoMapper.updateByPrimaryKey(classInfo1);
+        }
+        if(!addList.isEmpty()){
+            classInfoMapper.insertList(classDtoTovo.listClassInfoDtoToPo(classInfo));
+        }
+        example = new Example(ClassField.class);
+        example.createCriteria().andIn("classId", classInfos.stream().map(ClassInfo::getId).collect(Collectors.toList()));
+        classFieldMapper.deleteByExample(example);
+        saveFieldDto(classInfo);
     }
 
     @Override
@@ -84,5 +132,21 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             );
         }
         return classInfoVoList;
+    }
+
+    private void saveFieldDto(Collection<ClassInfoDto> classInfo) {
+        List<ClassFieldDto> fieldDtoList = new ArrayList<>();
+        for (ClassInfoDto c : classInfo) {
+            fieldDtoList.addAll(c.getFieldList().stream().peek(i -> {
+                i.setClassId(c.getId());
+                i.setCreateTime(new Date());
+                //赋值字段类型
+                ClassInfoDto typeClass = i.getTypeClass();
+                if (typeClass != null) {
+                    i.setTypeId(typeClass.getId());
+                }
+            }).collect(Collectors.toList()));
+        }
+        classFieldMapper.insertList(classDtoTovo.listClassFieldDtoToPo(fieldDtoList));
     }
 }

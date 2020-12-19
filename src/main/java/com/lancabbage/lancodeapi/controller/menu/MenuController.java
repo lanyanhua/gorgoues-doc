@@ -1,10 +1,12 @@
 package com.lancabbage.lancodeapi.controller.menu;
 
+import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.vo.api.ApiInfoVo;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 import com.lancabbage.lancodeapi.bean.vo.menu.BranchMenuVo;
 import com.lancabbage.lancodeapi.bean.vo.menu.MenuVo;
+import com.lancabbage.lancodeapi.map.MenuDtoToVo;
 import com.lancabbage.lancodeapi.service.ApiInfoService;
 import com.lancabbage.lancodeapi.service.ClassInfoService;
 import com.lancabbage.lancodeapi.service.MenuService;
@@ -27,11 +29,13 @@ public class MenuController {
     private final MenuService menuService;
     private final ApiInfoService apiInfoService;
     private final ClassInfoService classInfoService;
+    private final MenuDtoToVo menuDtoToVo;
 
-    public MenuController(MenuService menuService, ApiInfoService apiInfoService, ClassInfoService classInfoService) {
+    public MenuController(MenuService menuService, ApiInfoService apiInfoService, ClassInfoService classInfoService, MenuDtoToVo menuDtoToVo) {
         this.menuService = menuService;
         this.apiInfoService = apiInfoService;
         this.classInfoService = classInfoService;
+        this.menuDtoToVo = menuDtoToVo;
     }
 
     /**
@@ -43,10 +47,14 @@ public class MenuController {
     @GetMapping("/listMenuByBranchId")
     public BaseResponse<BranchMenuVo> listMenuByBranchId(@RequestParam Integer branchId) {
         BranchMenuVo branchMenuVo = new BranchMenuVo();
-        List<MenuVo> menuVos = menuService.listMenuByBranchId(branchId);
+        //菜单
+        List<MenuDto> menuList = menuService.listMenuByBranchId(branchId);
+        List<MenuVo> menuVos = menuDtoToVo.listMenuDtoToVo(menuList);
         branchMenuVo.setMenuList(menuVos);
+        //API
         List<ApiInfoVo> apiInfoVos = apiInfoService.listApiByBranchId(branchId);
         branchMenuVo.setApiInfoList(apiInfoVos);
+        //class
         List<ClassInfoVo> classInfoVos = classInfoService.listClassByBranchId(branchId);
         branchMenuVo.setClassInfoList(classInfoVos);
         return BaseResponse.successInstance(branchMenuVo);

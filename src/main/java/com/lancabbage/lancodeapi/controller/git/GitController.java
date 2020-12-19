@@ -4,6 +4,7 @@ import com.lancabbage.lancodeapi.bean.po.GitInfo;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.git.GitInfoSaveVo;
 import com.lancabbage.lancodeapi.service.GitService;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -27,6 +28,7 @@ public class GitController {
     @GetMapping("/getGitInfo")
     public BaseResponse<GitInfo> getGitInfo() {
         GitInfo gitInfo = gitService.getGitInfo();
+        Assert.notNull(gitInfo,"无git配置信息");
         return BaseResponse.successInstance(gitInfo);
     }
 

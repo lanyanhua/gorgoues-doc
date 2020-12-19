@@ -1,11 +1,16 @@
 package com.lancabbage.lancodeapi.mapper.base;
 
+import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.SelectProvider;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.provider.ExampleProvider;
 import tk.mybatis.mapper.provider.SpecialProvider;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,7 +22,4 @@ import java.util.List;
  */
 public interface BaseMapper<T> extends Mapper<T>, MySqlMapper<T> {
 
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    @InsertProvider(type = SpecialProvider.class, method = "dynamicSQL")
-    void insertListSon(List<? extends T> paramDtoList);
 }

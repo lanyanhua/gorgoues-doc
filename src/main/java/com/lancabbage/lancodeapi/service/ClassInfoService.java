@@ -3,6 +3,7 @@ package com.lancabbage.lancodeapi.service;
 import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
 import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -16,7 +17,11 @@ public interface ClassInfoService {
     /**
      * 保存class信息
      */
-    void saveClass(ClassInfoDto classInfo);
+    void addClass(Collection<ClassInfoDto> classInfo,Integer projectId, Integer branchId);
+    /**
+     * 保存class信息
+     */
+    void saveClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId);
 
     /**
      * 查询class 信息

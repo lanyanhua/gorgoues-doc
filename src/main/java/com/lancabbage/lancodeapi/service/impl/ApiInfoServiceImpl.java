@@ -30,14 +30,12 @@ public class ApiInfoServiceImpl implements ApiInfoService {
 
     private final ApiInfoMapper apiInfoMapper;
     private final ApiParamMapper apiParamMapper;
-    private final ClassInfoService classInfoService;
     private final ApiDtoToVo apiDtoToVo;
 
     public ApiInfoServiceImpl(ApiInfoMapper apiInfoMapper, ApiParamMapper apiParamMapper
-            , ClassInfoService classInfoService, ApiDtoToVo apiDtoToVo) {
+            , ApiDtoToVo apiDtoToVo) {
         this.apiInfoMapper = apiInfoMapper;
         this.apiParamMapper = apiParamMapper;
-        this.classInfoService = classInfoService;
         this.apiDtoToVo = apiDtoToVo;
     }
 
@@ -53,13 +51,9 @@ public class ApiInfoServiceImpl implements ApiInfoService {
             List<ApiParamDto> paramDtoList = dto.getApiParams().stream().peek(i -> {
                 i.setApiId(dto.getId());
                 i.setCreateTime(new Date());
-                //保存class
+                //赋值class ID
                 ClassInfoDto classInfo = i.getClassInfo();
-                //ID不等于null set 等于null保存再set
-                if (classInfo != null && i.setClassId(classInfo.getId()) == null) {
-                    classInfo.setProjectId(projectId);
-                    classInfo.setBranchId(branchId);
-                    classInfoService.saveClass(classInfo);
+                if(classInfo!=null) {
                     i.setClassId(classInfo.getId());
                 }
             }).collect(Collectors.toList());

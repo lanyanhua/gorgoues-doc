@@ -1,7 +1,7 @@
 package com.lancabbage.lancodeapi.service;
 
 import com.lancabbage.lancodeapi.bean.dto.MenuDto;
-import com.lancabbage.lancodeapi.bean.vo.menu.MenuVo;
+import com.lancabbage.lancodeapi.bean.po.Menu;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ import java.util.List;
  */
 public interface MenuService {
     /**
-     * 保存菜单
+     * 新增菜单
      *
      * @param menuDtoList 菜单
      * @param projectId   项目ID
      * @param branchId    分支ID
      */
-    void saveMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId);
+    void addMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId);
 
     /**
      * 查询菜单
@@ -28,5 +28,20 @@ public interface MenuService {
      * @param branchId 分支ID
      * @return 菜单列表 API信息
      */
-    List<MenuVo> listMenuByBranchId(Integer branchId);
+    List<MenuDto> listMenuByBranchId(Integer branchId);
+
+    /**
+     * 查询API关联的菜单
+     * @param aIds API ID
+     */
+    List<Menu> listApiMenuByApiId(List<Integer> aIds);
+
+
+    /**
+     * 保存菜单信息
+     * @param menuDtoList 菜单
+     * @param projectId   项目ID
+     * @param branchId    分支ID
+     */
+    void saveMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId);
 }

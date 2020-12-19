@@ -13,7 +13,17 @@ import java.util.List;
  */
 public class MenuDto extends Menu {
 
+
+    private List<MenuDto> childrenMenu;
     private List<ApiInfoDto> apiInfos;
+
+    public List<MenuDto> getChildrenMenu() {
+        return childrenMenu;
+    }
+
+    public void setChildrenMenu(List<MenuDto> childrenMenu) {
+        this.childrenMenu = childrenMenu;
+    }
 
     public List<ApiInfoDto> getApiInfos() {
         return apiInfos;

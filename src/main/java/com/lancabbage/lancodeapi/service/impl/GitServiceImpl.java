@@ -10,6 +10,7 @@ import com.lancabbage.lancodeapi.service.GitService;
 import com.lancabbage.lancodeapi.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import tk.mybatis.mapper.entity.Example;
 
 import java.io.File;
 import java.util.Date;
@@ -55,7 +56,9 @@ public class GitServiceImpl implements GitService {
     @Override
     public GitInfo getGitInfo() {
         List<GitInfo> gitInfo = gitInfoMapper.selectAll();
-        Assert.isTrue(!gitInfo.isEmpty(),"无git配置信息");
+        if (gitInfo.isEmpty()){
+            return null;
+        }
         return gitInfo.get(0);
     }
 
@@ -71,4 +74,5 @@ public class GitServiceImpl implements GitService {
             gitInfoMapper.updateByPrimaryKeySelective(gitInfo);
         }
     }
+
 }

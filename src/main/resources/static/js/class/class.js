@@ -1,29 +1,58 @@
-function getParamAllClass(param, type) {
-    let typeArr = [];
-    let jo = {};
-    for (let p of param) {
-        let value = jsonValue(p.type);
-        if (p.typeId != null) {
+let classTypeArrJson = {
+    paramType: 0,
+    typeMap: {},
+    getTypeArrJson: function (param, type) {
+        this.paramType = type;
+        this.typeMap = {};
+        return this.getParamAllClass(param);
+    },
+    /**
+     * 获取参数class信息
+     * @param param
+     * @returns {{typeList: [], typeJson: string}}
+     */
+    getParamAllClass: function (param) {
+        let typeArr = [];
+        let jo = {};
+        for (let p of param) {
+            let value = jsonValue(p.type);
+            if (p.typeId == null) {
+                jo[p.paramName] = value;
+                continue;
+            }
+
+            //是数组
+            let b = isArr(p.type);
+            let typeValue = this.typeMap[p.typeId];
+            if (typeValue) {
+                jo[p.paramName] = typeValue;
+                if (b) {
+                    p.type = typeValue;
+                }
+                continue;
+            }
             let c = branchMenuData.classInfoList.find(i => i.id == p.typeId);
-            if (isArr(p.type)) {
-                let listType = branchMenuData.classInfoList.find(i => i.id == c.classFieldList[0].typeId);
-                p.type = p.type+'['+listType.className+']';
-                let res = getParamAllClass(listType.classFieldList, type);
-                // listType.className = '['+listType.className+']';
-                typeArr.push($.extend({type: type}, listType));
-                typeArr = typeArr.concat(res.typeList);
-                value = [JSON.parse(res.typeJson)];
+            if (b) {
+                //数组使用范型
+                c = branchMenuData.classInfoList.find(i => i.id == c.classFieldList[0].typeId);
+                p.type = p.type + '[' + c.className + ']';
+            }
+            //记录当前类型防止互相依赖死循环
+            this.typeMap[p.typeId] = p.type;
+            let res = this.getParamAllClass(c.classFieldList);
+            typeArr.push($.extend({type: this.paramType}, c));
+            typeArr = typeArr.concat(res.typeList);
+            //赋值json
+            if (b) {
+                jo[p.paramName] = [JSON.parse(res.typeJson)];
             } else {
-                let res = getParamAllClass(c.classFieldList, type);
-                typeArr.push($.extend({type: type}, c));
-                typeArr = typeArr.concat(res.typeList);
-                value = JSON.parse(res.typeJson);
+                jo[p.paramName] = JSON.parse(res.typeJson);
             }
         }
-        jo[p.paramName] = value
+        return {typeList: typeArr, typeJson: JSON.stringify(jo)};
     }
-    return {typeList: typeArr, typeJson: JSON.stringify(jo)};
 }
+
 
 function jsonValue(type) {
     if (type == 'int' || type == 'Integer') {

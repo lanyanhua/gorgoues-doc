@@ -92,7 +92,7 @@ function openTab(id) {
         if (p.classId != null) {
             let c = branchMenuData.classInfoList.find(i => i.id == p.classId);
             p.className = c.className;
-            let res = getParamAllClass(c.classFieldList, p.type);
+            let res = classTypeArrJson.getTypeArrJson(c.classFieldList, p.type);
             typeArr.push($.extend({type: p.type, paramMode: p.paramMode, typeJson: res.typeJson}, c));
             typeArr = typeArr.concat(res.typeList);
         }

@@ -31,6 +31,10 @@ public class ClassInfoUtils {
         classMap = new HashMap<>();
     }
 
+    public Map<ClassKey, ClassInfoDto> getClassMap() {
+        return classMap;
+    }
+
     /**
      * 获取入参出餐 class
      *

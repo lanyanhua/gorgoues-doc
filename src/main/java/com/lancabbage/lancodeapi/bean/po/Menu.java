@@ -135,8 +135,9 @@ public class Menu {
      *
      * @param parentId 父菜单ID
      */
-    public void setParentId(Integer parentId) {
+    public Menu setParentId(Integer parentId) {
         this.parentId = parentId;
+        return this;
     }
 
     public Integer getApiId() {

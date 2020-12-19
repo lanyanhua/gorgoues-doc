@@ -10,10 +10,7 @@ import com.sun.javadoc.*;
 import com.sun.tools.javadoc.ClassDocImpl;
 import tk.mybatis.mapper.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: lanyanhua
@@ -30,6 +27,9 @@ public class ApiInfoUtils {
         this.classInfoUtils = new ClassInfoUtils();
     }
 
+    public Collection<ClassInfoDto> getClassInfoList(){
+       return classInfoUtils.getClassMap().values();
+    }
     /**
      * 解析类
      *
@@ -178,6 +178,7 @@ public class ApiInfoUtils {
             paramDto.setClassInfo(classInfo);
         }
     }
+
 
 
     private String s(String s1, String s2) {

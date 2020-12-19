@@ -1,19 +1,20 @@
 package com.lancabbage.lancodeapi.service.impl;
 
+import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
 import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchAddDto;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchDto;
 import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
+import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 import com.lancabbage.lancodeapi.mapper.ProjectBranchMapper;
-import com.lancabbage.lancodeapi.service.GitService;
-import com.lancabbage.lancodeapi.service.MenuService;
-import com.lancabbage.lancodeapi.service.ProjectBranchService;
+import com.lancabbage.lancodeapi.service.*;
 import com.lancabbage.lancodeapi.utils.doc.ApiInfoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -27,11 +28,13 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
     private final ProjectBranchMapper projectBranchMapper;
     private final GitService gitService;
     private final MenuService menuService;
+    private final ClassInfoService classInfoService;
 
-    public ProjectBranchServiceImpl(ProjectBranchMapper projectBranchMapper, GitService gitService, MenuService menuService) {
+    public ProjectBranchServiceImpl(ProjectBranchMapper projectBranchMapper, GitService gitService, MenuService menuService, ClassInfoService classInfoService) {
         this.projectBranchMapper = projectBranchMapper;
         this.gitService = gitService;
         this.menuService = menuService;
+        this.classInfoService = classInfoService;
     }
 
     @Override
@@ -56,8 +59,11 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         //解析api
         ApiInfoUtils classDocUtils = new ApiInfoUtils();
         List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
+        //class 信息单独处理
+        Collection<ClassInfoDto> classInfoList = classDocUtils.getClassInfoList();
+        classInfoService.addClass(classInfoList, projectId, branch.getId());
         //保存
-        menuService.saveMenuList(menuDtoList, projectId, branch.getId());
+        menuService.addMenuList(menuDtoList, projectId, branch.getId());
         return branch.getId();
     }
 
@@ -69,7 +75,12 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         //同步git代码
         List<String> javaFile = gitService.cloneCode(dto.getProject(), b.getName());
         //重新读取 java文件
-        //加载当前分支下所有的API class
-        //对比不相同就更新
+        ApiInfoUtils classDocUtils = new ApiInfoUtils();
+        List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
+        //class 信息单独处理
+        Collection<ClassInfoDto> classInfoList = classDocUtils.getClassInfoList();
+        classInfoService.saveClass(classInfoList, b.getProjectId(),dto.getId());
+        //保存菜单
+        menuService.saveMenuList(menuDtoList,b.getProjectId(),dto.getId());
     }
 }
