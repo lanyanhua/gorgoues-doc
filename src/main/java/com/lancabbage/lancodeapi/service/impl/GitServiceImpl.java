@@ -9,8 +9,6 @@ import com.lancabbage.lancodeapi.mapper.GitInfoMapper;
 import com.lancabbage.lancodeapi.service.GitService;
 import com.lancabbage.lancodeapi.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import tk.mybatis.mapper.entity.Example;
 
 import java.io.File;
 import java.util.Date;
@@ -56,7 +54,7 @@ public class GitServiceImpl implements GitService {
     @Override
     public GitInfo getGitInfo() {
         List<GitInfo> gitInfo = gitInfoMapper.selectAll();
-        if (gitInfo.isEmpty()){
+        if (gitInfo.isEmpty()) {
             return null;
         }
         return gitInfo.get(0);
@@ -66,10 +64,10 @@ public class GitServiceImpl implements GitService {
     public void save(GitInfoSaveVo vo) {
         List<GitInfo> gitInfoList = gitInfoMapper.selectAll();
         GitInfo gitInfo = gitInfoDtoToVo.gitInfoSaveVoToPo(vo);
-        if(gitInfoList.isEmpty()){
+        if (gitInfoList.isEmpty()) {
             gitInfo.setCreateTime(new Date());
             gitInfoMapper.insert(gitInfo);
-        }else {
+        } else {
             gitInfo.setId(gitInfoList.get(0).getId());
             gitInfoMapper.updateByPrimaryKeySelective(gitInfo);
         }

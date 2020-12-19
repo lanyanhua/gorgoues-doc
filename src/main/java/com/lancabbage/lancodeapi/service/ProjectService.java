@@ -32,6 +32,7 @@ public interface ProjectService {
 
     /**
      * 查询项目信息
+     *
      * @param projectId 项目ID
      */
     Project getProjectById(Integer projectId);

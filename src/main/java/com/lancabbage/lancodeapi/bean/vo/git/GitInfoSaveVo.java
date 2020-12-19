@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @date: 2020/12/7 12:46 下午
  * @Description:
  */
-public class GitInfoSaveVo  implements Serializable {
+public class GitInfoSaveVo implements Serializable {
     /**
      * git用户名
      */

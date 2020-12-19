@@ -48,9 +48,9 @@ public class EnvInfoServiceImpl implements EnvInfoService {
     @Override
     public void deleteEnvById(Integer id) {
         Example example = new Example(EnvInfo.class);
-        example.createCriteria().andNotEqualTo("id",id);
+        example.createCriteria().andNotEqualTo("id", id);
         int count = envInfoMapper.selectCountByExample(example);
-        Assert.isTrue(count>1,"最少要有一条环境数据");
+        Assert.isTrue(count > 1, "最少要有一条环境数据");
         envInfoMapper.deleteByPrimaryKey(id);
     }
 }

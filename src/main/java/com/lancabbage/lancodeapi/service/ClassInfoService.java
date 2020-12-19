@@ -17,7 +17,8 @@ public interface ClassInfoService {
     /**
      * 保存class信息
      */
-    void addClass(Collection<ClassInfoDto> classInfo,Integer projectId, Integer branchId);
+    void addClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId);
+
     /**
      * 保存class信息
      */

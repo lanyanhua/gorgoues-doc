@@ -6,7 +6,6 @@ import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
 import com.sun.tools.javadoc.ClassDocImpl;
 import com.sun.tools.javadoc.ParameterizedTypeImpl;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -20,7 +19,7 @@ public class ClassInfoUtils {
     public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
             "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "Date", "MultipartFile");
     public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest");
-    public static List<String> arrayType = Arrays.asList("List", "Set","array");
+    public static List<String> arrayType = Arrays.asList("List", "Set", "array");
     /**
      * class Map
      */
@@ -50,7 +49,7 @@ public class ClassInfoUtils {
             classInfoDto.setBaseType(className);
             return classInfoDto;
         }
-        if(arrayType.contains(className)){
+        if (arrayType.contains(className)) {
             type.typeName();
         }
         //赋值返回Class数据
@@ -96,7 +95,7 @@ public class ClassInfoUtils {
                 }
             }
         }
-        if(arrayType.contains(className)){
+        if (arrayType.contains(className)) {
             List<ClassFieldDto> fieldDtoList = new ArrayList<>();
             classInfoDto.setFieldList(fieldDtoList);
             ClassFieldDto fieldDto = new ClassFieldDto();
@@ -106,7 +105,7 @@ public class ClassInfoUtils {
             fieldDto.setParamDescribe("");
             ClassInfoDto c = paradigmMap.values().isEmpty() ? null : paradigmMap.values().iterator().next();
             fieldDto.setTypeClass(c);
-            fieldDto.setType(c==null?"Object": c.getClassName());
+            fieldDto.setType(c == null ? "Object" : c.getClassName());
         }
         //是否需要赋值字段
         else if (!notSetField.contains(className)) {

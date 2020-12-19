@@ -1,9 +1,6 @@
 package com.lancabbage.lancodeapi.controller.classInfo;
 
-import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
-import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 import com.lancabbage.lancodeapi.service.ClassInfoService;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**

@@ -62,9 +62,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public int addProject(ProjectAddVo vo) {
         Example example = new Example(Project.class);
-        example.createCriteria().andEqualTo("name",vo.getName());
+        example.createCriteria().andEqualTo("name", vo.getName());
         int count = projectMapper.selectCountByExample(example);
-        Assert.isTrue(count == 0,"项目名已存在，请选择新增分支");
+        Assert.isTrue(count == 0, "项目名已存在，请选择新增分支");
         Project project = projectDtoToVo.projectAddVoToPo(vo);
         project.setCreateTime(new Date());
         projectMapper.insert(project);

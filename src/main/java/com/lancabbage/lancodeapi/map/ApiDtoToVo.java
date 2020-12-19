@@ -22,4 +22,6 @@ public interface ApiDtoToVo {
     List<ApiParam> listApiParamDtoToPo(List<ApiParamDto> paramDtoList);
 
     List<ApiInfoVo> listApiInfoToVo(List<ApiInfo> apiInfos);
+
+    List<ApiInfoDto> listApiInfoToDto(List<ApiInfo> apiInfos);
 }

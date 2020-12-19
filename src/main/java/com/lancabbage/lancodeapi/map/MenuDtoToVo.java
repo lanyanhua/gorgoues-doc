@@ -14,12 +14,10 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface MenuDtoToVo {
-
-    Menu menuDtoToPo(MenuDto menuDto);
-
     List<MenuVo> listMenuDtoToVo(List<MenuDto> menuList);
 
     List<MenuDto> listMenuToDto(List<Menu> children);
 
     MenuDto menuToDto(Menu menu);
+
 }

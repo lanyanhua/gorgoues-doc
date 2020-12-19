@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
 
-
     @PostMapping("testUpload")
-    public BaseResponse<Integer> testUpload(){
+    public BaseResponse<Integer> testUpload() {
         return BaseResponse.successInstance(1);
     }
 }

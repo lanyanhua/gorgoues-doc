@@ -32,15 +32,15 @@ public class RouteController {
     @GetMapping("/docs")
     public String doc() {
         GitInfo gitInfo = gitService.getGitInfo();
-        if(gitInfo == null){
+        if (gitInfo == null) {
             return "/steps/steps";
         }
         List<ProjectVo> projectVos = projectService.listProjectAll();
-        if(projectVos.isEmpty()){
+        if (projectVos.isEmpty()) {
             return "/steps/steps";
         }
         List<EnvInfo> envInfos = envInfoService.listEnvAll();
-        if(envInfos.isEmpty()){
+        if (envInfos.isEmpty()) {
             return "/steps/steps";
         }
         return "/template";
@@ -55,10 +55,12 @@ public class RouteController {
     public String steps() {
         return "/steps/steps";
     }
+
     @GetMapping("/manage")
     public String manage() {
         return "/manage";
     }
+
     @GetMapping("/test")
     public String docs1() {
         return "/docs1";

@@ -12,6 +12,7 @@ import java.util.List;
 public interface EnvInfoService {
     /**
      * 添加环境
+     *
      * @return ID
      */
     int addEnv(EnvInfo envInfo);
@@ -23,12 +24,14 @@ public interface EnvInfoService {
 
     /**
      * 获取所有环境信息
+     *
      * @return 环境列表
      */
     List<EnvInfo> listEnvAll();
 
     /**
      * 删除环境信息
+     *
      * @param id ID
      */
     void deleteEnvById(Integer id);

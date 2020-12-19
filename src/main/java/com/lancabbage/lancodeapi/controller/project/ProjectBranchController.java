@@ -3,12 +3,10 @@ package com.lancabbage.lancodeapi.controller.project;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchAddDto;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchDto;
 import com.lancabbage.lancodeapi.bean.po.Project;
-import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectBranchAddVo;
 import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.service.ProjectService;
-import jogamp.graph.font.typecast.ot.table.ID;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +35,7 @@ public class ProjectBranchController {
         ProjectBranchAddDto dto = new ProjectBranchAddDto();
         dto.setName(vo.getName());
         Project project = projectService.getProjectById(vo.getProjectId());
-        Assert.notNull(project,"项目ID不存在");
+        Assert.notNull(project, "项目ID不存在");
         dto.setProject(project);
         // git信息 项目名
         int id = branchService.addProjectBranch(dto);
@@ -46,13 +44,14 @@ public class ProjectBranchController {
 
     /**
      * 拉git代码
+     *
      * @param projectId 项目ID
-     * @param branchId 分支ID
+     * @param branchId  分支ID
      */
     @PostMapping("/pullProjectBranch")
-    public BaseResponse<String> pullProjectBranch(@RequestParam Integer projectId,@RequestParam Integer branchId) {
+    public BaseResponse<String> pullProjectBranch(@RequestParam Integer projectId, @RequestParam Integer branchId) {
         Project project = projectService.getProjectById(projectId);
-        Assert.notNull(project,"项目ID不存在");
+        Assert.notNull(project, "项目ID不存在");
         ProjectBranchDto branch = new ProjectBranchDto();
         branch.setProject(project);
         branch.setId(branchId);

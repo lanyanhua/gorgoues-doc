@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.service;
 
 import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
+import com.lancabbage.lancodeapi.bean.po.ApiInfo;
 import com.lancabbage.lancodeapi.bean.vo.api.ApiInfoVo;
 
 import java.util.List;
@@ -29,4 +30,17 @@ public interface ApiInfoService {
      * @return API
      */
     List<ApiInfoVo> listApiByBranchId(Integer branchId);
+
+    /**
+     * 查询API
+     *
+     * @param branchId 分支ID
+     * @return API
+     */
+    List<ApiInfo> listApiInfoByBranchId(Integer branchId);
+
+    /**
+     * 更新API信息
+     */
+    void updateApi(ApiInfo apiInfo, ApiInfoDto api);
 }

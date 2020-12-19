@@ -5,9 +5,11 @@ import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchAddDto;
 import com.lancabbage.lancodeapi.bean.dto.ProjectBranchDto;
 import com.lancabbage.lancodeapi.bean.po.ProjectBranch;
-import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 import com.lancabbage.lancodeapi.mapper.ProjectBranchMapper;
-import com.lancabbage.lancodeapi.service.*;
+import com.lancabbage.lancodeapi.service.ClassInfoService;
+import com.lancabbage.lancodeapi.service.GitService;
+import com.lancabbage.lancodeapi.service.MenuService;
+import com.lancabbage.lancodeapi.service.ProjectBranchService;
 import com.lancabbage.lancodeapi.utils.doc.ApiInfoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +73,7 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
     @Override
     public void pullProjectBranch(ProjectBranchDto dto) {
         ProjectBranch b = projectBranchMapper.selectByPrimaryKey(dto.getId());
-        Assert.notNull(b,"分支ID不存在");
+        Assert.notNull(b, "分支ID不存在");
         //同步git代码
         List<String> javaFile = gitService.cloneCode(dto.getProject(), b.getName());
         //重新读取 java文件
@@ -79,8 +81,8 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
         //class 信息单独处理
         Collection<ClassInfoDto> classInfoList = classDocUtils.getClassInfoList();
-        classInfoService.saveClass(classInfoList, b.getProjectId(),dto.getId());
+        classInfoService.saveClass(classInfoList, b.getProjectId(), dto.getId());
         //保存菜单
-        menuService.saveMenuList(menuDtoList,b.getProjectId(),dto.getId());
+        menuService.saveMenuList(menuDtoList, b.getProjectId(), dto.getId());
     }
 }

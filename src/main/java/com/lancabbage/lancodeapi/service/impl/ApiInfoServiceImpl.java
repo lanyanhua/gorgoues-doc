@@ -10,8 +10,8 @@ import com.lancabbage.lancodeapi.map.ApiDtoToVo;
 import com.lancabbage.lancodeapi.mapper.ApiInfoMapper;
 import com.lancabbage.lancodeapi.mapper.ApiParamMapper;
 import com.lancabbage.lancodeapi.service.ApiInfoService;
-import com.lancabbage.lancodeapi.service.ClassInfoService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
@@ -48,16 +48,9 @@ public class ApiInfoServiceImpl implements ApiInfoService {
             dto.setCreateTime(new Date());
             apiInfoMapper.insert(dto);
             //保存参数信息
-            List<ApiParamDto> paramDtoList = dto.getApiParams().stream().peek(i -> {
-                i.setApiId(dto.getId());
-                i.setCreateTime(new Date());
-                //赋值class ID
-                ClassInfoDto classInfo = i.getClassInfo();
-                if(classInfo!=null) {
-                    i.setClassId(classInfo.getId());
-                }
-            }).collect(Collectors.toList());
-            apiParamMapper.insertList(apiDtoToVo.listApiParamDtoToPo(paramDtoList));
+            if (!CollectionUtils.isEmpty(dto.getApiParams())) {
+                saveParam(dto);
+            }
         }
     }
 
@@ -85,5 +78,40 @@ public class ApiInfoServiceImpl implements ApiInfoService {
         return apiInfoList;
     }
 
+    @Override
+    public List<ApiInfo> listApiInfoByBranchId(Integer branchId) {
+        Example example = new Example(ApiInfo.class);
+        example.createCriteria().andEqualTo("branchId", branchId);
+        return apiInfoMapper.selectByExample(example);
+    }
+
+    @Override
+    public void updateApi(ApiInfo apiInfo, ApiInfoDto api) {
+        if (!apiInfo.getMethod().equals(api.getMethod())) {
+            apiInfo.setMethod(api.getMethod());
+            apiInfoMapper.updateByPrimaryKey(apiInfo);
+        }
+        if (!CollectionUtils.isEmpty(api.getApiParams())) {
+            Example example = new Example(ApiParam.class);
+            example.createCriteria().andEqualTo("apiId", apiInfo.getId());
+            apiParamMapper.deleteByExample(example);
+            api.setId(apiInfo.getId());
+            //保存参数
+            saveParam(api);
+        }
+    }
+
+    private void saveParam(ApiInfoDto api) {
+        List<ApiParamDto> paramDtoList = api.getApiParams().stream().peek(i -> {
+            i.setApiId(api.getId());
+            i.setCreateTime(new Date());
+            //赋值class ID
+            ClassInfoDto classInfo = i.getClassInfo();
+            if (classInfo != null) {
+                i.setClassId(classInfo.getId());
+            }
+        }).collect(Collectors.toList());
+        apiParamMapper.insertList(apiDtoToVo.listApiParamDtoToPo(paramDtoList));
+    }
 
 }

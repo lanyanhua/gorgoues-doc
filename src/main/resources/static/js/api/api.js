@@ -10,16 +10,13 @@ function getPath(path) {
     return domain + '/' + path;
 }
 
-//参数变更事件
-function apiParamChange() {
-
-}
-
 
 function commitApi(id) {
     console.log(id)
     let $api = $('.api-tab-content-id-' + id);
     let url = $api.find('.api-path').text();
+    let type = $api.find('.apiType').text();
+    type = type == ApiType[0] ? "post" : type;
     // header
     let headers = {};
     $.each($api.find('.env-header'), (i, v) => {
@@ -50,7 +47,7 @@ function commitApi(id) {
             formData.append(name, val);
             return;
         }
-        if (url.contains("?")) {
+        if (url.indexOf("?") === -1) {
             url += '?';
         }
         url += name + '=' + val + '&';
@@ -66,7 +63,7 @@ function commitApi(id) {
         $api.find('.response-show').text(formatJson1(data));
     }
     let ajaxParam = {
-        type: $api.find('.apiType').text(),
+        type: type,
         url: url,
         headers: headers,
         contentType: "application/json;charset=utf-8",
@@ -84,23 +81,30 @@ function commitApi(id) {
 
 }
 
-function test(){
+function test() {
     $.ajax({
         type: 'post'
-        ,url: 'https://test.jaagro.com:9030/externalApi/schemeReportExcel'
-        ,headers: {token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyVHlwZSI6ImVtcGxveWVlIiwidXNlciI6IjEiLCJpYXQiOjE2MDY5NjE3MTl9.ZiD_iVKXqyLUECsX5zi8Nmn4zK8siQDreZ_AkwcA34g'}
-        ,contentType: 'application/json;charset=UTF-8'
-        ,dataType: 'json'
-        ,data: JSON.stringify({
+        ,
+        url: 'https://test.jaagro.com:9030/externalApi/schemeReportExcel'
+        ,
+        headers: {token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyVHlwZSI6ImVtcGxveWVlIiwidXNlciI6IjEiLCJpYXQiOjE2MDY5NjE3MTl9.ZiD_iVKXqyLUECsX5zi8Nmn4zK8siQDreZ_AkwcA34g'}
+        ,
+        contentType: 'application/json;charset=UTF-8'
+        ,
+        dataType: 'json'
+        ,
+        data: JSON.stringify({
             "startTime": "2020-12-01 00:00:00",
             "endTime": "2021-01-30 00:00:00",
             "adminPassword": "124"
         })
-        ,success: data=>{
+        ,
+        success: data => {
             console.log('success')
             console.log(data)
         }
-        ,error: data=>{
+        ,
+        error: data => {
             console.log('error')
             console.log(data)
         }

@@ -28,7 +28,7 @@ public class GitController {
     @GetMapping("/getGitInfo")
     public BaseResponse<GitInfo> getGitInfo() {
         GitInfo gitInfo = gitService.getGitInfo();
-        Assert.notNull(gitInfo,"无git配置信息");
+        Assert.notNull(gitInfo, "无git配置信息");
         return BaseResponse.successInstance(gitInfo);
     }
 

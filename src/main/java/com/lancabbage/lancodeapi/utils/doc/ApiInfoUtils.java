@@ -27,9 +27,10 @@ public class ApiInfoUtils {
         this.classInfoUtils = new ClassInfoUtils();
     }
 
-    public Collection<ClassInfoDto> getClassInfoList(){
-       return classInfoUtils.getClassMap().values();
+    public Collection<ClassInfoDto> getClassInfoList() {
+        return classInfoUtils.getClassMap().values();
     }
+
     /**
      * 解析类
      *
@@ -178,7 +179,6 @@ public class ApiInfoUtils {
             paramDto.setClassInfo(classInfo);
         }
     }
-
 
 
     private String s(String s1, String s2) {

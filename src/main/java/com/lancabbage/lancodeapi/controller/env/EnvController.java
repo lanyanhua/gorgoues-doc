@@ -6,7 +6,6 @@ import com.lancabbage.lancodeapi.bean.vo.env.EnvAddVo;
 import com.lancabbage.lancodeapi.bean.vo.env.EnvSaveVo;
 import com.lancabbage.lancodeapi.map.EnvInfoDtoToVo;
 import com.lancabbage.lancodeapi.service.EnvInfoService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +29,11 @@ public class EnvController {
 
     /**
      * 添加环境信息
+     *
      * @return ID
      */
     @PostMapping("/addEnv")
-    public BaseResponse<Integer> addEnv(@RequestBody EnvAddVo addVo){
+    public BaseResponse<Integer> addEnv(@RequestBody EnvAddVo addVo) {
         EnvInfo envInfo = envInfoDtoToVo.envAddVoToPo(addVo);
         int id = envInfoService.addEnv(envInfo);
         return BaseResponse.successInstance(id);
@@ -41,10 +41,11 @@ public class EnvController {
 
     /**
      * 保存环境信息
+     *
      * @return ID
      */
     @PutMapping("/saveEnv")
-    public BaseResponse<String> saveEnv(@RequestBody EnvSaveVo saveVo){
+    public BaseResponse<String> saveEnv(@RequestBody EnvSaveVo saveVo) {
         EnvInfo envInfo = envInfoDtoToVo.envSaveVoToPo(saveVo);
         envInfoService.saveEnv(envInfo);
         return BaseResponse.successInstance("成功");
@@ -53,10 +54,11 @@ public class EnvController {
 
     /**
      * 删除环境信息
+     *
      * @return ID
      */
     @DeleteMapping("/deleteEnvById")
-    public BaseResponse<String> deleteEnvById(@RequestParam Integer id){
+    public BaseResponse<String> deleteEnvById(@RequestParam Integer id) {
         envInfoService.deleteEnvById(id);
         return BaseResponse.successInstance("成功");
     }
@@ -64,11 +66,12 @@ public class EnvController {
 
     /**
      * 获取所有环境信息
+     *
      * @return 环境列表
      */
     @GetMapping("/listEnvAll")
-    public BaseResponse<List<EnvInfo>> listEnvAll(){
-        List<EnvInfo> envInfoList=  envInfoService.listEnvAll();
+    public BaseResponse<List<EnvInfo>> listEnvAll() {
+        List<EnvInfo> envInfoList = envInfoService.listEnvAll();
         return BaseResponse.successInstance(envInfoList);
     }
 }

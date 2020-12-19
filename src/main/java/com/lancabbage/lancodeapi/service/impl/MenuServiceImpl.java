@@ -2,13 +2,11 @@ package com.lancabbage.lancodeapi.service.impl;
 
 import com.lancabbage.lancodeapi.bean.dto.ApiInfoDto;
 import com.lancabbage.lancodeapi.bean.dto.MenuDto;
+import com.lancabbage.lancodeapi.bean.po.ApiInfo;
 import com.lancabbage.lancodeapi.bean.po.Menu;
-import com.lancabbage.lancodeapi.bean.vo.api.ApiInfoVo;
-import com.lancabbage.lancodeapi.bean.vo.classInfo.ClassInfoVo;
 import com.lancabbage.lancodeapi.map.MenuDtoToVo;
 import com.lancabbage.lancodeapi.mapper.MenuMapper;
 import com.lancabbage.lancodeapi.service.ApiInfoService;
-import com.lancabbage.lancodeapi.service.ClassInfoService;
 import com.lancabbage.lancodeapi.service.MenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +51,7 @@ public class MenuServiceImpl implements MenuService {
             cMenu.setCreateTime(new Date());
             menuMapper.insertSelective(cMenu);
             //先保存API信息
-            saveApiMenu(projectId, branchId, cMenu,cMenu.getApiInfos());
+            saveApiMenu(projectId, branchId, cMenu, cMenu.getApiInfos());
         }
     }
 
@@ -77,6 +75,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
 
+    @Transactional
     @Override
     public void saveMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId) {
         Example example = new Example(Menu.class);
@@ -87,9 +86,10 @@ public class MenuServiceImpl implements MenuService {
         example = new Example(Menu.class);
         example.createCriteria().andEqualTo("parentId", menu.getId());
         List<Menu> menus = menuMapper.selectByExample(example);
+        menuMapper.deleteByExample(example);
         //加载当前分支下所有的API API关联的菜单 class
-        List<ApiInfoVo> apiInfoVos = apiInfoService.listApiByBranchId(branchId);
-        List<Integer> aIds = apiInfoVos.stream().map(ApiInfoVo::getId).collect(Collectors.toList());
+        List<ApiInfo> apiList = apiInfoService.listApiInfoByBranchId(branchId);
+        List<Integer> aIds = apiList.stream().map(ApiInfo::getId).collect(Collectors.toList());
         List<Menu> apiMenus = listApiMenuByApiId(aIds);
         //对比不相同就更新
         //主菜单 查询
@@ -107,9 +107,8 @@ public class MenuServiceImpl implements MenuService {
             }
 
             List<ApiInfoDto> apiInfoAdds = new ArrayList<>();
-            List<Menu> menuPuts = new ArrayList<>();
             for (ApiInfoDto a : apiInfos) {
-                List<ApiInfoVo> collect = apiInfoVos.stream()
+                List<ApiInfo> collect = apiList.stream()
                         .filter(i -> i.getPath().equals(a.getPath())
                                 && i.getType().equals(a.getType()))
                         .collect(Collectors.toList());
@@ -119,28 +118,29 @@ public class MenuServiceImpl implements MenuService {
                     continue;
                 }
                 //存在修改当前API信息 已经关联的菜单信息 关联菜单是默认菜单的修改
-                ApiInfoVo apiInfo = collect.get(0);
+                ApiInfo apiInfo = collect.get(0);
                 // 1.当前API 名称相同（没有改过菜单）修改名称 2.同时判断是否是默认菜单修改为新菜单
-               apiMenus.stream()
+                apiMenus.stream()
                         .filter(i -> i.getApiId().equals(apiInfo.getId())
                                 && i.getMenuName().equals(apiInfo.getName()))
                         .peek(i -> i.setMenuName(a.getName()))
-                        .filter(i-> menus.stream().anyMatch(p -> p.getId().equals(i.getParentId())))
-                        .peek(i-> i.setParentId(cMenu.getId()))
+                        .filter(i -> menus.stream().anyMatch(p -> p.getId().equals(i.getParentId())))
+                        .peek(i -> i.setParentId(cMenu.getId()))
                         .forEach(menuMapper::updateByPrimaryKeySelective);
-               //修改API信息
-               //apiInfoService.updateApi()
+                //修改API信息
+                apiInfoService.updateApi(apiInfo, a);
             }
-            saveApiMenu(projectId, branchId, cMenu,apiInfoAdds);
+            saveApiMenu(projectId, branchId, cMenu, apiInfoAdds);
         }
     }
 
     /**
      * 保存API菜单
+     *
      * @param projectId 项目ID
-     * @param branchId 分支ID
-     * @param cMenu 父ID
-     * @param apiInfos API信息
+     * @param branchId  分支ID
+     * @param cMenu     父ID
+     * @param apiInfos  API信息
      */
     private void saveApiMenu(Integer projectId, Integer branchId, MenuDto cMenu, List<ApiInfoDto> apiInfos) {
         if (apiInfos.isEmpty()) {

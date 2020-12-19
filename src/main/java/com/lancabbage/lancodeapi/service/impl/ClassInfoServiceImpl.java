@@ -101,7 +101,7 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             classInfo1.setClassDescribe(c.getClassDescribe());
             classInfoMapper.updateByPrimaryKey(classInfo1);
         }
-        if(!addList.isEmpty()){
+        if (!addList.isEmpty()) {
             classInfoMapper.insertList(classDtoTovo.listClassInfoDtoToPo(classInfo));
         }
         example = new Example(ClassField.class);
