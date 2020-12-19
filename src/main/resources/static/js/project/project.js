@@ -25,7 +25,7 @@ function projectAll(fun) {
 //添加项目
 function addProject(fun) {
     //监听提交
-    form.on('submit(projectFormBtn)', function(data){
+    form.on('submit(projectFormBtn)', function (data) {
         $.ajax({
             type: 'post',
             url: addProjectUrl,
@@ -38,7 +38,7 @@ function addProject(fun) {
                     layer.msg(data.statusMsg);
                     return;
                 }
-                if(fun!= null ){
+                if (fun != null) {
                     fun(data.data);
                 }
             }
@@ -48,8 +48,24 @@ function addProject(fun) {
 
 }
 
+function pullProjectBranch(projectId, branchId) {
+    $.ajax({
+        type: "POST",
+        url: pullProjectBranchUrl + "?projectId=" + projectId + "&branchId=" + branchId,
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            if (data.statusCode !== 200) {
+                layer.msg(data.statusMsg);
+                return;
+            }
+            location.reload();
+        }
+    })
+}
 
-function renderTable(){
+//项目数据表格
+function renderTable() {
     table.render({
         elem: '#project-table',
         id: "showdata",
@@ -58,11 +74,13 @@ function renderTable(){
         cols: [[
             {type: 'checkbox'}
             , {field: 'id', title: 'ID', sort: true, width: 60}
-            , {field: 'name', title: '名称' ,width: 160}
+            , {field: 'name', title: '名称', width: 160}
             , {field: 'remotePath', title: 'git地址'}
-            , {field: 'branchList', title: '分支', templet: d=>{
-                return d.branchList.map(i=>i.name).join(",")
-                }}
+            , {
+                field: 'branchList', title: '分支', templet: d => {
+                    return d.branchList.map(i => i.name).join(",")
+                }
+            }
         ]],
         done: function (res, curr, count) {
             $("#countNum").text(count);

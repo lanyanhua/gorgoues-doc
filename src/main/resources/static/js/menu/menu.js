@@ -176,6 +176,10 @@ function openSwitch() {
     });
 
 }
+//更新当前API信息
+function updateApi(){
+    pullProjectBranch(currProject.projectId,currProject.branchId);
+}
 
 //菜单过滤
 function menuFilter(t) {

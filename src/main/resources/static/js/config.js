@@ -7,6 +7,8 @@ let listMenuTest = context + 'js/lancode.json';
 let listProjectAll = context + 'project/listProjectAll';
 //添加项目
 let addProjectUrl = context + 'project/addProject';
+//更新分支信息
+let pullProjectBranchUrl = context + 'branch/pullProjectBranch';
 
 
 //添加环境数据
