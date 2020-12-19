@@ -90,7 +90,7 @@
         <table class="layui-table" lay-size="sm">
             <thead>
             <th width="10%">参数</th>
-            <th width="10%">值</th>
+            <th width="15%">值</th>
             <th width="10%">类型</th>
             <th>描述</th>
             </thead>
@@ -104,7 +104,7 @@
                 {{# if(inputType){ }}
                 <td>
                     <input class="layui-input input-sm param-value"
-                           api-paramMode="{{v.paramMode}}" api-type="{{v.dataType}}"
+                           api-paramMode="{{v.paramMode}}" api-type="{{inputType}}"
                            name="{{v.paramName}}" type="{{inputType}}"/>
                 </td>
                 {{# }else{ }}

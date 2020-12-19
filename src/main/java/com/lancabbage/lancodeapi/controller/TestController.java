@@ -45,9 +45,8 @@ public class TestController {
      *
      * @return 001
      */
-    @GetMapping("testFile")
+    @PostMapping("testFile")
     public BaseResponse<String> testFile(MultipartFile file) {
-
         return BaseResponse.successInstance(file.getOriginalFilename());
     }
 
