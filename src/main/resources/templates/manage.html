@@ -67,28 +67,30 @@
                     <div class="layui-tab-item layui-show" tab-id="1-1">
                         <!--工具栏-->
                         <okToolbar>
-                            <button class="layui-btn layui-btn-normal layui-btn-sm">
-                                添加项目
+                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="addProjectBtn()">
+                                添加
                             </button>
-                            <button class="layui-btn layui-btn-normal layui-btn-sm">
-                                添加分支
-                            </button>
-                            <button class="layui-btn layui-btn-normal layui-btn-sm">
-                                编辑项目
-                            </button>
-                            <button class="layui-btn layui-btn-normal layui-btn-sm">
-                                菜单管理
-                            </button>
+                            <!--                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="">-->
+                            <!--                                停用-->
+                            <!--                            </button>-->
                         </okToolbar>
                         <!--数据表格-->
-                        <table class="" id="project-table" lay-filter="tableFilter"></table>
-
+                        <table class="" id="project-table" lay-filter="project-table-filter"></table>
                     </div>
                     <div class="layui-tab-item " tab-id="2-1">
-                        <h3 class="">hello world 4</h3>
+                        <div th:include="git/gitTemplate.html"></div>
                     </div>
                     <div class="layui-tab-item " tab-id="2-2">
-                        <h3 class="">hello world 5</h3>
+                        <okToolbar>
+                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="openEnvForm()">
+                                添加
+                            </button>
+                            <!--                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="">-->
+                            <!--                                停用-->
+                            <!--                            </button>-->
+                        </okToolbar>
+                        <!--数据表格-->
+                        <table class="" id="env-table" lay-filter="env-table-filter"></table>
                     </div>
                 </div>
             </div>
@@ -96,18 +98,50 @@
     </div>
 </div>
 </body>
+<div th:include="project/projectAddTemplate.html"></div>
+<div th:include="env/envAddTemplate.html"></div>
 <div th:include="common/common.html"></div>
 <script th:src="@{/js/project/project.js}"></script>
-
-branchListTemp
+<script th:src="@{/js/git/git.js}"></script>
+<script th:src="@{/js/env/env.js}"></script>
 <script type="text/javascript">
-    renderTable();
-    $(".layui-nav-child").find("dd").click(function () {
-        let tabId = $(this).children('a').attr('tab-id');
-        // 切换选项卡
-        element.tabChange("ok-tab", tabId);
-    });
+    $(function () {
+        $projectForm.addClass("layui-hide");
+        $envForm.addClass("layui-hide");
 
+        $(".layui-nav-child").find("dd").click(function () {
+            let tabId = $(this).children('a').attr('tab-id');
+            // 切换选项卡
+            element.tabChange("ok-tab", tabId);
+        });
+        //项目数据表格
+        renderProjectTable();
+        addProject(function () {
+            layer.closeAll();
+            dataTable.reload({});
+            $projectForm.addClass("layui-hide");
+        });
+        //加载git信息 保存
+        getGitInfo();
+        saveGit(function () {
+            layer.msg('保存成功');
+        });
+        //环境表格
+        renderEnvTable();
+        saveEnv(function () {
+            layer.closeAll();
+            dataTableEnv.reload({});
+            $envForm.addClass("layui-hide");
+        });
+    })
 
 </script>
+<script type="text/html" id="project-toolbar">
+    <a class="layui-btn layui-btn-xs" lay-event="addBranch">添加分支</a>
+    <!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+</script>
+<script type="text/html" id="env-toolbar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
 </html>
+

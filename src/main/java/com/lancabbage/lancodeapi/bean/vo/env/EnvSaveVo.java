@@ -9,7 +9,6 @@ import com.sun.istack.internal.NotNull;
  */
 public class EnvSaveVo {
 
-    @NotNull
     private Integer id;
 
     /**
@@ -27,7 +26,6 @@ public class EnvSaveVo {
     /**
      * header参数，多个逗号隔开
      */
-    @NotNull
     private String header;
 
     public Integer getId() {

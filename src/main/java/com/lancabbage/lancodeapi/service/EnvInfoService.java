@@ -10,17 +10,11 @@ import java.util.List;
  * @Description: 环境service
  */
 public interface EnvInfoService {
-    /**
-     * 添加环境
-     *
-     * @return ID
-     */
-    int addEnv(EnvInfo envInfo);
 
     /**
      * 保存环境信息
      */
-    void saveEnv(EnvInfo envInfo);
+    int saveEnv(EnvInfo envInfo);
 
     /**
      * 获取所有环境信息

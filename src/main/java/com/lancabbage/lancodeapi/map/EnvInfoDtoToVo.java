@@ -1,7 +1,6 @@
 package com.lancabbage.lancodeapi.map;
 
 import com.lancabbage.lancodeapi.bean.po.EnvInfo;
-import com.lancabbage.lancodeapi.bean.vo.env.EnvAddVo;
 import com.lancabbage.lancodeapi.bean.vo.env.EnvSaveVo;
 import org.mapstruct.Mapper;
 
@@ -12,7 +11,6 @@ import org.mapstruct.Mapper;
  */
 @Mapper(componentModel = "spring")
 public interface EnvInfoDtoToVo {
-    EnvInfo envAddVoToPo(EnvAddVo addVo);
 
     EnvInfo envSaveVoToPo(EnvSaveVo saveVo);
 }

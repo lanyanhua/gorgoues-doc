@@ -7,12 +7,11 @@ let listMenuTest = context + 'js/lancode.json';
 let listProjectAll = context + 'project/listProjectAll';
 //添加项目
 let addProjectUrl = context + 'project/addProject';
+//添加分支信息
+let addProjectBranchUrl = context + 'branch/addProjectBranch';
 //更新分支信息
 let pullProjectBranchUrl = context + 'branch/pullProjectBranch';
 
-
-//添加环境数据
-let addEnvUrl = context + 'env/addEnv';
 //保存环境数据
 let saveEnvUrl = context + 'env/saveEnv';
 //
@@ -175,22 +174,25 @@ function setEnvMap(envValue) {
 /**
  * 获取当前打开的菜单
  */
-function getCurrMenuId() {
-    let temp = localStorage.getItem("CurrMenuId");
+function getCurrMenuId(branchId) {
+    let temp = localStorage.getItem("CurrMenuId_"+branchId);
     return temp != null ? Number(temp) : null;
 }
 
 /**
  * 设置当前打开的菜单
  */
-function setCurrMenuId(id) {
-    localStorage.setItem("CurrMenuId", id);
+function setCurrMenuId(branchId,id) {
+    localStorage.setItem("CurrMenuId_"+branchId, id);
 }
 
 /**
  * 格式化json
  */
 function formatJson1(json) {
+    if(!json){
+        return "";
+    }
     if (typeof json == 'string') {
         json = JSON.parse(json);
     }

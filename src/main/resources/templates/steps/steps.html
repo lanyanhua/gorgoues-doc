@@ -68,37 +68,58 @@
             ], //desc 不是必须
             //current: 2 //默认为第几步
         });
+        nextFun.steps = steps;
         //git
-        getGitInfo(function (data) {
-            if (data) {
-                steps.next(); //下一步
-                //项目
-                projectAll(function (data) {
-                    if (data && data.length >0) {
-                        steps.next(); //下一步
-                        //环境
-                        getEnvAll(function (data) {
-                            if (data && data.length >0) {
-                                steps.next(); //下一步
-                                // window.location.href=context+"docs";
-                            }
-                        })
-                    }
-                });
-            }
-        });
+        nextFun.getNext(0);
         saveGit(function () {
             steps.next(); //下一步
+            nextFun.getNext(1);
         });
         addProject(function () {
-            debugger
             steps.next(); //下一步
+            nextFun.getNext(2);
         });
-        addEnv(function () {
+        saveEnv(function () {
             steps.next(); //下一步
-            window.location.href=context+"docs";
+            window.location.href = context + "docs";
         })
+
+
     });
+
+    let nextFun = {
+        steps: null,
+        getNext: function (i) {
+            if (i === 0) {
+                getGitInfo(nextFun.git);
+            } else if (i === 1) {
+                nextFun.git(true);
+            } else if (i === 2) {
+                nextFun.pro([true]);
+            }
+        }
+        ,
+        pro: function (data) {
+            if (data && data.length > 0) {
+                nextFun.steps.next(); //下一步
+                //环境
+                getEnvAll(function (data) {
+                    if (data && data.length > 0) {
+                        nextFun.steps.next(); //下一步
+                        window.location.href = context + "docs";
+                    }
+                })
+            }
+        }
+        , git: function (data) {
+            if (data) {
+                nextFun.steps.next(); //下一步
+                //项目
+                projectAll(nextFun.pro);
+            }
+        }
+    }
+
 
 </script>
 </body>

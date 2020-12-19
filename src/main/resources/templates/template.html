@@ -58,7 +58,7 @@
             //显示菜单
             renderMenu();
             //打开上次的菜单
-            let currMenuId = getCurrMenuId();
+            let currMenuId = getCurrMenuId(currProject.branchId);
             if (currMenuId) {
                 openTab(currMenuId);
             }
@@ -67,7 +67,7 @@
         //监听tab切换
         element.on('tab(api-tab)', function () {
             let mId = this.getAttribute('lay-id');
-            setCurrMenuId(mId)
+            setCurrMenuId(currProject.branchId,mId)
         });
     });
 </script>

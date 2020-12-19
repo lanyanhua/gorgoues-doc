@@ -95,9 +95,9 @@ public class ClassInfoUtils {
                 }
             }
         }
+        List<ClassFieldDto> fieldDtoList = new ArrayList<>();
+        classInfoDto.setFieldList(fieldDtoList);
         if (arrayType.contains(className)) {
-            List<ClassFieldDto> fieldDtoList = new ArrayList<>();
-            classInfoDto.setFieldList(fieldDtoList);
             ClassFieldDto fieldDto = new ClassFieldDto();
             fieldDtoList.add(fieldDto);
             fieldDto.setParamName("value");
@@ -110,8 +110,6 @@ public class ClassInfoUtils {
         //是否需要赋值字段
         else if (!notSetField.contains(className)) {
             //字段
-            List<ClassFieldDto> fieldDtoList = new ArrayList<>();
-            classInfoDto.setFieldList(fieldDtoList);
             FieldDoc[] fields = doc.fields(false);
             for (FieldDoc field : fields) {
                 ClassFieldDto fieldDto = new ClassFieldDto();

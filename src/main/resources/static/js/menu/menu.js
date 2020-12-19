@@ -166,8 +166,14 @@ function openSwitch() {
         layui.form.render();
         //绑定联动
         form.on('select(projectIdFilter)', function (data) {
-            $('.branch-div').addClass('layui-hide');
-            $('.branch-id-' + data.value).removeClass('layui-hide');
+            let p = projectData.find(i=> i.id == data.value);
+            let $branch = $('[name="branchId"]');
+            $branch.html("");
+            $.each(p.branchList,(i,b)=> {
+                $branch.append("<option value=" + b.id + ">" + b.name + "</option>");
+            });
+            //渲染
+            layui.form.render('select');
         });
         form.on('select(envIdFilter)', function (data) {
             $('.env-div').addClass('layui-hide');

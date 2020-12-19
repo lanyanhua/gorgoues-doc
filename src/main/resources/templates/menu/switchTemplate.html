@@ -6,22 +6,21 @@
             <label class="layui-form-label">项目</label>
             <div class="layui-input-block">
                 <select name="projectId" lay-verify="required" lay-filter="projectIdFilter" >
+                    {{# let branchList = [] }}
                     {{# $.each(d.projectList,(i,p)=>{ }}
-                    <option value="{{p.id}}" {{# if(p.id== d.projectId){ }}selected{{# } }}>{{p.name}}</option>
+                    <option value="{{p.id}}" {{# if(p.id== d.projectId){ }}selected{{# branchList = p.branchList; } }}>
+                        {{p.name}}
+                    </option>
                     {{# }) }}
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">选择框</label>
+            <label class="layui-form-label">分支</label>
             <div class="layui-input-block">
                 <select name="branchId" lay-verify="required">
-                    {{# $.each(d.projectList,(i,p)=>{ }}
-                    <div class="branch-div branch-id-{{p.id}} {{# if(p.id == d.projectId){ }}layui-hide{{# } }}">
-                        {{# $.each(p.branchList,(i,b)=>{ }}
-                        <option value="{{b.id}}" {{# if(b.id == d.branchId){ }}selected{{# } }}>{{b.name}}</option>
-                        {{# }) }}
-                    </div>
+                    {{# $.each(branchList,(i,b)=>{ }}
+                    <option value="{{b.id}}" {{# if(b.id == d.branchId){ }}selected{{# } }}>{{b.name}}</option>
                     {{# }) }}
                 </select>
             </div>

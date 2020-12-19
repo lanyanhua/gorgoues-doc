@@ -25,18 +25,17 @@ public class EnvInfoServiceImpl implements EnvInfoService {
         this.envInfoMapper = envInfoMapper;
     }
 
-    @Transactional
-    @Override
-    public int addEnv(EnvInfo envInfo) {
-        envInfo.setCreateTime(new Date());
-        envInfoMapper.insert(envInfo);
-        return envInfo.getId();
-    }
 
     @Transactional
     @Override
-    public void saveEnv(EnvInfo envInfo) {
+    public int saveEnv(EnvInfo envInfo) {
+        if(envInfo.getId() == null){
+            envInfo.setCreateTime(new Date());
+            envInfoMapper.insert(envInfo);
+            return envInfo.getId();
+        }
         envInfoMapper.updateByPrimaryKeySelective(envInfo);
+        return envInfo.getId();
     }
 
     @Override

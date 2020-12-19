@@ -2,7 +2,6 @@ package com.lancabbage.lancodeapi.controller.env;
 
 import com.lancabbage.lancodeapi.bean.po.EnvInfo;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
-import com.lancabbage.lancodeapi.bean.vo.env.EnvAddVo;
 import com.lancabbage.lancodeapi.bean.vo.env.EnvSaveVo;
 import com.lancabbage.lancodeapi.map.EnvInfoDtoToVo;
 import com.lancabbage.lancodeapi.service.EnvInfoService;
@@ -28,27 +27,14 @@ public class EnvController {
     }
 
     /**
-     * 添加环境信息
-     *
-     * @return ID
-     */
-    @PostMapping("/addEnv")
-    public BaseResponse<Integer> addEnv(@RequestBody EnvAddVo addVo) {
-        EnvInfo envInfo = envInfoDtoToVo.envAddVoToPo(addVo);
-        int id = envInfoService.addEnv(envInfo);
-        return BaseResponse.successInstance(id);
-    }
-
-    /**
      * 保存环境信息
-     *
      * @return ID
      */
     @PutMapping("/saveEnv")
-    public BaseResponse<String> saveEnv(@RequestBody EnvSaveVo saveVo) {
+    public BaseResponse<Integer> saveEnv(@RequestBody EnvSaveVo saveVo) {
         EnvInfo envInfo = envInfoDtoToVo.envSaveVoToPo(saveVo);
-        envInfoService.saveEnv(envInfo);
-        return BaseResponse.successInstance("成功");
+        int id = envInfoService.saveEnv(envInfo);
+        return BaseResponse.successInstance(id);
     }
 
 
