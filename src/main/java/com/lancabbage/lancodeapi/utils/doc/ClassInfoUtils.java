@@ -41,10 +41,10 @@ public class ClassInfoUtils {
      * @return classInfo
      */
     public ClassInfoDto getClassInfo(Type type) {
-        String className = type.typeName();
         String packagePath = type.toString();
         ClassInfoDto classInfoDto;
         boolean isArr = packagePath.endsWith("[]");
+        String className = isArr ? packagePath.substring(packagePath.lastIndexOf(".") + 1) : type.typeName();
         //基本数据类型直接返回
         if (baseDataType.contains(className) && !isArr) {
             return new ClassInfoDto(className);
@@ -86,6 +86,9 @@ public class ClassInfoUtils {
                 String[] key = s.substring(s.indexOf("<") + 1, s.lastIndexOf(">")).split(",");
                 //先申明范型对象
                 for (int i = 0; i < types.length; i++) {
+                    if(arrayType.contains(className) ){
+                        classInfoDto.setClassName(types[i].typeName()+"[]");
+                    }
                     ClassInfoDto v = getClassInfo(types[i]);
                     //获取范型classKey
                     paradigmList.add(v);
@@ -110,7 +113,6 @@ public class ClassInfoUtils {
             }
             fieldDto.setTypeClass(c);
             fieldDto.setType(s(c.getClassName(), c.getBaseType()));
-            classInfoDto.setClassName(fieldDto.getType()+"[]");
         }
         //是否需要赋值字段
         else if (!notSetField.contains(className)) {

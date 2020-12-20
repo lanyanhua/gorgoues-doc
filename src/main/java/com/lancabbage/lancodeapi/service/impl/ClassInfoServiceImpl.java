@@ -101,7 +101,7 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             c.setId(classInfo1.getId());
             //修改
             classInfo1.setClassDescribe(c.getClassDescribe());
-            classInfoMapper.updateByPrimaryKey(classInfo1);
+            classInfoMapper.updateByPrimaryKeySelective(classInfo1);
         }
         if (!addList.isEmpty()) {
             classInfoMapper.insertList(classDtoTovo.listClassInfoDtoToPo(classInfo));

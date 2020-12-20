@@ -90,18 +90,11 @@ function openTab(id) {
     let typeArr = [];
     for (let p of menu.api.apiParamList) {
         if (p.classId != null) {
-            let c = branchMenuData.classInfoList.find(i => i.id == p.classId);
-            if(isArr(c.className)){
-                let typeC = c.classFieldList[0];
-                if (typeC.typeId == null) {
-                    //基本类型数组
-                    p.isBaseTypeArr = BaseType[c.className.replace("[]","")];
-                    continue;
-                }
-            }
+            let c = branchMenuData.classInfoList.find(i => i.id === p.classId);
             p.className = c.className;
-            let res = classTypeArrJson.getTypeArrJson(c.classFieldList, p.type);
-            typeArr.push($.extend({type: p.type, paramMode: p.paramMode, typeJson: res.typeJson}, c));
+            let res = classTypeArrJson.getTypeArrJson(c, p);
+            //基本类型数组
+            p.isBaseTypeArr = p.paramMode === ParamMode.form_data ? res.isBaseTypeArr : '';
             typeArr = typeArr.concat(res.typeList);
         }
     }
@@ -174,10 +167,10 @@ function openSwitch() {
         layui.form.render();
         //绑定联动
         form.on('select(projectIdFilter)', function (data) {
-            let p = projectData.find(i=> i.id == data.value);
+            let p = projectData.find(i => i.id == data.value);
             let $branch = $('[name="branchId"]');
             $branch.html("");
-            $.each(p.branchList,(i,b)=> {
+            $.each(p.branchList, (i, b) => {
                 $branch.append("<option value=" + b.id + ">" + b.name + "</option>");
             });
             //渲染
@@ -190,9 +183,10 @@ function openSwitch() {
     });
 
 }
+
 //更新当前API信息
-function updateApi(){
-    pullProjectBranch(currProject.projectId,currProject.branchId);
+function updateApi() {
+    pullProjectBranch(currProject.projectId, currProject.branchId);
 }
 
 //菜单过滤
@@ -209,12 +203,12 @@ function menuFilter(t) {
         let m = $(v);
         let a = m.children('a');
         let isShow = false;
-        if( a.data('class').indexOf(content) !== -1 || a.data('name').indexOf(content) !== -1){
+        if (a.data('class').indexOf(content) !== -1 || a.data('name').indexOf(content) !== -1) {
             m.removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
             m.children('.layui-nav-child>dd').removeClass('layui-hide ').addClass('layui-show');
-            return ;
+            return;
         }
-        for(let ci of m.find('.layui-nav-child>dd')) {
+        for (let ci of m.find('.layui-nav-child>dd')) {
             let c = $(ci);
             let api = c.find('api');
             if (api.data('menuname').indexOf(content) !== -1 || api.data('name').indexOf(content) !== -1
@@ -225,9 +219,9 @@ function menuFilter(t) {
                 c.removeClass('layui-show').addClass('layui-hide');
             }
         }
-        if(isShow){
+        if (isShow) {
             m.removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
-        }else{
+        } else {
             m.removeClass('layui-show layui-nav-itemed').addClass('layui-hide');
         }
     })

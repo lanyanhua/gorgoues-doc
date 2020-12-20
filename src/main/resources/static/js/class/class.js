@@ -1,75 +1,72 @@
 let classTypeArrJson = {
-    paramType: 0,
+    paramType: null,
+    paramMode: null,
     typeMap: {},
-    getTypeArrJson: function (param, type) {
-        this.paramType = type;
+    getTypeArrJson: function (c, param) {
+        this.paramType = param.type;
+        this.paramMode = param.paramMode;
         this.typeMap = {};
-        return this.getParamAllClass(param);
+        return this.getParamAllClass(c);
     },
     /**
      * 获取参数class信息
-     * @param param
-     * @returns {{typeList: [], typeJson: string}}
      */
-    getParamAllClass: function (param) {
+    getParamAllClass: function (c) {
         let typeArr = [];
         let jo = {};
-        for (let p of param) {
+        //数组
+        if (isArr(c.className)) {
+            let typeC = c.classFieldList[0];
+            //基本类型数组
+            if (typeC.typeId == null) {
+                let value = jsonValue(typeC.type);
+                let typeJson = JSON.stringify([value]);
+                typeArr.push({type: this.paramType, paramMode: this.paramMode, typeJson: typeJson});
+                return {typeList: typeArr, typeJson:typeJson, isBaseTypeArr: BaseType[typeC.type]};
+            }
+            //引用类型数组
+            c = branchMenuData.classInfoList.find(i => i.id === typeC.typeId);
+            //非数组添加到类型
+        }
+        for (let p of c.classFieldList) {
             let value = jsonValue(p.type);
             if (p.typeId == null) {
                 jo[p.paramName] = value;
                 continue;
             }
-
-            //是数组
-            let b = isArr(p.type);
+            //记录当前类型防止互相依赖死循环
             let typeValue = this.typeMap[p.typeId];
+            debugger
             if (typeValue) {
                 jo[p.paramName] = typeValue;
-                if (b) {
-                    p.type = typeValue;
-                }
                 continue;
             }
-            let c = branchMenuData.classInfoList.find(i => i.id == p.typeId);
-            if (b) {
-                //数组使用范型
-                let typeC = c.classFieldList[0];
-                if (typeC.typeId == null) {
-                    jo[p.paramName] = [jsonValue(typeC.type)];
-                    continue;
-                }
-                c = branchMenuData.classInfoList.find(i => i.id == typeC.typeId);
-                p.type = p.type + '[' + c.className + ']';
-            }
-            //记录当前类型防止互相依赖死循环
             this.typeMap[p.typeId] = p.type;
-            let res = this.getParamAllClass(c.classFieldList);
-            typeArr.push($.extend({type: this.paramType}, c));
+            //解析当前字段类型
+            let c = branchMenuData.classInfoList.find(i => i.id === p.typeId);
+            let res = this.getParamAllClass(c);
             typeArr = typeArr.concat(res.typeList);
             //赋值json
-            if (b) {
-                jo[p.paramName] = [JSON.parse(res.typeJson)];
-            } else {
-                jo[p.paramName] = JSON.parse(res.typeJson);
-            }
+            jo[p.paramName] = JSON.parse(res.typeJson);
         }
+        //添加自身
+        typeArr.unshift($.extend({type: this.paramType, paramMode: this.paramMode, typeJson: JSON.stringify(jo)}, c));
         return {typeList: typeArr, typeJson: JSON.stringify(jo)};
     }
 }
 
 
 function jsonValue(type) {
-    if (type == 'int' || type == 'Integer') {
+    if (type === 'int' || type === 'Integer') {
         return 0;
     }
-    if (type == 'double' || type == 'Double') {
+    if (type === 'double' || type === 'Double') {
         return 0.0;
     }
-    if (type == 'boolean' || type == 'Boolean') {
+    if (type === 'boolean' || type === 'Boolean') {
         return false;
     }
-    if (type == 'Date') {
+    if (type === 'Date') {
         return dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss');
     }
     return type;
