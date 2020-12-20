@@ -2,11 +2,16 @@ let classTypeArrJson = {
     paramType: null,
     paramMode: null,
     typeMap: {},
+    classSet: {},
     getTypeArrJson: function (c, param) {
         this.paramType = param.type;
         this.paramMode = param.paramMode;
         this.typeMap = {};
-        return this.getParamAllClass(c);
+        this.classSet = {};
+        let res=  this.getParamAllClass(c);
+        res.typeList.push({type: this.paramType, paramMode: this.paramMode, typeJson: res.typeJson});
+        res.typeList.dis
+        return res;
     },
     /**
      * 获取参数class信息
@@ -17,15 +22,18 @@ let classTypeArrJson = {
         //数组
         if (isArr(c.className)) {
             let typeC = c.classFieldList[0];
-            //基本类型数组
             if (typeC.typeId == null) {
+                //基本类型数组
                 let value = jsonValue(typeC.type);
-                let typeJson = JSON.stringify([value]);
-                typeArr.push({type: this.paramType, paramMode: this.paramMode, typeJson: typeJson});
-                return {typeList: typeArr, typeJson:typeJson, isBaseTypeArr: BaseType[typeC.type]};
+                jo = [value];
+            } else {
+                //引用类型数组
+                c = branchMenuData.classInfoList.find(i => i.id === typeC.typeId);
+                let res = this.getParamAllClass(c);
+                typeArr = typeArr.concat(res.typeList);
+                jo = [res.typeJson];
             }
-            //引用类型数组
-            c = branchMenuData.classInfoList.find(i => i.id === typeC.typeId);
+            return {typeList: typeArr, typeJson: jo, isBaseTypeArr: BaseType[typeC.type]};
             //非数组添加到类型
         }
         for (let p of c.classFieldList) {
@@ -36,22 +44,24 @@ let classTypeArrJson = {
             }
             //记录当前类型防止互相依赖死循环
             let typeValue = this.typeMap[p.typeId];
-            debugger
             if (typeValue) {
                 jo[p.paramName] = typeValue;
                 continue;
             }
-            this.typeMap[p.typeId] = p.type;
+            this.typeMap[p.typeId] = value;
             //解析当前字段类型
             let c = branchMenuData.classInfoList.find(i => i.id === p.typeId);
             let res = this.getParamAllClass(c);
             typeArr = typeArr.concat(res.typeList);
             //赋值json
-            jo[p.paramName] = JSON.parse(res.typeJson);
+            jo[p.paramName] = res.typeJson;
         }
         //添加自身
-        typeArr.unshift($.extend({type: this.paramType, paramMode: this.paramMode, typeJson: JSON.stringify(jo)}, c));
-        return {typeList: typeArr, typeJson: JSON.stringify(jo)};
+        if(this.classSet[c.id]==null){
+            typeArr.unshift($.extend({type: this.paramType,paramMode: this.paramMode}, c));
+            this.classSet[c.id] = 1;
+        }
+        return {typeList: typeArr, typeJson: jo};
     }
 }
 
@@ -68,6 +78,9 @@ function jsonValue(type) {
     }
     if (type === 'Date') {
         return dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss');
+    }
+    if (isArr(type)) {
+        return [];
     }
     return type;
 }

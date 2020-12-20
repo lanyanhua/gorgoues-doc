@@ -93,6 +93,7 @@ public class ClassInfoServiceImpl implements ClassInfoService {
                 c.setId(++id);
                 c.setProjectId(projectId);
                 c.setBranchId(branchId);
+                c.setCreateTime(new Date());
                 addList.add(c);
                 continue;
             }
@@ -104,7 +105,7 @@ public class ClassInfoServiceImpl implements ClassInfoService {
             classInfoMapper.updateByPrimaryKeySelective(classInfo1);
         }
         if (!addList.isEmpty()) {
-            classInfoMapper.insertList(classDtoTovo.listClassInfoDtoToPo(classInfo));
+            classInfoMapper.insertList(classDtoTovo.listClassInfoDtoToPo(addList));
         }
         example = new Example(ClassField.class);
         example.createCriteria().andIn("classId", classInfos.stream().map(ClassInfo::getId).collect(Collectors.toList()));
