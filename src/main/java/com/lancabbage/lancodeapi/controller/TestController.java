@@ -82,7 +82,7 @@ public class TestController {
      * @return 001
      */
     @PostMapping("testSuper")
-    public BaseResponse<MenuDto> testSuper(MenuDto file) {
+    public BaseResponse<MenuDto> testSuper(@RequestBody MenuDto file) {
         return BaseResponse.successInstance(file);
     }
 
