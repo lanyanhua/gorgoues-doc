@@ -25,7 +25,34 @@
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <h3 class="">hello world</h3>
+<pre class="layui-code">
+注释读取
+class
+/**
+* {{优先级1}}
+* @author: lanyanhua
+* @date: 2020/12/4 8:38 下午
+* @Description: {{优先级2}}
+*/
+public class ProjectController {
+}
+
+方法
+/**
+* {{方法名称}}
+* @param {{参数名称}} {{参数描述}}
+* @return {{返回值描述}}
+*/
+public BaseResponse addProject(@RequestBody ProjectAddVo vo) {
+}
+
+字段
+
+/**
+* {{字段描述}}
+*/
+private String name;
+</pre>
                     </div>
                 </div>
             </div>
@@ -67,7 +94,7 @@
         //监听tab切换
         element.on('tab(api-tab)', function () {
             let mId = this.getAttribute('lay-id');
-            setCurrMenuId(currProject.branchId,mId)
+            setCurrMenuId(currProject.branchId, mId)
         });
     });
 </script>

@@ -19,3 +19,42 @@ API：
 
 可以隐藏分支
 删除分支：需判断自定义菜单是否还有管理当前分支API
+
+
+class
+/**
+ * {{优先级1}}
+ * @author: lanyanhua
+ * @date: 2020/12/4 8:38 下午
+ * @Description: {{优先级2}}
+ */
+public class ProjectController {
+}
+
+方法
+ /**
+  * {{方法名称}}
+  * @param {{参数名称}} {{参数描述}}
+  * @return {{返回值描述}}
+  */
+public BaseResponse<Integer> addProject(@RequestBody ProjectAddVo vo) {
+}
+
+字段
+
+/**
+ * {{字段描述}}
+ */
+private String name;
+
+自定义：
+注释
+classTag
+methodTag
+methodParamTag
+methodReturnTag
+fieldTag
+注解
+classAnnotation 注释名称 注释字段
+methodAnnotation 注释名称 注释字段
+fieldAnnotation 注释名称 注释字段

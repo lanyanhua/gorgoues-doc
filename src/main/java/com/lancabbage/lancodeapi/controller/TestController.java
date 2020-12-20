@@ -1,5 +1,6 @@
 package com.lancabbage.lancodeapi.controller;
 
+import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.menu.MenuVo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,6 +73,17 @@ public class TestController {
     @PostMapping("testFile")
     public BaseResponse<String> testFile(MultipartFile[] file) {
         return BaseResponse.successInstance(file[0].getOriginalFilename());
+    }
+
+
+    /**
+     * 测试父类字段
+     *
+     * @return 001
+     */
+    @PostMapping("testSuper")
+    public BaseResponse<MenuDto> testSuper(MenuDto file) {
+        return BaseResponse.successInstance(file);
     }
 
 }
