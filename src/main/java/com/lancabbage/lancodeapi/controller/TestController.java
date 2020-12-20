@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * @author: lanyanhua
  * @date: 2020/12/13 3:10 下午
@@ -58,7 +60,7 @@ public class TestController {
      * @return 001
      */
     @PostMapping("testArrParamPostObj")
-    public BaseResponse<MenuVo[]> testArrParamPostObj(@RequestBody MenuVo[] ids) {
+    public BaseResponse<List<MenuVo>> testArrParamPostObj(@RequestBody List<MenuVo> ids) {
         return BaseResponse.successInstance(ids);
     }
 
