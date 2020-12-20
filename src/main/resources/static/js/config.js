@@ -63,15 +63,9 @@ let BaseType = {
     "MultipartFile": 'file',
 }
 
-/**
- * 基本数据类型
- */
-let arrayType = [
-    "List", "Set", "array"
-]
-
+//类型是否是数组
 function isArr(type) {
-    return arrayType.find(i => i == type) != null
+    return type.indexOf('[]') !== -1;
 }
 
 /**

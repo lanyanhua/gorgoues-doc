@@ -34,7 +34,12 @@ let classTypeArrJson = {
             let c = branchMenuData.classInfoList.find(i => i.id == p.typeId);
             if (b) {
                 //数组使用范型
-                c = branchMenuData.classInfoList.find(i => i.id == c.classFieldList[0].typeId);
+                let typeC = c.classFieldList[0];
+                if (typeC.typeId == null) {
+                    jo[p.paramName] = [jsonValue(typeC.type)];
+                    continue;
+                }
+                c = branchMenuData.classInfoList.find(i => i.id == typeC.typeId);
                 p.type = p.type + '[' + c.className + ']';
             }
             //记录当前类型防止互相依赖死循环

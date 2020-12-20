@@ -1,8 +1,10 @@
 package com.lancabbage.lancodeapi.controller;
 
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
+import com.lancabbage.lancodeapi.bean.vo.menu.MenuVo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,13 +43,43 @@ public class TestController {
     }
 
     /**
+     * 测试数组参数Post
+     *
+     * @return 001
+     */
+    @PostMapping("testArrParamPost")
+    public BaseResponse<Integer[]> testArrParamPost(@RequestBody Integer[] ids) {
+        return BaseResponse.successInstance(ids);
+    }
+
+    /**
+     * 测试数组参数
+     *
+     * @return 001
+     */
+    @GetMapping("testArrParamObj")
+    public BaseResponse<MenuVo[]> testArrParamObj(MenuVo[] ids) {
+        return BaseResponse.successInstance(ids);
+    }
+
+    /**
+     * 测试数组参数复杂类型
+     *
+     * @return 001
+     */
+    @GetMapping("testArrParamPostObj")
+    public BaseResponse<MenuVo[]> testArrParamPostObj(@RequestBody MenuVo[] ids) {
+        return BaseResponse.successInstance(ids);
+    }
+
+    /**
      * 测试文件上传
      *
      * @return 001
      */
     @PostMapping("testFile")
-    public BaseResponse<String> testFile(MultipartFile file) {
-        return BaseResponse.successInstance(file.getOriginalFilename());
+    public BaseResponse<String> testFile(MultipartFile[] file) {
+        return BaseResponse.successInstance(file[0].getOriginalFilename());
     }
 
 }

@@ -50,5 +50,10 @@ public class ClassInfoDto extends ClassInfo {
         this.baseType = baseType;
     }
 
+    public ClassInfoDto() {
+    }
 
+    public ClassInfoDto(String baseType) {
+        this.baseType = baseType;
+    }
 }

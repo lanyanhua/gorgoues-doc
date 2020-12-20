@@ -43,4 +43,11 @@ public class ClassKey {
         this.packagePath = packagePath;
     }
 
+    public ClassKey() {
+    }
+
+    public ClassKey(String name, String packagePath) {
+        this.name = name;
+        this.packagePath = packagePath;
+    }
 }

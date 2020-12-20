@@ -101,15 +101,17 @@
                 <td>{{v.paramName}}</td>
                 {{# let inputType = BaseType[v.dataType]; }}
 
-                {{# if(inputType){ }}
                 <td>
+                    {{# if(inputType){ }}
                     <input class="layui-input input-sm param-value"
                            api-paramMode="{{v.paramMode}}" api-type="{{inputType}}"
                            name="{{v.paramName}}" type="{{inputType}}"/>
+                    {{# }else if(v.isBaseTypeArr){ }}
+                    <input class="layui-input input-sm param-value"
+                           api-paramMode="{{v.paramMode}}" api-type="{{v.isBaseTypeArr}}"
+                           name="{{v.paramName}}" type="{{v.isBaseTypeArr}}"/>
+                    {{# } }}
                 </td>
-                {{# }else{ }}
-                <td>{{v.type}}</td>
-                {{# } }}
                 <td>{{v.dataType}}</td>
                 <td>{{v.paramDescribe||''}}</td>
             </tr>

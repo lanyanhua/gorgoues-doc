@@ -87,10 +87,12 @@ public class ClassInfoServiceImpl implements ClassInfoService {
         int id = classInfoMapper.selectId();
         for (ClassInfoDto c : classInfo) {
             List<ClassInfo> collect = classInfos.stream()
-                    .filter(i -> i.getClassPath().equals(c.getClassPath()))
+                    .filter(i -> i.getPackagePath().equals(c.getPackagePath()))
                     .collect(Collectors.toList());
             if (collect.isEmpty()) {
                 c.setId(++id);
+                c.setProjectId(projectId);
+                c.setBranchId(branchId);
                 addList.add(c);
                 continue;
             }

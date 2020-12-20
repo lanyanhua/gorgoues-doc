@@ -42,25 +42,23 @@ public class ClassInfoUtils {
      */
     public ClassInfoDto getClassInfo(Type type) {
         String className = type.typeName();
+        String packagePath = type.toString();
         ClassInfoDto classInfoDto;
+        boolean isArr = packagePath.endsWith("[]");
         //基本数据类型直接返回
-        if (baseDataType.contains(className)) {
-            classInfoDto = new ClassInfoDto();
-            classInfoDto.setBaseType(className);
-            return classInfoDto;
-        }
-        if (arrayType.contains(className)) {
-            type.typeName();
+        if (baseDataType.contains(className) && !isArr) {
+            return new ClassInfoDto(className);
         }
         //赋值返回Class数据
         ClassKey classKey = new ClassKey();
         classKey.setName(className);
-        classKey.setPackagePath(type.toString());
+        classKey.setPackagePath(packagePath);
         //从classMap中获取class
         classInfoDto = classMap.get(classKey);
         if (classInfoDto != null) {
             return classInfoDto;
         }
+
         classInfoDto = new ClassInfoDto();
         //先申明对象放入classMap中 解决循环依赖问题
         classMap.put(classKey, classInfoDto);
@@ -97,15 +95,22 @@ public class ClassInfoUtils {
         }
         List<ClassFieldDto> fieldDtoList = new ArrayList<>();
         classInfoDto.setFieldList(fieldDtoList);
-        if (arrayType.contains(className)) {
+        //数组赋值类型
+        if (arrayType.contains(className) || isArr) {
+            //[] 表示是数组
             ClassFieldDto fieldDto = new ClassFieldDto();
             fieldDtoList.add(fieldDto);
             fieldDto.setParamName("value");
             fieldDto.setParamDescribe("");
-            fieldDto.setParamDescribe("");
-            ClassInfoDto c = paradigmMap.values().isEmpty() ? null : paradigmMap.values().iterator().next();
+            ClassInfoDto c;
+            if (isArr) {
+                c = getClassInfo(type.getElementType());
+            } else {
+                c = paradigmMap.values().isEmpty() ? new ClassInfoDto("Object") : paradigmMap.values().iterator().next();
+            }
             fieldDto.setTypeClass(c);
-            fieldDto.setType(c == null ? "Object" : c.getClassName());
+            fieldDto.setType(s(c.getClassName(), c.getBaseType()));
+            classInfoDto.setClassName(fieldDto.getType()+"[]");
         }
         //是否需要赋值字段
         else if (!notSetField.contains(className)) {
@@ -137,4 +142,8 @@ public class ClassInfoUtils {
         return classInfoDto;
     }
 
+
+    public String s(String s1, String s2) {
+        return s1 == null ? s2 : s1;
+    }
 }

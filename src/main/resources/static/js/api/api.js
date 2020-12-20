@@ -43,7 +43,8 @@ function commitApi(id) {
         let type = v.attr('api-type');
         if (type == 'file') {
             isFile = true;
-            val = v[0].files
+            debugger
+            val = v[0].files[0];
             formData.append(name, val);
             return;
         }

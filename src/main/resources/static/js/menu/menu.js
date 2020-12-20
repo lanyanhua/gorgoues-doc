@@ -91,6 +91,14 @@ function openTab(id) {
     for (let p of menu.api.apiParamList) {
         if (p.classId != null) {
             let c = branchMenuData.classInfoList.find(i => i.id == p.classId);
+            if(isArr(c.className)){
+                let typeC = c.classFieldList[0];
+                if (typeC.typeId == null) {
+                    //基本类型数组
+                    p.isBaseTypeArr = BaseType[c.className.replace("[]","")];
+                    continue;
+                }
+            }
             p.className = c.className;
             let res = classTypeArrJson.getTypeArrJson(c.classFieldList, p.type);
             typeArr.push($.extend({type: p.type, paramMode: p.paramMode, typeJson: res.typeJson}, c));
