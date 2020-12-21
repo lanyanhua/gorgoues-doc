@@ -30,12 +30,12 @@ public class ApiInfoUtilTest {
         notesConfigList.add(NotesConfigUtils.notesConfig("methodAnnotation","@ApiOperation(value)"));
         notesConfigList.add(NotesConfigUtils.notesConfig("fieldAnnotation","@ApiModelProperty(value)"));
         NotesConfigUtils.notesConfigList =notesConfigList;
-        String basePath = "/Users/lanyanhua/Desktop/gittest/gyl/master";
-//        String basePath = "/Users/lanyanhua/Desktop/gittest/qns/master";
+//        String basePath = "/Users/lanyanhua/Desktop/gittest/gyl/master";
+        String basePath = "/Users/lanyanhua/Desktop/gittest/qns/master";
 //        String basePath = "/Users/lanyanhua/Desktop/gittest/lan-code-api/master";
         File file = new File(basePath);
         List<String> javaFile = GitUtils.getJavaFile(file);
-//        javaFile.add("/Users/lanyanhua/Documents/workspace/lan-code-api/src/test/java/com/io/swagger/annotations/Api.java");
+        javaFile.add("/Users/lanyanhua/Desktop/gittest/public/main/java/com/jaagro/utils/BaseResponse.java");
         ApiInfoUtils classDocUtils = new ApiInfoUtils();
         List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
         System.out.println(JSON.toJSONString(menuDtoList.get(0)));

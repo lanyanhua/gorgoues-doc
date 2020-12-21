@@ -15,4 +15,8 @@ public interface NotesConfigService {
      */
     List<NotesConfig> selectAll();
 
+    /**
+     * 保存注释配置
+     */
+    Integer saveNotesConfig(NotesConfig config);
 }

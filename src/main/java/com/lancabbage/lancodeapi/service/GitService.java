@@ -34,4 +34,8 @@ public interface GitService {
      */
     void save(GitInfoSaveVo gitInfo);
 
+    /**
+     * 获取公共类路径
+     */
+    String getPublicPath();
 }

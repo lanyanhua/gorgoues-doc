@@ -1,7 +1,16 @@
 package com.lancabbage.lancodeapi.controller.env;
 
+import com.lancabbage.lancodeapi.bean.po.NotesConfig;
+import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
+import com.lancabbage.lancodeapi.bean.vo.env.NotesConfigSaveVo;
+import com.lancabbage.lancodeapi.map.NotesConfigDtoToVo;
 import com.lancabbage.lancodeapi.service.NotesConfigService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author: lanyanhua
@@ -9,11 +18,33 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description: 配置管理
  */
 @RestController
+@RequestMapping("/config")
 public class NotesConfigController {
 
     private final NotesConfigService configService;
+    private final NotesConfigDtoToVo configDtoToVo;
 
-    public NotesConfigController(NotesConfigService configService) {
+    public NotesConfigController(NotesConfigService configService, NotesConfigDtoToVo configDtoToVo) {
         this.configService = configService;
+        this.configDtoToVo = configDtoToVo;
+    }
+
+    /**
+     * 查询所有配置
+     */
+    @GetMapping("/listNotesConfigAll")
+    public BaseResponse<List<NotesConfig>> listNotesConfigAll(){
+        return BaseResponse.successInstance(configService.selectAll());
+    }
+
+    /**
+     * 保存注释配置
+     * @return ID
+     */
+    @PutMapping("/save")
+    public BaseResponse<Integer> saveNotesConfig(NotesConfigSaveVo saveVo){
+        NotesConfig config = configDtoToVo.notesConfigSaveVoToPo(saveVo);
+        int id =configService.saveNotesConfig(config);
+        return BaseResponse.successInstance(id);
     }
 }

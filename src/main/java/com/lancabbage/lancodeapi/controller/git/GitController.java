@@ -1,11 +1,17 @@
 package com.lancabbage.lancodeapi.controller.git;
 
 import com.lancabbage.lancodeapi.bean.po.GitInfo;
+import com.lancabbage.lancodeapi.bean.po.NotesConfig;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
+import com.lancabbage.lancodeapi.bean.vo.env.NotesConfigSaveVo;
 import com.lancabbage.lancodeapi.bean.vo.git.GitInfoSaveVo;
 import com.lancabbage.lancodeapi.service.GitService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author: lanyanhua
@@ -38,6 +44,21 @@ public class GitController {
     @PutMapping("/save")
     public BaseResponse<String> save(@RequestBody GitInfoSaveVo gitInfo) {
         gitService.save(gitInfo);
+        return BaseResponse.successInstance("成功");
+    }
+
+    /**
+     * 上传类
+     * @param bean 文件
+     * @param path 包地址
+     */
+    @PutMapping("/uploadBean")
+    public BaseResponse<String> uploadBean(@RequestParam MultipartFile[] bean,@RequestParam String path) throws IOException {
+        String publicPath = gitService.getPublicPath()+"/"+path+"/";
+        for (MultipartFile f : bean) {
+            String fileName = f.getOriginalFilename();
+            f.transferTo(new File(publicPath+fileName));
+        }
         return BaseResponse.successInstance("成功");
     }
 }

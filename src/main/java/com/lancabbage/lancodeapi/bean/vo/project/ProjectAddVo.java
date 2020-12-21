@@ -20,6 +20,12 @@ public class ProjectAddVo {
      */
     @NotNull
     private String contextPath;
+
+    /**
+     * 端口
+     */
+    private Integer port;
+
     /**
      * 远程库路径
      */
@@ -31,6 +37,7 @@ public class ProjectAddVo {
      */
     @NotNull
     private String branchName;
+
 
     public String getName() {
         return name;
@@ -46,6 +53,14 @@ public class ProjectAddVo {
 
     public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
     public String getRemotePath() {

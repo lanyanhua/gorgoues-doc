@@ -9,6 +9,7 @@ import com.lancabbage.lancodeapi.mapper.GitInfoMapper;
 import com.lancabbage.lancodeapi.service.GitService;
 import com.lancabbage.lancodeapi.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.Date;
@@ -71,6 +72,12 @@ public class GitServiceImpl implements GitService {
             gitInfo.setId(gitInfoList.get(0).getId());
             gitInfoMapper.updateByPrimaryKeySelective(gitInfo);
         }
+    }
+
+    public String getPublicPath() {
+        GitInfo gitInfo = gitInfoMapper.selectAll().get(0);
+        GitUtils gitUtils = GitUtils.getInstance(gitInfo.getRepositoryPath());
+        return gitUtils.getPublicPath();
     }
 
 }

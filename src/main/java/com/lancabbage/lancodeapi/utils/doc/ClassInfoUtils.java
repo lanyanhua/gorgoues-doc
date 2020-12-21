@@ -19,7 +19,7 @@ import static com.lancabbage.lancodeapi.utils.doc.NotesConfigUtils.s;
 public class ClassInfoUtils {
 
     public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
-            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "Date", "MultipartFile");
+            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "Date", "MultipartFile", "BigDecimal");
     public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest");
     public static List<String> arrayType = Arrays.asList("List", "Set", "array");
     /**
@@ -48,6 +48,9 @@ public class ClassInfoUtils {
         String packagePath = type.toString();
         ClassInfoDto classInfoDto;
         boolean isArr = packagePath.endsWith("[]");
+        if(isArr){
+            System.out.println("debugger");
+        }
         String className = isArr ? packagePath.substring(packagePath.lastIndexOf(".") + 1) : type.typeName();
         //基本数据类型直接返回
         if (baseDataType.contains(className) && !isArr) {
@@ -72,11 +75,10 @@ public class ClassInfoUtils {
         classInfoDto.setPackagePath(classKey.getPackagePath());
         //doc
         ClassDocImpl doc = (ClassDocImpl) type.asClassDoc();
-        if (doc == null) {
-            return classInfoDto;
+        if (doc != null) {
+            //描述
+            classInfoDto.setClassDescribe(doc.commentText());
         }
-        //描述
-        classInfoDto.setClassDescribe(doc.commentText());
         //不用赋值字段的赋值范型，用赋值字段的范型当字段数据类型用
         Map<String, ClassInfoDto> paradigmMap = new HashMap<>();
         if (type instanceof ParameterizedTypeImpl) {
@@ -105,7 +107,7 @@ public class ClassInfoUtils {
         //数组赋值类型
         if (arrayType.contains(className) || isArr) {
             //[] 表示是数组
-            ClassFieldDto fieldDto = new ClassFieldDto();
+             ClassFieldDto fieldDto = new ClassFieldDto();
             fieldDtoList.add(fieldDto);
             fieldDto.setParamName("value");
             fieldDto.setParamDescribe("");
@@ -119,7 +121,7 @@ public class ClassInfoUtils {
             fieldDto.setType(s(c.getClassName(), c.getBaseType()));
         }
         //是否需要赋值字段
-        else if (!notSetField.contains(className)) {
+        else if (!notSetField.contains(className) && doc !=null) {
             //字段
             FieldDoc[] fields = doc.fields(false);
             for (FieldDoc field : fields) {

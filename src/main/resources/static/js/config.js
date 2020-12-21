@@ -57,6 +57,7 @@ let BaseType = {
     "Float": 'number',
     "char": 'number',
     "Char": 'number',
+    "BigDecimal": 'number',
     "boolean": 'text',
     "Boolean": 'text',
     "Date": 'date',

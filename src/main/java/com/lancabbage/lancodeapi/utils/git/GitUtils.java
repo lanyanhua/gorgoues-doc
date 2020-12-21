@@ -22,6 +22,10 @@ import java.util.List;
 public class GitUtils {
 
     /**
+     * 公共类
+     */
+    private final String publicBean = "public";
+    /**
      * 远程库路径
      */
     private final String remotePath;
@@ -59,6 +63,62 @@ public class GitUtils {
         return new GitUtils(remotePath, localPath, project, branch, username, password);
     }
 
+    public static GitUtils getInstance(String repositoryPath) {
+        return new GitUtils(null, repositoryPath, null, null, null, null);
+    }
+
+
+    public void cloneCode() throws GitAPIException {
+        //设置远程服务器上的用户名和密码
+        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
+                UsernamePasswordCredentialsProvider(username, password);
+
+        //克隆代码库命令
+        CloneCommand cloneCommand = Git.cloneRepository();
+
+        Git git = cloneCommand.setURI(remotePath) //设置远程URI
+                .setBranch(branch) //设置clone下来的分支
+                .setDirectory(new File(getPath())) //设置下载存放路径
+                .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
+                .call();
+        System.out.print(git.tag());
+    }
+
+    /**
+     * 拉取远程仓库内容到本地
+     */
+    public void pull() throws IOException, GitAPIException {
+        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
+                UsernamePasswordCredentialsProvider(username, password);
+        //git仓库地址
+        Git git = new Git(new FileRepository(getPath() + "/.git"));
+        PullResult call = git.pull().setRemoteBranchName(branch).
+                setCredentialsProvider(usernamePasswordCredentialsProvider).call();
+
+    }
+
+    /**
+     * 获取java文件路径
+     * 项目分支下所有的java文件
+     */
+    public List<String> getJavaFile() throws IOException {
+        String basePath = getPath();
+        File file = new File(basePath);
+        List<String> javaFile = getJavaFile(file);
+        javaFile.addAll(getPublicJavaFile());
+        return javaFile;
+    }
+
+    /**
+     * 获取java文件路径
+     * 项目分支下所有的java文件
+     */
+    public List<String> getPublicJavaFile() throws IOException {
+        String publicPath = getPublicPath();
+        File publicFile = new File(publicPath);
+        return getJavaFile(publicFile);
+    }
+
     /**
      * 获取java文件路径
      *
@@ -85,48 +145,12 @@ public class GitUtils {
         return sources;
     }
 
-    public void cloneCode() throws GitAPIException {
-        //设置远程服务器上的用户名和密码
-        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
-                UsernamePasswordCredentialsProvider(username, password);
-
-        //克隆代码库命令
-        CloneCommand cloneCommand = Git.cloneRepository();
-
-        Git git = cloneCommand.setURI(remotePath) //设置远程URI
-                .setBranch(branch) //设置clone下来的分支
-                .setDirectory(new File(getPath())) //设置下载存放路径
-                .setCredentialsProvider(usernamePasswordCredentialsProvider) //设置权限验证
-                .call();
-        System.out.print(git.tag());
-    }
-
     public String getPath() {
-        return localPath + project + "/" + branch;
+        return localPath +"/"+ project + "/" + branch;
     }
 
-    /**
-     * 拉取远程仓库内容到本地
-     */
-    public void pull() throws IOException, GitAPIException {
-        UsernamePasswordCredentialsProvider usernamePasswordCredentialsProvider = new
-                UsernamePasswordCredentialsProvider(username, password);
-        //git仓库地址
-        Git git = new Git(new FileRepository(localPath + project + "/" + branch + "/.git"));
-        PullResult call = git.pull().setRemoteBranchName(branch).
-                setCredentialsProvider(usernamePasswordCredentialsProvider).call();
-
+    public String getPublicPath() {
+        return localPath +"/"+ publicBean;
     }
-
-    /**
-     * 获取java文件路径
-     * 项目分支下所有的java文件
-     */
-    public List<String> getJavaFile() throws IOException {
-        String basePath = localPath + "/" + project + "/" + branch;
-        File file = new File(basePath);
-        return getJavaFile(file);
-    }
-
 
 }

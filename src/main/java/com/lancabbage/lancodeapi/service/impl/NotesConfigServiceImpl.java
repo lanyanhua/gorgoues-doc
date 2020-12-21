@@ -5,6 +5,7 @@ import com.lancabbage.lancodeapi.mapper.NotesConfigMapper;
 import com.lancabbage.lancodeapi.service.NotesConfigService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,5 +25,16 @@ public class NotesConfigServiceImpl implements NotesConfigService {
     @Override
     public List<NotesConfig> selectAll() {
         return configMapper.selectAll();
+    }
+
+    @Override
+    public Integer saveNotesConfig(NotesConfig config) {
+        if(config.getId() == null){
+            config.setCreateTime(new Date());
+            configMapper.insert(config);
+            return config.getId();
+        }
+        configMapper.updateByPrimaryKeySelective(config);
+        return config.getId();
     }
 }
