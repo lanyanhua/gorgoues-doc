@@ -65,7 +65,7 @@ function commitApi(id) {
         if (url.indexOf("?") === -1) {
             url += '?';
         }
-        url += name + '=' + val + '&';
+        url += name + '=' + encodeURI(val) + '&';
     })
     let file = {
         data: formData,

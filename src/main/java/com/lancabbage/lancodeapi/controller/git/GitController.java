@@ -52,9 +52,13 @@ public class GitController {
      * @param bean 文件
      * @param path 包地址
      */
-    @PutMapping("/uploadBean")
+    @PostMapping("/uploadBean")
     public BaseResponse<String> uploadBean(@RequestParam MultipartFile[] bean,@RequestParam String path) throws IOException {
         String publicPath = gitService.getPublicPath()+"/"+path+"/";
+        File file = new File(publicPath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
         for (MultipartFile f : bean) {
             String fileName = f.getOriginalFilename();
             f.transferTo(new File(publicPath+fileName));

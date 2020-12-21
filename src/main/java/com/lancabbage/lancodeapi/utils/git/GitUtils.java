@@ -150,7 +150,7 @@ public class GitUtils {
     }
 
     public String getPublicPath() {
-        return localPath +"/"+ publicBean;
+        return localPath +"/"+ publicBean+"/src/main/java";
     }
 
 }

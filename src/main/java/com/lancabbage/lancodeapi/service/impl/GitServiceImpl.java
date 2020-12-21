@@ -46,7 +46,7 @@ public class GitServiceImpl implements GitService {
             } else {
                 gitUtils.cloneCode();
             }
-            return GitUtils.getJavaFile(file);
+            return gitUtils.getJavaFile();
         } catch (Exception e) {
             throw new BusinessException("git 拉去代码失败");
         }
