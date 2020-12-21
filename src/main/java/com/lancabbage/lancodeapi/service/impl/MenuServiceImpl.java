@@ -105,16 +105,12 @@ public class MenuServiceImpl implements MenuService {
             if (apiInfos.isEmpty()) {
                 continue;
             }
-
-            List<ApiInfoDto> apiInfoAdds = new ArrayList<>();
             for (ApiInfoDto a : apiInfos) {
                 List<ApiInfo> collect = apiList.stream()
                         .filter(i -> i.getPath().equals(a.getPath())
                                 && i.getType().equals(a.getType()))
                         .collect(Collectors.toList());
-                //不存在新增
                 if (collect.isEmpty()) {
-                    apiInfoAdds.add(a);
                     continue;
                 }
                 //存在修改当前API信息 已经关联的菜单信息 关联菜单是默认菜单的修改
@@ -130,7 +126,7 @@ public class MenuServiceImpl implements MenuService {
                 //修改API信息
                 apiInfoService.updateApi(apiInfo, a);
             }
-            saveApiMenu(projectId, branchId, cMenu, apiInfoAdds);
+            saveApiMenu(projectId, branchId, cMenu, apiInfos);
         }
     }
 
@@ -146,7 +142,9 @@ public class MenuServiceImpl implements MenuService {
         if (apiInfos.isEmpty()) {
             return;
         }
-        apiInfoService.saveApiList(apiInfos, projectId, branchId);
+        apiInfoService.saveApiList(apiInfos.stream()
+                .filter(i -> i.getId() == null)
+                .collect(Collectors.toList()), projectId, branchId);
         List<Menu> menuList = apiInfos.stream().map(i -> {
             Menu m = new Menu();
             m.setParentId(cMenu.getId());

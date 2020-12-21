@@ -71,6 +71,7 @@ function renderEnvTable() {
             {type: 'checkbox'}
             , {field: 'id', title: 'ID', sort: true, width: 60}
             , {field: 'name', title: '名称', width: 160}
+            , {field: 'domain', title: '域名'}
             , {field: 'header', title: 'header'}
             , {fixed: 'right', width: 150, align: 'center', toolbar: '#env-toolbar'}
         ]],

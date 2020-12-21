@@ -26,6 +26,13 @@ public class ClassInfoDto extends ClassInfo {
      */
     private String baseType;
 
+    public ClassInfoDto() {
+    }
+
+    public ClassInfoDto(String baseType) {
+        this.baseType = baseType;
+    }
+
     public List<ClassFieldDto> getFieldList() {
         return fieldList;
     }
@@ -47,13 +54,6 @@ public class ClassInfoDto extends ClassInfo {
     }
 
     public void setBaseType(String baseType) {
-        this.baseType = baseType;
-    }
-
-    public ClassInfoDto() {
-    }
-
-    public ClassInfoDto(String baseType) {
         this.baseType = baseType;
     }
 }

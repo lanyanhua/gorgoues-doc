@@ -6,11 +6,13 @@ import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
 import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.Tag;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AnnotationUtils {
     /**
@@ -162,15 +164,19 @@ public class AnnotationUtils {
      * @param annotation 注释
      * @return 名称
      */
-    public String getParamValue(AnnotationDesc annotation) {
+    public String getParamValue(AnnotationDesc annotation, List<String> field) {
         AnnotationDesc.ElementValuePair[] elementValuePairs = annotation.elementValues();
         for (AnnotationDesc.ElementValuePair elementValuePair : elementValuePairs) {
             String name = elementValuePair.element().name();
-            if ("value".equals(name)) {
+            if (field.contains(name)) {
                 Object value = elementValuePair.value().value();
+                if(value instanceof AnnotationValue[]){
+                    return Arrays.stream(((AnnotationValue[]) value))
+                            .map(i-> i.value().toString())
+                            .collect(Collectors.joining(","));
+                }
                 return value.toString();
             }
-            //路径 只保留前面的斜杠/ 没有斜杠加斜杠 后面有斜杠去掉
         }
         return "";
     }
@@ -189,6 +195,31 @@ public class AnnotationUtils {
         }
         return -1;
     }
+
+    /**
+     * 获取注解描述
+     *
+     * @param annotations 注解
+     * @return 是否
+     */
+    public String getAnnotationDesc(AnnotationDesc[] annotations) {
+        for (AnnotationDesc annotation : annotations) {
+            String name1 = annotation.annotationType().name();
+            List<String> collect = this.parmTag.stream().filter(i -> i.contains(name1)).collect(Collectors.toList());
+            if (!collect.isEmpty()) {
+                String paramValue = getParamValue(annotation, collect.stream()
+                        .map(i -> i.substring(i.indexOf("(") + 1, i.indexOf(")")))
+                        .collect(Collectors.toList())
+                );
+                if(StringUtils.hasLength(paramValue)){
+                    return paramValue;
+                }
+            }
+
+        }
+        return "";
+    }
+
 
     public void setParmTag(List<String> parmTag) {
         this.parmTag = parmTag;

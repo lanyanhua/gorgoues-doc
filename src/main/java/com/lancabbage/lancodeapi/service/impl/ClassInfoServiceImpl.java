@@ -140,6 +140,9 @@ public class ClassInfoServiceImpl implements ClassInfoService {
     private void saveFieldDto(Collection<ClassInfoDto> classInfo) {
         List<ClassFieldDto> fieldDtoList = new ArrayList<>();
         for (ClassInfoDto c : classInfo) {
+            if(c.getFieldList()==null){
+                continue;
+            }
             fieldDtoList.addAll(c.getFieldList().stream().peek(i -> {
                 i.setClassId(c.getId());
                 i.setCreateTime(new Date());

@@ -12,6 +12,8 @@ import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.*;
 
+import static com.lancabbage.lancodeapi.utils.doc.NotesConfigUtils.s;
+
 /**
  * @author: lanyanhua
  * @date: 2020/12/4 8:38 下午
@@ -24,7 +26,7 @@ public class ApiInfoUtils {
 
     public ApiInfoUtils() {
         this.annotationUtils = new AnnotationUtils();
-        this.classInfoUtils = new ClassInfoUtils();
+        this.classInfoUtils = new ClassInfoUtils(annotationUtils);
     }
 
     public Collection<ClassInfoDto> getClassInfoList() {
@@ -45,7 +47,8 @@ public class ApiInfoUtils {
         for (ClassDoc classDoc : classes) {
             System.out.println(classDoc);
             ClassDocImpl c = (ClassDocImpl) classDoc;
-            AnnotationRes controller = annotationUtils.isController(c.annotations());
+            AnnotationDesc[] annotations = c.annotations();
+            AnnotationRes controller = annotationUtils.isController(annotations);
             //注解 判断是否是controller RestController 还有路径RequestMapping({"/jobGroup"})
             if (!controller.isController) {
                 continue;
@@ -56,10 +59,12 @@ public class ApiInfoUtils {
             //类名
             m.setClassName(c.name());
             //tag描述
-            annotationUtils.setParmTag(Collections.singletonList("@Description:"));
+            annotationUtils.setParmTag(NotesConfigUtils.getClassTag());
             String tagDesc = annotationUtils.getTagDesc(classDoc.tags());
+            annotationUtils.setParmTag(NotesConfigUtils.getClassAnnotation());
+            String annotationDesc = annotationUtils.getAnnotationDesc(annotations);
             //获取注释
-            m.setMenuName(s(c.commentText(), tagDesc, c.name()));
+            m.setMenuName(s(annotationDesc, tagDesc, c.commentText(), c.name()));
             //api
             m.setApiInfos(parsingMethod(controller, c.methods()));
 
@@ -86,7 +91,11 @@ public class ApiInfoUtils {
             }
             ApiInfoDto apiInfo = new ApiInfoDto();
             //接口描述 方法名
-            apiInfo.setName(s(method.commentText(), method.name()));
+            annotationUtils.setParmTag(NotesConfigUtils.getMethodTag());
+            String tagDesc = annotationUtils.getTagDesc(method.tags());
+            annotationUtils.setParmTag(NotesConfigUtils.getMethodAnnotation());
+            String annotationDesc = annotationUtils.getAnnotationDesc(annotations);
+            apiInfo.setName(s(annotationDesc,tagDesc, method.commentText(),  method.name()));
             apiInfo.setMethod(method.name());
             //接口类型 接口访问路径
             apiInfo.setType(isApi.apiType);
@@ -119,7 +128,7 @@ public class ApiInfoUtils {
         retParam.setParamName(resClassName);
         retParam.setType(ParamTypeEnum.OUT_PARAM.getCode());
         //tag描述
-        annotationUtils.setParmTag(Collections.singletonList("@return"));
+        annotationUtils.setParmTag(NotesConfigUtils.getMethodReturnTag());
         retParam.setParamDescribe(annotationUtils.getTagDesc(method.tags()));
         //赋值数据类型
         setDataType(retParam, returnType);
@@ -134,7 +143,7 @@ public class ApiInfoUtils {
      */
     private List<ApiParamDto> getInputParam(MethodDoc method) {
         //参数注释信息
-        annotationUtils.setParmTag(Collections.singletonList("@param"));
+        annotationUtils.setParmTag(NotesConfigUtils.getMethodParamTag());
         Map<String, String> paramMap = annotationUtils.getParamMap(method.tags());
         //参数
         Parameter[] parameters = method.parameters();
@@ -157,7 +166,7 @@ public class ApiInfoUtils {
                 int paramMode = annotationUtils.getParamMode(name1);
                 if (paramMode != -1) {
                     apiParamDto.setParamMode(paramMode);
-                    String paramValue = annotationUtils.getParamValue(annotation);
+                    String paramValue = annotationUtils.getParamValue(annotation, Collections.singletonList("value"));
                     if (!StringUtil.isEmpty(paramValue)) {
                         apiParamDto.setParamName(paramValue);
                     }
@@ -180,13 +189,5 @@ public class ApiInfoUtils {
         }
     }
 
-
-    private String s(String s1, String s2) {
-        return StringUtil.isEmpty(s1) ? s2 : s1;
-    }
-
-    private String s(String s1, String s2, String s3) {
-        return StringUtil.isEmpty(s1) ? StringUtil.isEmpty(s2) ? s3 : s2 : s1;
-    }
 
 }

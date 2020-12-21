@@ -29,7 +29,7 @@ public class EnvInfoServiceImpl implements EnvInfoService {
     @Transactional
     @Override
     public int saveEnv(EnvInfo envInfo) {
-        if(envInfo.getId() == null){
+        if (envInfo.getId() == null) {
             envInfo.setCreateTime(new Date());
             envInfoMapper.insert(envInfo);
             return envInfo.getId();

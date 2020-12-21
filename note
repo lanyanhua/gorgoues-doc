@@ -48,13 +48,15 @@ public BaseResponse<Integer> addProject(@RequestBody ProjectAddVo vo) {
 private String name;
 
 自定义：
-注释
+注释 @Description:
 classTag
 methodTag
 methodParamTag
 methodReturnTag
 fieldTag
-注解
-classAnnotation 注释名称 注释字段
-methodAnnotation 注释名称 注释字段
-fieldAnnotation 注释名称 注释字段
+注解 @Api(tags)
+classAnnotation
+methodAnnotation
+fieldAnnotation
+
+

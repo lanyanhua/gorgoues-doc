@@ -9,6 +9,8 @@ import com.sun.tools.javadoc.ParameterizedTypeImpl;
 
 import java.util.*;
 
+import static com.lancabbage.lancodeapi.utils.doc.NotesConfigUtils.s;
+
 /**
  * @author: lanyanhua
  * @date: 2020/12/4 8:38 下午
@@ -24,9 +26,11 @@ public class ClassInfoUtils {
      * class Map
      */
     public Map<ClassKey, ClassInfoDto> classMap;
+    private final AnnotationUtils annotationUtils;
 
 
-    public ClassInfoUtils() {
+    public ClassInfoUtils(AnnotationUtils annotationUtils) {
+        this.annotationUtils = annotationUtils;
         classMap = new HashMap<>();
     }
 
@@ -86,8 +90,8 @@ public class ClassInfoUtils {
                 String[] key = s.substring(s.indexOf("<") + 1, s.lastIndexOf(">")).split(",");
                 //先申明范型对象
                 for (int i = 0; i < types.length; i++) {
-                    if(arrayType.contains(className) ){
-                        classInfoDto.setClassName(types[i].typeName()+"[]");
+                    if (arrayType.contains(className)) {
+                        classInfoDto.setClassName(types[i].typeName() + "[]");
                     }
                     ClassInfoDto v = getClassInfo(types[i]);
                     //获取范型classKey
@@ -122,7 +126,12 @@ public class ClassInfoUtils {
                 ClassFieldDto fieldDto = new ClassFieldDto();
                 fieldDtoList.add(fieldDto);
                 fieldDto.setParamName(field.name());
-                fieldDto.setParamDescribe(field.commentText());
+                //字段注释
+                annotationUtils.setParmTag(NotesConfigUtils.getFieldTag());
+                String tagDesc = annotationUtils.getTagDesc(field.tags());
+                annotationUtils.setParmTag(NotesConfigUtils.getFieldAnnotation());
+                String annotationDesc = annotationUtils.getAnnotationDesc(field.annotations());
+                fieldDto.setParamDescribe(s(annotationDesc,tagDesc,field.commentText()));
                 Type fType = field.type();
                 String name = fType.typeName();
 
@@ -144,8 +153,4 @@ public class ClassInfoUtils {
         return classInfoDto;
     }
 
-
-    public String s(String s1, String s2) {
-        return s1 == null ? s2 : s1;
-    }
 }

@@ -87,6 +87,8 @@ private String name;
             //打开上次的菜单
             let currMenuId = getCurrMenuId(currProject.branchId);
             if (currMenuId) {
+                $('.api-menu-'+currMenuId).addClass("layui-this")
+                    .parents(".layui-nav-item").addClass("layui-nav-itemed");
                 openTab(currMenuId);
             }
         })

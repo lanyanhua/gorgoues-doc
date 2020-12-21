@@ -13,6 +13,14 @@ public class ClassKey {
      */
     private String packagePath;
 
+    public ClassKey() {
+    }
+
+    public ClassKey(String name, String packagePath) {
+        this.name = name;
+        this.packagePath = packagePath;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -40,14 +48,6 @@ public class ClassKey {
     }
 
     public void setPackagePath(String packagePath) {
-        this.packagePath = packagePath;
-    }
-
-    public ClassKey() {
-    }
-
-    public ClassKey(String name, String packagePath) {
-        this.name = name;
         this.packagePath = packagePath;
     }
 }
