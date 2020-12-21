@@ -36,7 +36,7 @@
         {{# $.each(d.menuList,(i,menu)=>{ }}
         <div class="layui-side layui-bg-black {{# if(menu.id != d.currHeaderMenuId){ }}layui-hide{{# }else{ }} layui-show {{# } }}"
              id="menu-dev-{{menu.id}}" title="{{menu.menuName}}">
-            <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side">
+            <div class="layui-side-scroll"  lay-filter="side">
                 <ul class="layui-nav layui-nav-tree  beg-navbar">
                     {{# $.each(menu.childrenMenu,(i,menu)=>{ }}
                     <li class="layui-nav-item ">

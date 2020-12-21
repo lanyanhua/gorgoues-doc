@@ -56,6 +56,16 @@ public class TestController {
     }
 
     /**
+     * 测试数组参数Post
+     *
+     * @return 001
+     */
+    @GetMapping("testBaseArr")
+    public BaseResponse<int[]> testBaseArr(int[] ids) {
+        return BaseResponse.successInstance(ids);
+    }
+
+    /**
      * 测试数组参数复杂类型
      *
      * @return 001

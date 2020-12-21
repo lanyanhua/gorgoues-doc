@@ -32,7 +32,6 @@ class
 * {{优先级1}}
 * @author: lanyanhua
 * @date: 2020/12/4 8:38 下午
-* @Description: {{优先级2}}
 */
 public class ProjectController {
 }
@@ -52,6 +51,7 @@ public BaseResponse addProject(@RequestBody ProjectAddVo vo) {
 * {{字段描述}}
 */
 private String name;
+
 </pre>
                     </div>
                 </div>
@@ -87,8 +87,11 @@ private String name;
             //打开上次的菜单
             let currMenuId = getCurrMenuId(currProject.branchId);
             if (currMenuId) {
-                $('.api-menu-'+currMenuId).addClass("layui-this")
-                    .parents(".layui-nav-item").addClass("layui-nav-itemed");
+                let $menu = $('.api-menu-' + currMenuId);
+                $menu.addClass("layui-this").parents(".layui-nav-item").addClass("layui-nav-itemed");
+                $menu.parents('.layui-side-scroll').animate({
+                    scrollTop: $menu.offset().top-200
+                }, 0);
                 openTab(currMenuId);
             }
         })

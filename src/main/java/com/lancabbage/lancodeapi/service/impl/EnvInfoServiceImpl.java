@@ -34,6 +34,7 @@ public class EnvInfoServiceImpl implements EnvInfoService {
             envInfoMapper.insert(envInfo);
             return envInfo.getId();
         }
+        envInfo.setName(null);
         envInfoMapper.updateByPrimaryKeySelective(envInfo);
         return envInfo.getId();
     }

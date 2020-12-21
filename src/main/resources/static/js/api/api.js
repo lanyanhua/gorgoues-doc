@@ -1,15 +1,26 @@
 //获取接口路径
 function getPath(path) {
-    let domain = currProjectData.env.domain;
-    if (domain.endsWith("/")) {
-        domain = domain.substr(0, domain.length - 1);
+    let env = currProjectData.env;
+    let domain = pathFormat(env.domain);
+    if (env.isPort && currProjectData.project.port) {
+        domain = domain + ':' + currProjectData.project.port;
     }
-    if (path.startsWith("/")) {
-        return domain + path;
+    if (env.isContextPath && currProjectData.project.contextPath != null) {
+        domain = domain + '/' + pathFormat(currProjectData.project.contextPath);
     }
+    path = pathFormat(path);
     return domain + '/' + path;
 }
 
+function pathFormat(s) {
+    if (s.startsWith("/")) {
+        s = s.substr(1);
+    }
+    if (s.endsWith("/")) {
+        s = s.substr(0, s.length - 1);
+    }
+    return s;
+}
 
 function commitApi(id) {
     console.log(id)
@@ -38,14 +49,18 @@ function commitApi(id) {
         let paramMode = v.attr('api-paramMode');
         if (paramMode == ParamMode.path) {
             url.replace(name, val);
-            return;
+            return true;
+        }
+        if (paramMode == ParamMode.json) {
+            url.replace(name, val);
+            return true;
         }
         let type = v.attr('api-type');
         if (type == 'file') {
             isFile = true;
             val = v[0].files[0];
             formData.append(name, val);
-            return;
+            return true;
         }
         if (url.indexOf("?") === -1) {
             url += '?';
@@ -77,36 +92,4 @@ function commitApi(id) {
     }
     debugger
     $.ajax(ajaxParam);
-
-
-}
-
-function test() {
-    $.ajax({
-        type: 'post'
-        ,
-        url: 'https://test.jaagro.com:9030/externalApi/schemeReportExcel'
-        ,
-        headers: {token: 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyVHlwZSI6ImVtcGxveWVlIiwidXNlciI6IjEiLCJpYXQiOjE2MDY5NjE3MTl9.ZiD_iVKXqyLUECsX5zi8Nmn4zK8siQDreZ_AkwcA34g'}
-        ,
-        contentType: 'application/json;charset=UTF-8'
-        ,
-        dataType: 'json'
-        ,
-        data: JSON.stringify({
-            "startTime": "2020-12-01 00:00:00",
-            "endTime": "2021-01-30 00:00:00",
-            "adminPassword": "124"
-        })
-        ,
-        success: data => {
-            console.log('success')
-            console.log(data)
-        }
-        ,
-        error: data => {
-            console.log('error')
-            console.log(data)
-        }
-    })
 }

@@ -99,6 +99,8 @@ function renderProjectTable() {
             {type: 'checkbox'}
             , {field: 'id', title: 'ID', sort: true, width: 60}
             , {field: 'name', title: '名称', width: 160}
+            , {field: 'contextPath', title: '上下文路径'}
+            , {field: 'port', title: '端口'}
             , {field: 'remotePath', title: 'git地址'}
             , {
                 field: 'branchList', title: '分支', templet: d => {

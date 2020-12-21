@@ -56,7 +56,6 @@ function saveEnv(fun) {
 }
 
 
-
 let dataTableEnv;
 let $envForm = $('#envForm');
 
@@ -73,6 +72,8 @@ function renderEnvTable() {
             , {field: 'name', title: '名称', width: 160}
             , {field: 'domain', title: '域名'}
             , {field: 'header', title: 'header'}
+            , {field: 'isPort', title: '是否使用项目端口'}
+            , {field: 'isContextPath', title: '是否使用上下文路径'}
             , {fixed: 'right', width: 150, align: 'center', toolbar: '#env-toolbar'}
         ]],
         done: function (res, curr, count) {
@@ -92,11 +93,12 @@ function renderEnvTable() {
 }
 
 function openEnvForm(data) {
-    if(data == null){
-        data ={id: '', name :'', domain :'', header :'',}
+    if (data == null) {
+        data = {id: '', name: '', domain: '', header: '',}
     }
     $envForm.find('[name=id]').val(data.id);
-    $envForm.find('[name=name]').val(data.name);
+    $envForm.find('[name=name]').val(data.name).attr(data.name ? 'readonly' : '');
+
     $envForm.find('[name=domain]').val(data.domain);
     $envForm.find('[name=header]').val(data.header);
     $envForm.removeClass("layui-hide");

@@ -19,10 +19,18 @@ public class ProjectVo {
     private String name;
 
     /**
+     * 上下文路径
+     */
+    private String contextPath;
+    /**
      * 远程库路径
      */
     private String remotePath;
 
+    /**
+     * 端口
+     */
+    private Integer port;
     /**
      * 分支
      */
@@ -42,6 +50,22 @@ public class ProjectVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
     public String getRemotePath() {

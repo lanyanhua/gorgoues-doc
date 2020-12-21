@@ -25,6 +25,16 @@ public class Project {
     private String remotePath;
 
     /**
+     * 上下文路径
+     */
+    @Column(name = "context_path")
+    private String contextPath;
+
+    /**
+     * 端口
+     */
+    private Integer port;
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
@@ -64,6 +74,22 @@ public class Project {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
     /**

@@ -35,6 +35,17 @@ public class EnvInfo {
      */
     @Column(name = "create_time")
     private Date createTime;
+    /**
+     * 是否使用项目端口：1：是 0：否
+     */
+    @Column(name = "is_port")
+    private Boolean isPort;
+
+    /**
+     * 是否使用项目上下文路径
+     */
+    @Column(name = "is_context_path")
+    private Boolean isContextPath;
 
     /**
      * 获取ID
@@ -124,5 +135,21 @@ public class EnvInfo {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getIsPort() {
+        return isPort;
+    }
+
+    public void setIsPort(Boolean port) {
+        isPort = port;
+    }
+
+    public Boolean getIsContextPath() {
+        return isContextPath;
+    }
+
+    public void setIsContextPath(Boolean contextPath) {
+        isContextPath = contextPath;
     }
 }

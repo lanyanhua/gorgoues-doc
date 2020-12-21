@@ -28,6 +28,17 @@ public class EnvSaveVo {
      */
     private String header;
 
+    /**
+     * 是否使用项目端口：1：是 0：否
+     */
+    private Boolean isPort;
+
+    /**
+     * 是否使用项目上下文路径
+     */
+    private Boolean isContextPath;
+
+
     public Integer getId() {
         return id;
     }
@@ -58,5 +69,21 @@ public class EnvSaveVo {
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public Boolean getPort() {
+        return isPort;
+    }
+
+    public void setPort(Boolean port) {
+        isPort = port;
+    }
+
+    public Boolean getContextPath() {
+        return isContextPath;
+    }
+
+    public void setContextPath(Boolean contextPath) {
+        isContextPath = contextPath;
     }
 }

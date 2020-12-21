@@ -105,28 +105,37 @@ public class MenuServiceImpl implements MenuService {
             if (apiInfos.isEmpty()) {
                 continue;
             }
+
+            List<ApiInfoDto> apiInfoAdds = new ArrayList<>();
             for (ApiInfoDto a : apiInfos) {
                 List<ApiInfo> collect = apiList.stream()
                         .filter(i -> i.getPath().equals(a.getPath())
                                 && i.getType().equals(a.getType()))
                         .collect(Collectors.toList());
+                //不存在新增
                 if (collect.isEmpty()) {
+                    //父ID
+                    apiInfoAdds.add(a);
                     continue;
                 }
                 //存在修改当前API信息 已经关联的菜单信息 关联菜单是默认菜单的修改
                 ApiInfo apiInfo = collect.get(0);
-                // 1.当前API 名称相同（没有改过菜单）修改名称 2.同时判断是否是默认菜单修改为新菜单
+                // 1.当前API 修改名称 2.同时判断是否是默认菜单修改为新菜单
                 apiMenus.stream()
-                        .filter(i -> i.getApiId().equals(apiInfo.getId())
-                                && i.getMenuName().equals(apiInfo.getName()))
-                        .peek(i -> i.setMenuName(a.getName()))
-                        .filter(i -> menus.stream().anyMatch(p -> p.getId().equals(i.getParentId())))
-                        .peek(i -> i.setParentId(cMenu.getId()))
+                        .filter(i -> i.getApiId().equals(apiInfo.getId()))
+                        .peek(i ->{
+                            //修改名称
+                            i.setMenuName(a.getName());
+                            //父菜单是默认菜单修改为新菜单
+                            if(menus.stream().anyMatch(p -> p.getId().equals(i.getParentId()))){
+                                i.setParentId(cMenu.getId());
+                            }
+                        })
                         .forEach(menuMapper::updateByPrimaryKeySelective);
                 //修改API信息
                 apiInfoService.updateApi(apiInfo, a);
             }
-            saveApiMenu(projectId, branchId, cMenu, apiInfos);
+            saveApiMenu(projectId, branchId, cMenu, apiInfoAdds);
         }
     }
 
@@ -142,9 +151,7 @@ public class MenuServiceImpl implements MenuService {
         if (apiInfos.isEmpty()) {
             return;
         }
-        apiInfoService.saveApiList(apiInfos.stream()
-                .filter(i -> i.getId() == null)
-                .collect(Collectors.toList()), projectId, branchId);
+        apiInfoService.saveApiList(apiInfos, projectId, branchId);
         List<Menu> menuList = apiInfos.stream().map(i -> {
             Menu m = new Menu();
             m.setParentId(cMenu.getId());

@@ -152,15 +152,11 @@ function openSwitch() {
                     if (key != null) {
                         envMap[key] = v.value
                         currProjectData.env.headerMap.push(JSON.parse('{ "' + v.name + '" : "' + v.value + '" }'));
-                        // debugger
-                        //修改页面上显示的 值
-                        $('.show-' + v.name).text(v.value);
                     }
                 });
                 setEnvMap(envMap);
                 //渲染菜单
-                renderMenu();
-                layer.closeAll();
+                location.reload();
             }
         });
         //渲染
@@ -206,7 +202,7 @@ function menuFilter(t) {
         if (a.data('class').indexOf(content) !== -1 || a.data('name').indexOf(content) !== -1) {
             m.removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
             m.children('.layui-nav-child>dd').removeClass('layui-hide ').addClass('layui-show');
-            return;
+            return true;
         }
         for (let ci of m.find('.layui-nav-child>dd')) {
             let c = $(ci);

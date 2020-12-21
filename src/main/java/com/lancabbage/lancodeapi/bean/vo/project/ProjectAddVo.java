@@ -16,6 +16,11 @@ public class ProjectAddVo {
     private String name;
 
     /**
+     * 上下文路径
+     */
+    @NotNull
+    private String contextPath;
+    /**
      * 远程库路径
      */
     @NotNull
@@ -33,6 +38,14 @@ public class ProjectAddVo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
     }
 
     public String getRemotePath() {
