@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.bean.vo.env;
 
-import com.sun.istack.internal.NotNull;
+
+import javax.validation.constraints.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Id;

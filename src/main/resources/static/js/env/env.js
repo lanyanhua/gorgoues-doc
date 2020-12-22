@@ -33,6 +33,8 @@ function getEnvAll(fun) {
 function saveEnv(fun) {
     //监听提交
     form.on('submit(envFormBtn)', function (data) {
+        data.field.isPort = data.field.isPort ==='on';
+        data.field.isContextPath = data.field.isContextPath ==='on';
         $.ajax({
             type: 'put',
             url: saveEnvUrl,
@@ -104,7 +106,7 @@ function openEnvForm(data) {
     layer.open({
         title: '添加项目'
         , type: 1
-        , area: ['50%', '300px']
+        , area: ['65%', '400px']
         , content: $envForm
         , btn: []
     });

@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.bean.vo.project;
 
-import com.sun.istack.internal.NotNull;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author: lanyanhua

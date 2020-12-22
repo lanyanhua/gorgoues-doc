@@ -10,6 +10,8 @@ import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * @author: lanyanhua
  * @date: 2020/12/5 6:35 下午
@@ -31,7 +33,7 @@ public class ProjectBranchController {
      * 添加项目分支
      */
     @PostMapping("/addProjectBranch")
-    public BaseResponse<Integer> addProjectBranch(@RequestBody ProjectBranchAddVo vo) {
+    public BaseResponse<Integer> addProjectBranch(@RequestBody @Valid ProjectBranchAddVo vo) {
         ProjectBranchAddDto dto = new ProjectBranchAddDto();
         dto.setName(vo.getName());
         Project project = projectService.getProjectById(vo.getProjectId());

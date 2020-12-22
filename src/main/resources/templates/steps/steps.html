@@ -46,7 +46,8 @@
             <div>完成</div>
         </div>
         <div class="steps-plant-btn">
-            <button type="button" class="layui-btn " style="float: right">下一步</button>
+            <button type="button" class="layui-btn " style="float: right" onclick="stepsFun.nextBtn()">下一步</button>
+            <button type="button" class="layui-btn " style="float: right;margin-right: 10px" onclick="stepsFun.backBtn()">上一步</button>
         </div>
     </div>
 </div>
@@ -68,44 +69,39 @@
             ], //desc 不是必须
             //current: 2 //默认为第几步
         });
-        nextFun.steps = steps;
+        stepsFun.steps = steps;
         //git
-        nextFun.getNext(0);
+        stepsFun.getNext(0);
         saveGit(function () {
-            steps.next(); //下一步
-            nextFun.getNext(1);
+            stepsFun.getNext(0);
         });
         addProject(function () {
-            steps.next(); //下一步
-            nextFun.getNext(2);
+            stepsFun.getNext(0);
         });
         saveEnv(function () {
-            steps.next(); //下一步
-            window.location.href = context + "docs";
+            stepsFun.getNext(0);
         })
-
 
     });
 
-    let nextFun = {
+    let stepsFun = {
         steps: null,
         getNext: function (i) {
             if (i === 0) {
-                getGitInfo(nextFun.git);
+                getGitInfo(stepsFun.git);
             } else if (i === 1) {
-                nextFun.git(true);
+                stepsFun.git(true);
             } else if (i === 2) {
-                nextFun.pro([true]);
+                stepsFun.project([true]);
             }
         }
-        ,
-        pro: function (data) {
+        , project: function (data) {
             if (data && data.length > 0) {
-                nextFun.steps.next(); //下一步
+                stepsFun.steps.show(2);
                 //环境
                 getEnvAll(function (data) {
                     if (data && data.length > 0) {
-                        nextFun.steps.next(); //下一步
+                        stepsFun.steps.show(3);
                         window.location.href = context + "docs";
                     }
                 })
@@ -113,10 +109,16 @@
         }
         , git: function (data) {
             if (data) {
-                nextFun.steps.next(); //下一步
+                stepsFun.steps.show(1);
                 //项目
-                projectAll(nextFun.pro);
+                projectAll(stepsFun.project);
             }
+        }
+        , nextBtn: function (){
+            stepsFun.steps.next(1);
+        }
+        , backBtn: function (){
+            stepsFun.steps.next(-1);
         }
     }
 

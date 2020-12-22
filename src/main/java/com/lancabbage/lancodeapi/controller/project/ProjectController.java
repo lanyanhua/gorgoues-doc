@@ -6,6 +6,7 @@ import com.lancabbage.lancodeapi.bean.vo.project.ProjectVo;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class ProjectController {
      * @return ID
      */
     @PostMapping("/addProject")
-    public BaseResponse<Integer> addProject(@RequestBody ProjectAddVo vo) {
+    public BaseResponse<Integer> addProject(@RequestBody @Valid ProjectAddVo vo) {
         int id = projectService.addProject(vo);
         return BaseResponse.successInstance(id);
     }

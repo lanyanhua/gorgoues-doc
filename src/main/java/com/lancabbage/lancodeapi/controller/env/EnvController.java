@@ -7,6 +7,7 @@ import com.lancabbage.lancodeapi.map.EnvInfoDtoToVo;
 import com.lancabbage.lancodeapi.service.EnvInfoService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class EnvController {
      * @return ID
      */
     @PutMapping("/saveEnv")
-    public BaseResponse<Integer> saveEnv(@RequestBody EnvSaveVo saveVo) {
+    public BaseResponse<Integer> saveEnv(@RequestBody @Valid EnvSaveVo saveVo) {
         EnvInfo envInfo = envInfoDtoToVo.envSaveVoToPo(saveVo);
         int id = envInfoService.saveEnv(envInfo);
         return BaseResponse.successInstance(id);

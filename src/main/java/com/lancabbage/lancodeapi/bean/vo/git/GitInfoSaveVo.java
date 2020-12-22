@@ -1,6 +1,7 @@
 package com.lancabbage.lancodeapi.bean.vo.git;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+
 
 import java.io.Serializable;
 

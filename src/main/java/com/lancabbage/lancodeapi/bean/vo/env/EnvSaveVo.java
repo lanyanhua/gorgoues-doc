@@ -1,6 +1,6 @@
 package com.lancabbage.lancodeapi.bean.vo.env;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author: lanyanhua
@@ -71,19 +71,19 @@ public class EnvSaveVo {
         this.header = header;
     }
 
-    public Boolean getPort() {
+    public Boolean getIsPort() {
         return isPort;
     }
 
-    public void setPort(Boolean port) {
+    public void setIsPort(Boolean port) {
         isPort = port;
     }
 
-    public Boolean getContextPath() {
+    public Boolean getIsContextPath() {
         return isContextPath;
     }
 
-    public void setContextPath(Boolean contextPath) {
+    public void setIsContextPath(Boolean contextPath) {
         isContextPath = contextPath;
     }
 }

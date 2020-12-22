@@ -273,3 +273,24 @@
 #menu-filter{
     width: 280px;
 }
+
+.toolbar {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    line-height: 22px;
+    border-radius: 0 2px 2px 0;
+    background-color: #f2f2f2;
+    text-align: right;
+}
+.layui-layer-content .layui-form{
+    width: 95%;
+    margin: 10px;
+}
+.layui-layer-content .layui-form-label{
+    width: 100px;
+}
+.layui-layer-content .layui-input-block{
+    margin-left: 130px;
+}

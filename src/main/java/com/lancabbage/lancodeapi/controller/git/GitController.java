@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 
@@ -42,7 +43,7 @@ public class GitController {
      * 保存git信息
      */
     @PutMapping("/save")
-    public BaseResponse<String> save(@RequestBody GitInfoSaveVo gitInfo) {
+    public BaseResponse<String> save(@RequestBody @Valid GitInfoSaveVo gitInfo) {
         gitService.save(gitInfo);
         return BaseResponse.successInstance("成功");
     }

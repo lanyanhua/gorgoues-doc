@@ -5,11 +5,9 @@ import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.env.NotesConfigSaveVo;
 import com.lancabbage.lancodeapi.map.NotesConfigDtoToVo;
 import com.lancabbage.lancodeapi.service.NotesConfigService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -42,7 +40,7 @@ public class NotesConfigController {
      * @return ID
      */
     @PutMapping("/save")
-    public BaseResponse<Integer> saveNotesConfig(NotesConfigSaveVo saveVo){
+    public BaseResponse<Integer> saveNotesConfig(@RequestBody @Valid NotesConfigSaveVo saveVo){
         NotesConfig config = configDtoToVo.notesConfigSaveVoToPo(saveVo);
         int id =configService.saveNotesConfig(config);
         return BaseResponse.successInstance(id);

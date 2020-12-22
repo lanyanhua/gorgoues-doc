@@ -6,7 +6,7 @@ layui.define(['jquery'], function (exports) {
         data: [],
         ele: null,
         current: 0,
-        render: function(config){
+        render: function (config) {
             this.ele = config.ele;
             this.data = config.data;
             this.current = config.current || 0;
@@ -15,8 +15,8 @@ layui.define(['jquery'], function (exports) {
         make: function () {
             var data = this.data;
             var current = this.current;
-            var html = '', data_length = data.length, percentage = 100 / (data_length+0.85);
-            html = '<div class="step-item" style="width: ' + (percentage*0.85) + '%;"></div>';
+            var html = '', data_length = data.length, percentage = 100 / (data_length + 0.85);
+            html = '<div class="step-item" style="width: ' + (percentage * 0.85) + '%;"></div>';
             current = current || 0;
             for (var i = 0; i < data_length; i++) {
                 var icon = '', tail = '';
@@ -47,11 +47,25 @@ layui.define(['jquery'], function (exports) {
             }
             $(this.ele).empty().append(html);
         },
-
-        next: function () {
-            this.current += 1;
+        next: function (i) {
+            i = i || 1;
+            this.current += i;
+            if (this.current >= this.data.length) {
+                this.current = this.data.length-1;
+                return;
+            }
+            if (this.current < 0) {
+                this.current = 0;
+                return;
+            }
             $('.steps-plant').addClass("layui-hide")
-            $('.steps-plant-'+this.current).removeClass("layui-hide");
+            $('.steps-plant-' + this.current).removeClass("layui-hide");
+            this.make();
+        },
+        show: function (index) {
+            this.current = index;
+            $('.steps-plant').addClass("layui-hide")
+            $('.steps-plant-' + this.current).removeClass("layui-hide");
             this.make();
         }
     };

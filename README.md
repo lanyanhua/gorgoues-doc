@@ -22,7 +22,7 @@ spring:
     username: root
     password: AAaa123456
 ```
-[database.sql](https://gitee.com/lanyanhua/lan-code-api/blob/master/database.sql)
+[database.sql](https://gitee.com/lanyanhua/lan-code-api/blob/master/database.sql)  
 启动项目访问地址 http://localhost:5160/lApi/docs
 ![初始化页面](https://images.gitee.com/uploads/images/2020/1222/125336_1ce8bcfd_1793098.png "屏幕截图.png")  
 
@@ -37,35 +37,35 @@ git数据在库里只会有一条数据。现在没有开发用户项目组方�
 
 3.  项目配置
 
-字段    
-项目名  
-git地址  
-分支名称  
+字段  
+项目名：项目名  
+git地址：git地址  
+分支名称：分支  
 上下文路径：配置 server.servlet.context-path 值  
 端口：端口  
 
 上下文路径、端口这两个配置是配合环境配置使用  
 单体项目直接在环境中配置域名就好了  
-微服务架构
-本地 通过端口和项目名访问的  http:localhost:8080/user
-网关 只需要项目名就可以了  http:test.lan.com/user
+微服务架构  
+本地 通过端口和项目名访问的  http:localhost:8080/user  
+网关 只需要项目名就可以了  http:test.lan.com/user  
 
 4.  环境配置
 
 字段  
-名称：环境名称
-域名：环境域名
-headerKey：ajax请求携带的header值
-是否使用项目端口：
-是否使用项目上下文路径：
+名称：环境名称  
+域名：环境域名  
+headerKey：ajax请求携带的header值  
+是否使用项目端口：  
+是否使用项目上下文路径：  
 
-单体项目：项目里面的路径和端口和环境里面是否使用端口路径都可以不用管
+单体项目：项目里面的路径和端口和环境里面是否使用端口路径都可以不用管  
 
-微服务架构
-建议环境配置 local、dev、test
-local本地开发 域名：http://localhost 使用项目端口 使用项目路径
-dev开发环境 域名：http://{{开发网管地址}} 使用项目路径
-test开发环境 同上
+微服务架构  
+建议环境配置 local、dev、test  
+local本地开发 域名：http://localhost 使用项目端口 使用项目路径  
+dev开发环境 域名：http://{{开发网管地址}} 使用项目路径  
+test开发环境 同上  
 
 
 5.  注释配置
