@@ -33,37 +33,32 @@ public class RouteController {
     public String doc() {
         GitInfo gitInfo = gitService.getGitInfo();
         if (gitInfo == null) {
-            return "/steps/steps";
+            return "steps/steps";
         }
         List<ProjectVo> projectVos = projectService.listProjectAll();
         if (projectVos.isEmpty()) {
-            return "/steps/steps";
+            return "steps/steps";
         }
         List<EnvInfo> envInfos = envInfoService.listEnvAll();
         if (envInfos.isEmpty()) {
-            return "/steps/steps";
+            return "steps/steps";
         }
-        return "/template";
+        return "template";
     }
 
     @GetMapping("/template")
     public String template() {
-        return "/template";
+        return "template";
     }
 
     @GetMapping("/steps")
     public String steps() {
-        return "/steps/steps";
+        return "steps/steps";
     }
 
     @GetMapping("/manage")
     public String manage() {
-        return "/manage";
-    }
-
-    @GetMapping("/test")
-    public String docs1() {
-        return "/docs1";
+        return "manage";
     }
 
 
