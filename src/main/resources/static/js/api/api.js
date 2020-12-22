@@ -73,9 +73,13 @@ function commitApi(id) {
         contentType: false
     }
     let fun = function (data) {
-        $api.find('.api-response').removeClass("layui-hide");
+        let $response = $api.find('.api-response');
+        $response.removeClass("layui-hide");
         $api.find('.response-path').text(url);
         $api.find('.response-show').text(formatJson1(data));
+        $('.api-body').animate({
+            scrollTop: 1000
+        }, 0);
     }
     let ajaxParam = {
         type: type,
@@ -90,6 +94,5 @@ function commitApi(id) {
     if (isFile) {
         ajaxParam = $.extend(ajaxParam, file);
     }
-    debugger
     $.ajax(ajaxParam);
 }

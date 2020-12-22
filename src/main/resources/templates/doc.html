@@ -1,0 +1,63 @@
+<pre class="layui-code">
+默认注释读取
+class
+/**
+* {{类名称}}
+* @author: lanyanhua
+* @date: 2020/12/4 8:38 下午
+*/
+public class ProjectController {
+}
+
+方法
+/**
+* {{方法名称}}
+* @param {{参数名称}} {{参数描述}}
+* @return {{返回值描述}}
+*/
+public BaseResponse&lt;Integer&gt; addProject(@RequestBody ProjectAddVo vo) {
+}
+
+字段
+/**
+* {{字段描述}}
+*/
+private String name;
+
+
+自定义注释注解
+注释类型
+ classTag
+ methodTag
+ methodParamTag
+ methodReturnTag
+ fieldTag
+注解类型
+ classAnnotation
+ methodAnnotation
+ fieldAnnotation
+
+配置方式
+
+注释 classTag @Description:
+/**
+ * @author: lanyanhua
+ * @date: 2020/12/20 10:21 下午
+ * @Description: 配置管理
+ */
+
+注解 classAnnotation @Api(tags) "tags"注解取值字段
+@Api(tags = "用户管理", produces = MediaType.APPLICATION_JSON_VALUE)
+
+@Api源码
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Api {
+    String value() default "";
+
+    String[] tags() default {""};
+    ...
+}
+
+</pre>

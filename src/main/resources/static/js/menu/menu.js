@@ -64,11 +64,13 @@ function renderMenu() {
     if (currHeaderMenuId == null) {
         currHeaderMenuId = setCurrHeaderMenuId(branchMenuData.menuList[0].id);
     }
-    let menuTemplate = $("#menuTemplate").html();
     let data = $.extend({currHeaderMenuId: currHeaderMenuId}, currProjectData, branchMenuData);
     console.log(data);
     //渲染
-    laytpl(menuTemplate).render(data, (html) => $("#body").html(html));
+    let headerTemplate = $("#headerTemplate").html();
+    laytpl(headerTemplate).render(data, (html) => $("#header-body").html(html));
+    let menuTemplate = $("#menuTemplate").html();
+    laytpl(menuTemplate).render(data, (html) => $("#menu-body").html(html));
     //事件
     element.render('nav', "");
     element.init();

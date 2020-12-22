@@ -1,42 +1,27 @@
+<script id="headerTemplate" type="text/template">
+    <div class="layui-logo">
+        <span style="font-size: 22px;color: #fff">{{d.project.name}}</span>
+        <small class="version">{{d.branch.name}}</small>
+        <small class="version">{{d.env.name}}</small>
+    </div>
+    <ul class="layui-nav layui-layout-left">
+        {{# $.each(d.menuList,(i,menu)=>{ }}
+        <li class="layui-nav-item {{# if(menu.id == d.currHeaderMenuId){ }}layui-this{{# } }}">
+            <a href="javascript:switchMenu({{menu.id}});">{{menu.menuName}}</a>
+        </li>
+        {{# }) }}
+        <li class="layui-nav-item1 layui-form component">
+            <input id="menu-filter" class="layui-input " onchange="menuFilter(this)" placeholder="筛选菜单-回车"/>
+        </li>
+    </ul>
+</script>
 <script id="menuTemplate" type="text/template">
 
-    <div class="layui-header header " id="header">
-
-        <div class="layui-logo">
-            <span style="font-size: 22px;color: #fff">{{d.project.name}}</span>
-            <small class="version">{{d.branch.name}}</small>
-            <small class="version">{{d.env.name}}</small>
-        </div>
-        <ul class="layui-nav layui-layout-left">
-            {{# $.each(d.menuList,(i,menu)=>{ }}
-            <li class="layui-nav-item {{# if(menu.id == d.currHeaderMenuId){ }}layui-this{{# } }}">
-                <a href="javascript:switchMenu({{menu.id}});">{{menu.menuName}}</a>
-            </li>
-            {{# }) }}
-            <li class="layui-nav-item1 layui-form component">
-                <input id="menu-filter" class="layui-input " onchange="menuFilter(this)" placeholder="筛选菜单-回车" />
-            </li>
-
-
-        </ul>
-
-        <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item">
-                <a href="javascript:openSwitch();">切换<!--弹框修改项目分支环境--></a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:updateApi()">更新</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:window.open(context+'manage','3');">设置</a>
-            </li>
-        </ul>
-    </div>
     <div id="menu-div">
         {{# $.each(d.menuList,(i,menu)=>{ }}
         <div class="layui-side layui-bg-black {{# if(menu.id != d.currHeaderMenuId){ }}layui-hide{{# }else{ }} layui-show {{# } }}"
              id="menu-dev-{{menu.id}}" title="{{menu.menuName}}">
-            <div class="layui-side-scroll"  lay-filter="side">
+            <div class="layui-side-scroll" lay-filter="side">
                 <ul class="layui-nav layui-nav-tree  beg-navbar">
                     {{# $.each(menu.childrenMenu,(i,menu)=>{ }}
                     <li class="layui-nav-item ">
@@ -49,7 +34,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             {{# $.each(menu.childrenMenu,(j,cm)=>{ }}
-                            <dd title="{{cm.menuName}}"  class="api-menu-{{cm.id}}">
+                            <dd title="{{cm.menuName}}" class="api-menu-{{cm.id}}">
                                 <a href="javascript:openTab({{cm.id}});">
                                     <i class="fa fa-navicon" data-icon="fa-navicon"></i>
                                     <cite class="">{{cm.menuName}}</cite>
@@ -74,7 +59,7 @@
     </div>
 
     <!--    <div class="layui-body site-content" id="path-body"-->
-        <!--         style="border-left: solid 2px #1AA094;">-->
-        <!--        &lt;!&ndash;        body 内容 $ref = temp_body&ndash;&gt;-->
-        <!--    </div>-->
+    <!--         style="border-left: solid 2px #1AA094;">-->
+    <!--        &lt;!&ndash;        body 内容 $ref = temp_body&ndash;&gt;-->
+    <!--    </div>-->
 </script>

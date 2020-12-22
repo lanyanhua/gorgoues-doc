@@ -14,10 +14,24 @@
 <body>
 <div class="layui-layout-body">
     <div class="layui-layout layui-layout-admin">
-
-        <div id="body">
+        <div class="layui-header header " >
+            <div id="header-body">
+            </div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:openSwitch();">切换<!--弹框修改项目分支环境--></a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:updateApi()">更新</a>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:window.open(context+'manage','3');">设置</a>
+                </li>
+            </ul>
         </div>
-        <div class="layui-body lapi-body">
+        <div id="menu-body">
+        </div>
+        <div class="layui-body api-body">
             <!-- 内容主体区域 -->
             <div class="layui-tab layui-tab-brief" lay-filter="api-tab" lay-allowClose="true">
                 <ul class="layui-tab-title">
@@ -25,34 +39,7 @@
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-<pre class="layui-code">
-注释读取
-class
-/**
-* {{优先级1}}
-* @author: lanyanhua
-* @date: 2020/12/4 8:38 下午
-*/
-public class ProjectController {
-}
-
-方法
-/**
-* {{方法名称}}
-* @param {{参数名称}} {{参数描述}}
-* @return {{返回值描述}}
-*/
-public BaseResponse addProject(@RequestBody ProjectAddVo vo) {
-}
-
-字段
-
-/**
-* {{字段描述}}
-*/
-private String name;
-
-</pre>
+<div th:include="doc.html"></div>
                     </div>
                 </div>
             </div>

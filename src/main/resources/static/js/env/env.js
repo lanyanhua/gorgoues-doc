@@ -86,7 +86,6 @@ function renderEnvTable() {
         let layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
         let tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
         if (layEvent === 'edit') {
-            debugger
             openEnvForm(data);
         }
     });
