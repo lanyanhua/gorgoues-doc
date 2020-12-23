@@ -96,4 +96,15 @@ public class TestController {
         return BaseResponse.successInstance(file);
     }
 
+
+    /**
+     * 测试多范型
+     *
+     * @return 001
+     */
+    @PostMapping("testDoubleParadigms")
+    public BaseResponse<List<MenuDto>> testDoubleParadigms(@RequestBody List<MenuDto> menuDtos) {
+        return BaseResponse.successInstance(menuDtos);
+    }
+
 }

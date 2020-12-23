@@ -2,9 +2,9 @@ package com.lancabbage.lancodeapi.utils.doc;
 
 import com.lancabbage.lancodeapi.bean.dto.ClassFieldDto;
 import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
+import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
-import com.sun.tools.javadoc.ClassDocImpl;
 import com.sun.tools.javadoc.ParameterizedTypeImpl;
 
 import java.util.*;
@@ -20,7 +20,7 @@ public class ClassInfoUtils {
 
     public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
             "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "Date", "MultipartFile", "BigDecimal");
-    public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest");
+    public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest", "LinkedHashMap", "URL");
     public static List<String> arrayType = Arrays.asList("List", "Set", "array");
     /**
      * class Map
@@ -48,7 +48,7 @@ public class ClassInfoUtils {
         String packagePath = type.toString();
         ClassInfoDto classInfoDto;
         boolean isArr = packagePath.endsWith("[]");
-        if(isArr){
+        if (isArr) {
             System.out.println("debugger");
         }
         String className = isArr ? packagePath.substring(packagePath.lastIndexOf(".") + 1) : type.typeName();
@@ -74,7 +74,7 @@ public class ClassInfoUtils {
         classInfoDto.setClassPath(classKey.getPackagePath());
         classInfoDto.setPackagePath(classKey.getPackagePath());
         //doc
-        ClassDocImpl doc = (ClassDocImpl) type.asClassDoc();
+        ClassDoc doc = type.asClassDoc();
         if (doc != null) {
             //描述
             classInfoDto.setClassDescribe(doc.commentText());
@@ -107,7 +107,7 @@ public class ClassInfoUtils {
         //数组赋值类型
         if (arrayType.contains(className) || isArr) {
             //[] 表示是数组
-             ClassFieldDto fieldDto = new ClassFieldDto();
+            ClassFieldDto fieldDto = new ClassFieldDto();
             fieldDtoList.add(fieldDto);
             fieldDto.setParamName("value");
             fieldDto.setParamDescribe("");
@@ -121,7 +121,7 @@ public class ClassInfoUtils {
             fieldDto.setType(s(c.getClassName(), c.getBaseType()));
         }
         //是否需要赋值字段
-        else if (!notSetField.contains(className) && doc !=null) {
+        else if (!notSetField.contains(className) && doc != null) {
             //字段
             FieldDoc[] fields = doc.fields(false);
             for (FieldDoc field : fields) {
@@ -133,7 +133,7 @@ public class ClassInfoUtils {
                 String tagDesc = annotationUtils.getTagDesc(field.tags());
                 annotationUtils.setParmTag(NotesConfigUtils.getFieldAnnotation());
                 String annotationDesc = annotationUtils.getAnnotationDesc(field.annotations());
-                fieldDto.setParamDescribe(s(annotationDesc,tagDesc,field.commentText()));
+                fieldDto.setParamDescribe(s(annotationDesc, tagDesc, field.commentText()));
                 Type fType = field.type();
                 String name = fType.typeName();
 
@@ -150,8 +150,17 @@ public class ClassInfoUtils {
                     fieldDto.setType(dataType.getClassName());
                 }
             }
-        }
 
+            //父类字段
+            ClassDoc superclass;
+            if ((superclass = doc.superclass()) != null && !superclass.toString().contains("java.lang.")) {
+                //获取父类字段
+                ClassInfoDto classInfo = getClassInfo(superclass);
+                if(classInfo.getFieldList() !=null){
+                    fieldDtoList.addAll(classInfo.getFieldList());
+                }
+            }
+        }
         return classInfoDto;
     }
 

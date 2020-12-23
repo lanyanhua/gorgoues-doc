@@ -25,4 +25,5 @@ public interface ClassDtoToVo {
 
     List<ClassInfo> listClassInfoDtoToPo(Collection<ClassInfoDto> classInfo);
 
+    ClassField classFieldDtoToPo(ClassFieldDto i);
 }

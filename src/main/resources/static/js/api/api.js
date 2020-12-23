@@ -23,7 +23,7 @@ function pathFormat(s) {
 }
 
 function commitApi(id) {
-    console.log(id)
+    NProgress.start();
     let $api = $('.api-tab-content-id-' + id);
     let url = $api.find('.api-path').text();
     let type = $api.find('.apiType').text();
@@ -48,7 +48,7 @@ function commitApi(id) {
         let val = v.val();
         let paramMode = v.attr('api-paramMode');
         if (paramMode == ParamMode.path) {
-            url.replace(name, val);
+            url = url.replace('{' + name + '}', val);
             return true;
         }
         if (paramMode == ParamMode.json) {
@@ -58,8 +58,9 @@ function commitApi(id) {
         let type = v.attr('api-type');
         if (type == 'file') {
             isFile = true;
-            val = v[0].files[0];
-            formData.append(name, val);
+            for (let i = 0; i < v[0].files.length; i++) {
+                formData.append(name, v[0].files[i]);
+            }
             return true;
         }
         if (url.indexOf("?") === -1) {
@@ -78,8 +79,9 @@ function commitApi(id) {
         $api.find('.response-path').text(url);
         $api.find('.response-show').text(formatJson1(data));
         $('.api-body').animate({
-            scrollTop: 1000
+            scrollTop: $response.offset().top +1000
         }, 0);
+        NProgress.done();
     }
     let ajaxParam = {
         type: type,

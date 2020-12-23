@@ -192,7 +192,7 @@ function menuFilter(t) {
     let content = $(t).val();
     let $menu = $('#menu-div>div.layui-show');
     if (!content) {
-        $menu.find('.layui-nav-item').removeClass('layui-hide').addClass('layui-show layui-nav-itemed');
+        $menu.find('.layui-nav-item').removeClass('layui-hide');//.addClass('layui-show layui-nav-itemed');
         $menu.find('.layui-nav-item>.layui-nav-child>dd').removeClass('layui-hide').addClass('layui-show');
         return;
     }

@@ -1,11 +1,10 @@
 package com.lancabbage.lancodeapi;
 
 import com.lancabbage.lancodeapi.bean.dto.*;
-import com.lancabbage.lancodeapi.bean.po.ApiParam;
 import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
-import com.lancabbage.lancodeapi.utils.doc.ClassKey;
 import com.lancabbage.lancodeapi.utils.doc.AnnotationRes;
+import com.lancabbage.lancodeapi.utils.doc.ClassKey;
 import com.sun.javadoc.*;
 import com.sun.tools.javadoc.ClassDocImpl;
 import com.sun.tools.javadoc.ParameterizedTypeImpl;
@@ -46,18 +45,34 @@ public class DocletTest extends Doclet {
     public static List<String> classTag = Arrays.asList("@Description:");
     public static List<String> returnTag = Arrays.asList("@return");
     /**
+     * 参数传输方式 1：form-data 2：post json格式 3：path {id}
+     */
+    public static String[] paramMode = {"RequestParam", "RequestBody", "PathVariable"};
+
+//    public static List<String> tagList = Arrays.asList("@param","@Description:","@return");
+    /**
+     * 文档根节点
+     */
+    private static RootDoc root;
+//@RequestParam(value = "id",required = false)
+//@PathVariable(value = "id")
+    /**
      * class Map
      */
     public Map<ClassKey, ClassInfoDto> classMap = new HashMap<>();
 
-//    public static List<String> tagList = Arrays.asList("@param","@Description:","@return");
+    public static LanguageVersion languageVersion() {
+
+        return LanguageVersion.JAVA_1_5;
+    }
 
     /**
-     * 参数传输方式 1：form-data 2：post json格式 3：path {id}
+     * javadoc调用入口
      */
-    public static String[] paramMode = {"RequestParam", "RequestBody", "PathVariable"};
-//@RequestParam(value = "id",required = false)
-//@PathVariable(value = "id")
+    public static boolean start(RootDoc root) {
+        DocletTest.root = root;
+        return true;
+    }
 
     /**
      * 测试
@@ -86,7 +101,6 @@ public class DocletTest extends Doclet {
             getMethod((ClassDocImpl) classDoc[0], "", method);
         }
     }
-
 
     /**
      * 获取classDoc
@@ -247,7 +261,6 @@ public class DocletTest extends Doclet {
         return retParam;
     }
 
-
     private Map<String, String> getParamMap(Tag[] tags) {
         Map<String, String> map = new HashMap<>();
         if (tags == null || tags.length == 0) {
@@ -360,7 +373,6 @@ public class DocletTest extends Doclet {
 
         return classInfoDto;
     }
-
 
     /**
      * 判断是否controller
@@ -504,24 +516,5 @@ public class DocletTest extends Doclet {
 
     public String s(String s1, String s2) {
         return StringUtils.isBlank(s1) ? s2 : s1;
-    }
-
-
-    /**
-     * 文档根节点
-     */
-    private static RootDoc root;
-
-    public static LanguageVersion languageVersion() {
-
-        return LanguageVersion.JAVA_1_5;
-    }
-
-    /**
-     * javadoc调用入口
-     */
-    public static boolean start(RootDoc root) {
-        DocletTest.root = root;
-        return true;
     }
 }

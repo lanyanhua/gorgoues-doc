@@ -138,21 +138,23 @@ public class ClassInfoServiceImpl implements ClassInfoService {
     }
 
     private void saveFieldDto(Collection<ClassInfoDto> classInfo) {
-        List<ClassFieldDto> fieldDtoList = new ArrayList<>();
+        List<ClassField> fields = new ArrayList<>();
         for (ClassInfoDto c : classInfo) {
             if(c.getFieldList()==null){
                 continue;
             }
-            fieldDtoList.addAll(c.getFieldList().stream().peek(i -> {
-                i.setClassId(c.getId());
-                i.setCreateTime(new Date());
+            fields.addAll(c.getFieldList().stream().map(i -> {
+                ClassField field =classDtoTovo.classFieldDtoToPo(i);
+                field.setClassId(c.getId());
+                field.setCreateTime(new Date());
                 //赋值字段类型
                 ClassInfoDto typeClass = i.getTypeClass();
                 if (typeClass != null) {
-                    i.setTypeId(typeClass.getId());
+                    field.setTypeId(typeClass.getId());
                 }
+                return field;
             }).collect(Collectors.toList()));
         }
-        classFieldMapper.insertList(classDtoTovo.listClassFieldDtoToPo(fieldDtoList));
+        classFieldMapper.insertList(fields);
     }
 }

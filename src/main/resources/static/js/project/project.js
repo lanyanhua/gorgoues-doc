@@ -27,7 +27,7 @@ function saveProject(fun) {
     form.on('submit(projectFormBtn)', function (data) {
         $.ajax({
             type: 'post',
-            url: data.field.id == null ? addProjectUrl : saveProjectUrl,
+            url: data.field.id ? saveProjectUrl : addProjectUrl,
             data: JSON.stringify(data.field),
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -48,6 +48,7 @@ function saveProject(fun) {
 
 //添加项目分支
 function addProjectBranch(projectId, name, fun) {
+    NProgress.start();
     $.ajax({
         type: 'post',
         url: addProjectBranchUrl,
@@ -56,6 +57,7 @@ function addProjectBranch(projectId, name, fun) {
         dataType: 'json',
         error: ajaxError,
         success: function (data) {
+            NProgress.done();
             if (data.statusCode !== 200) {
                 layer.msg(data.statusMsg);
                 return;
@@ -70,6 +72,7 @@ function addProjectBranch(projectId, name, fun) {
 }
 
 function pullProjectBranch(projectId, branchId) {
+    NProgress.start();
     $.ajax({
         type: "POST",
         url: pullProjectBranchUrl + "?projectId=" + projectId + "&branchId=" + branchId,

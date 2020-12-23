@@ -95,9 +95,11 @@
                            api-paramMode="{{v.paramMode}}" api-type="{{inputType}}"
                            name="{{v.paramName}}" type="{{inputType}}"/>
                     {{# }else if(v.isBaseTypeArr){ }}
+                    {{# let multiple = v.isBaseTypeArr=="file"? 'multiple="multiple"':''; }}
                     <input class="layui-input input-sm param-value"
                            api-paramMode="{{v.paramMode}}" api-type="{{v.isBaseTypeArr}}"
-                           name="{{v.paramName}}" type="{{v.isBaseTypeArr}}"/>
+                           name="{{v.paramName}}" type="{{v.isBaseTypeArr}}" {{multiple}} />
+
                     {{# } }}
                 </td>
                 <td>{{v.dataType}}</td>
