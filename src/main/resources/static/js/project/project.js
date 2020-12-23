@@ -21,13 +21,13 @@ function projectAll(fun) {
     })
 }
 
-//添加项目
-function addProject(fun) {
+//保存项目
+function saveProject(fun) {
     //监听提交
     form.on('submit(projectFormBtn)', function (data) {
         $.ajax({
             type: 'post',
-            url: addProjectUrl,
+            url: data.field.id == null ? addProjectUrl : saveProjectUrl,
             data: JSON.stringify(data.field),
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -47,7 +47,7 @@ function addProject(fun) {
 }
 
 //添加项目分支
-function addProjectBranch(projectId, name,fun) {
+function addProjectBranch(projectId, name, fun) {
     $.ajax({
         type: 'post',
         url: addProjectBranchUrl,
@@ -123,16 +123,30 @@ function renderProjectTable() {
                 title: '添加分支',
                 area: ['50%', '300px']
             }, function (value, index, elem) {
-                addProjectBranch(data.id,value,function (){
+                addProjectBranch(data.id, value, function () {
                     layer.closeAll();
                     dataTable.reload({});
                 })
             });
         }
+        if (layEvent === 'edit') {
+            addProjectBtn(data);
+        }
     });
 }
 
-function addProjectBtn() {
+function addProjectBtn(data) {
+
+    if (data == null) {
+        data = {id: '', name: '', remotePath: '', header: '', branchName: ''}
+        $projectForm.find('[name=branchName]').show();
+    }else {
+        $projectForm.find('[name=branchName]').hide();
+    }
+    $projectForm.find('[name=id]').val(data.id);
+    $projectForm.find('[name=name]').val(data.name);
+    $projectForm.find('[name=remotePath]').val(data.remotePath);
+
     layer.open({
         title: '添加项目'
         , type: 1

@@ -36,4 +36,10 @@ public interface ProjectService {
      * @param projectId 项目ID
      */
     Project getProjectById(Integer projectId);
+
+    /**
+     * 保存项目
+     * @param vo
+     */
+    void saveProject(Project vo);
 }

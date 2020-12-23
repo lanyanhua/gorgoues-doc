@@ -95,13 +95,14 @@ function renderEnvTable() {
 
 function openEnvForm(data) {
     if (data == null) {
-        data = {id: '', name: '', domain: '', header: '',}
+        data = {id: '', name: '', domain: '', header: '', isPort: false, isContextPath: false,}
     }
     $envForm.find('[name=id]').val(data.id);
     $envForm.find('[name=name]').val(data.name).attr(data.name ? 'readonly' : '');
-
     $envForm.find('[name=domain]').val(data.domain);
     $envForm.find('[name=header]').val(data.header);
+    $envForm.find('[name=isPort]').val(data.isPort);
+    $envForm.find('[name=isContextPath]').val(data.isContextPath);
     $envForm.removeClass("layui-hide");
     layer.open({
         title: '添加项目'

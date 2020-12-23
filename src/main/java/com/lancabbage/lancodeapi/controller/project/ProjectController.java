@@ -1,5 +1,6 @@
 package com.lancabbage.lancodeapi.controller.project;
 
+import com.lancabbage.lancodeapi.bean.po.Project;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectAddVo;
 import com.lancabbage.lancodeapi.bean.vo.project.ProjectVo;
@@ -33,6 +34,17 @@ public class ProjectController {
     public BaseResponse<Integer> addProject(@RequestBody @Valid ProjectAddVo vo) {
         int id = projectService.addProject(vo);
         return BaseResponse.successInstance(id);
+    }
+
+    /**
+     * 保存项目
+     *
+     * @return ID
+     */
+    @PostMapping("/saveProject")
+    public BaseResponse<String> saveProject(@RequestBody Project p) {
+        projectService.saveProject(p);
+        return BaseResponse.successInstance("成功");
     }
 
     /**

@@ -104,7 +104,7 @@
         });
         //项目数据表格
         renderProjectTable();
-        addProject(function () {
+        saveProject(function () {
             layer.closeAll();
             dataTable.reload({});
             $projectForm.addClass("layui-hide");
@@ -126,7 +126,7 @@
 </script>
 <script type="text/html" id="project-toolbar">
     <a class="layui-btn layui-btn-xs" lay-event="addBranch">添加分支</a>
-    <!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 </script>
 <script type="text/html" id="env-toolbar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>

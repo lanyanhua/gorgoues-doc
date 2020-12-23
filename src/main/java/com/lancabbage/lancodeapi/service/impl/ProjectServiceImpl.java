@@ -80,4 +80,9 @@ public class ProjectServiceImpl implements ProjectService {
     public Project getProjectById(Integer projectId) {
         return projectMapper.selectByPrimaryKey(projectId);
     }
+
+    @Override
+    public void saveProject(Project p) {
+        projectMapper.updateByPrimaryKeySelective(p);
+    }
 }
