@@ -1,5 +1,6 @@
 package com.lancabbage.lancodeapi.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.vo.base.BaseResponse;
 import com.lancabbage.lancodeapi.bean.vo.menu.MenuVo;
@@ -103,8 +104,8 @@ public class TestController {
      * @return 001
      */
     @PostMapping("testDoubleParadigms")
-    public BaseResponse<List<MenuDto>> testDoubleParadigms(@RequestBody List<MenuDto> menuDtos) {
-        return BaseResponse.successInstance(menuDtos);
+    public BaseResponse<PageInfo<MenuDto>> testDoubleParadigms(@RequestBody List<MenuDto> menuDtos) {
+        return BaseResponse.successInstance(new PageInfo<>(menuDtos));
     }
 
 }

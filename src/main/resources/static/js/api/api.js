@@ -27,9 +27,13 @@ function commitApi(id) {
     let $api = $('.api-tab-content-id-' + id);
     let url = $api.find('.api-path').text();
     let type = $api.find('.apiType').text();
-    type = type == ApiType[0] ? "post" : type;
+    type = type === ApiType[0] ? "post" : type;
     // header
-    let headers = {};
+    let headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE',
+    };
+
     $.each($api.find('.env-header'), (i, v) => {
         v = $(v);
         let key = v.attr('header-key');
@@ -78,8 +82,10 @@ function commitApi(id) {
         $response.removeClass("layui-hide");
         $api.find('.response-path').text(url);
         $api.find('.response-show').text(formatJson1(data));
-        $('.api-body').animate({
-            scrollTop: $response.offset().top +1000
+        debugger
+        let apiBody = $('.api-body');
+        apiBody.animate({
+            scrollTop: apiBody.children().height()
         }, 0);
         NProgress.done();
     }
@@ -88,6 +94,7 @@ function commitApi(id) {
         url: url,
         headers: headers,
         contentType: "application/json;charset=utf-8",
+        xhrFields: { withCredentials: true },
         data: data,
         dataType: 'json',
         error: fun,

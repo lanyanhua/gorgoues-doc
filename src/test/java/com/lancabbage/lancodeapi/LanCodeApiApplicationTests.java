@@ -15,6 +15,7 @@ import java.util.List;
 @SpringBootTest
 class LanCodeApiApplicationTests {
 
+
     @Test
     void contextLoads() {
         List<String> classTag = NotesConfigUtils.getClassTag();

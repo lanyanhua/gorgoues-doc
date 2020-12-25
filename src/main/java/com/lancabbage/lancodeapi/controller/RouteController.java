@@ -7,6 +7,7 @@ import com.lancabbage.lancodeapi.service.EnvInfoService;
 import com.lancabbage.lancodeapi.service.GitService;
 import com.lancabbage.lancodeapi.service.ProjectService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
