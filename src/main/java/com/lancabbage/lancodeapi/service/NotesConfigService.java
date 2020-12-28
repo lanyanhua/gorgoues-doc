@@ -19,4 +19,17 @@ public interface NotesConfigService {
      * 保存注释配置
      */
     Integer saveNotesConfig(NotesConfig config);
+
+    /**
+     * 删除配置
+     *
+     * @param id ID
+     */
+    void deleteById(Integer id);
+
+    /**
+     * 根据类型查询配置
+     * @param type 类型
+     */
+    List<NotesConfig> listNotesConfigByType(String type);
 }

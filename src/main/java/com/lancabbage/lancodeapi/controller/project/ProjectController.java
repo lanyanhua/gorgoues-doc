@@ -58,4 +58,26 @@ public class ProjectController {
         return BaseResponse.successInstance(projectVos);
     }
 
+    /**
+     * 删除项目
+     * @param id ID
+     */
+    @DeleteMapping("/deleteById")
+    public BaseResponse<String> deleteById(@RequestParam Integer id){
+        projectService.deleteById(id);
+        return BaseResponse.successInstance("成功");
+    }
+
+
+    /**
+     * 查询项目模块名称
+     * @param id ID
+     * @return 模块名称
+     */
+    @GetMapping("/listModelById")
+    public BaseResponse<List<String>> listModelById(@RequestParam Integer id){
+        List<String> modelList =projectService.listModelById(id);
+        return BaseResponse.successInstance(modelList);
+    }
+
 }

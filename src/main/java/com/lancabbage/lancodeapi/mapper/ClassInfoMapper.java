@@ -8,8 +8,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface ClassInfoMapper extends BaseMapper<ClassInfo> {
-    /**
-     * 查询当前最大ID
-     */
-    int selectId();
+
 }

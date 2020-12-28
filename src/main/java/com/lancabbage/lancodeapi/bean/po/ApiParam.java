@@ -1,10 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "api_param")
 public class ApiParam {
@@ -57,7 +54,7 @@ public class ApiParam {
     private Integer apiId;
 
     /**
-     * 数据类型
+     * 基本数据类型
      */
     @Column(name = "data_type")
     private String dataType;
@@ -112,8 +109,8 @@ public class ApiParam {
      *
      * @param classId 参数对应的 class
      */
-    public Integer setClassId(Integer classId) {
-        return this.classId = classId;
+    public void setClassId(Integer classId) {
+        this.classId = classId;
     }
 
     /**
@@ -206,10 +203,20 @@ public class ApiParam {
         this.apiId = apiId;
     }
 
+    /**
+     * 获取基本数据类型
+     *
+     * @return data_type - 基本数据类型
+     */
     public String getDataType() {
         return dataType;
     }
 
+    /**
+     * 设置基本数据类型
+     *
+     * @param dataType 基本数据类型
+     */
     public void setDataType(String dataType) {
         this.dataType = dataType;
     }

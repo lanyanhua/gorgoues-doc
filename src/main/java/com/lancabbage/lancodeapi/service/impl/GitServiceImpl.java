@@ -9,6 +9,7 @@ import com.lancabbage.lancodeapi.mapper.GitInfoMapper;
 import com.lancabbage.lancodeapi.service.GitService;
 import com.lancabbage.lancodeapi.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -33,7 +34,9 @@ public class GitServiceImpl implements GitService {
 
     @Override
     public List<String> cloneCode(Project project, String branch) {
-        GitInfo gitInfo = gitInfoMapper.selectAll().get(0);
+        List<GitInfo> gitInfoList = gitInfoMapper.selectAll();
+        Assert.isTrue(!gitInfoList.isEmpty(),"无git配置信息");
+        GitInfo gitInfo = gitInfoList.get(0);
         GitUtils gitUtils = GitUtils.getInstance(project.getRemotePath(), gitInfo.getRepositoryPath()
                 , project.getName(), branch, gitInfo.getUsername(), gitInfo.getPassword());
         try {

@@ -25,6 +25,9 @@ public class NotesConfigUtils {
     public static final String methodAnnotation = "methodAnnotation";
     public static final String fieldAnnotation = "fieldAnnotation";
 
+    public static final String baseDataType = "baseDataType";
+    public static final String arrayType = "arrayType";
+
     public static List<NotesConfig> notesConfigList;
     public static NotesConfigService service;
 
@@ -35,7 +38,7 @@ public class NotesConfigUtils {
             refresh();
         }
     }
-    public void refresh(){
+    public static void refresh(){
         notesConfigList = service.selectAll();
     }
 
@@ -69,6 +72,14 @@ public class NotesConfigUtils {
 
     public static List<String> getFieldAnnotation() {
         return getTag(fieldAnnotation);
+    }
+
+    public static List<String> getBaseDataType() {
+        return getTag(baseDataType);
+    }
+
+    public static List<String> getArrayType() {
+        return getTag(arrayType);
     }
 
     public static List<String> getTag(String tag) {

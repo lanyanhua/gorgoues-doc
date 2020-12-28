@@ -14,6 +14,16 @@ import java.util.List;
  * @Description:
  */
 public interface ApiInfoService {
+
+    /**
+     * 保存API信息
+     *
+     * @param apiInfos  API info
+     * @param projectId 项目ID
+     * @param branchId  分支ID
+     */
+    void addApiList(List<ApiInfoDto> apiInfos, Integer projectId, Integer branchId);
+
     /**
      * 保存API信息
      *
@@ -39,8 +49,10 @@ public interface ApiInfoService {
      */
     List<ApiInfo> listApiInfoByBranchId(Integer branchId);
 
+
     /**
-     * 更新API信息
+     * 删除API
+     * @param id 分支ID
      */
-    void updateApi(ApiInfo apiInfo, ApiInfoDto api);
+    void deleteByBranchId(List<Integer> id);
 }

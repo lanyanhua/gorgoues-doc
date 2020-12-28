@@ -1,6 +1,5 @@
 package com.lancabbage.lancodeapi.service.impl;
 
-import com.lancabbage.lancodeapi.bean.dto.ClassFieldDto;
 import com.lancabbage.lancodeapi.bean.dto.ClassInfoDto;
 import com.lancabbage.lancodeapi.bean.po.ClassField;
 import com.lancabbage.lancodeapi.bean.po.ClassInfo;
@@ -11,7 +10,6 @@ import com.lancabbage.lancodeapi.mapper.ClassInfoMapper;
 import com.lancabbage.lancodeapi.service.ClassInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
@@ -40,34 +38,9 @@ public class ClassInfoServiceImpl implements ClassInfoService {
     }
 
     @Transactional
-    public void saveClass(ClassInfoDto classInfo) {
-        classInfo.setCreateTime(new Date());
-        classInfoMapper.insert(classInfo);
-        if (CollectionUtils.isEmpty(classInfo.getFieldList())) {
-            return;
-        }
-        //保存字段
-        List<ClassFieldDto> fieldDtoList = classInfo.getFieldList().stream().peek(i -> {
-            i.setClassId(classInfo.getId());
-            i.setCreateTime(new Date());
-            //赋值字段类型
-            ClassInfoDto typeClass = i.getTypeClass();
-            if (typeClass != null && i.setTypeId(typeClass.getId()) == null) {
-                typeClass.setBranchId(classInfo.getBranchId());
-                typeClass.setProjectId(classInfo.getProjectId());
-                saveClass(typeClass);
-                i.setTypeId(typeClass.getId());
-            }
-        }).collect(Collectors.toList());
-        classFieldMapper.insertList(classDtoTovo.listClassFieldDtoToPo(fieldDtoList));
-    }
-
-    @Transactional
     @Override
-    public synchronized void addClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId) {
-        int id = classInfoMapper.selectId();
+    public void addClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId) {
         for (ClassInfoDto c : classInfo) {
-            c.setId(++id);
             c.setProjectId(projectId);
             c.setBranchId(branchId);
             c.setCreateTime(new Date());
@@ -78,19 +51,17 @@ public class ClassInfoServiceImpl implements ClassInfoService {
 
     @Transactional
     @Override
-    public synchronized void saveClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId) {
+    public void saveClass(Collection<ClassInfoDto> classInfo, Integer projectId, Integer branchId) {
         Example example = new Example(ClassInfo.class);
         example.createCriteria().andEqualTo("branchId", branchId);
         List<ClassInfo> classInfos = classInfoMapper.selectByExample(example);
         //删除当前所有类的字段
         List<ClassInfoDto> addList = new ArrayList<>();
-        int id = classInfoMapper.selectId();
         for (ClassInfoDto c : classInfo) {
             List<ClassInfo> collect = classInfos.stream()
                     .filter(i -> i.getPackagePath().equals(c.getPackagePath()))
                     .collect(Collectors.toList());
             if (collect.isEmpty()) {
-                c.setId(++id);
                 c.setProjectId(projectId);
                 c.setBranchId(branchId);
                 c.setCreateTime(new Date());
@@ -137,14 +108,26 @@ public class ClassInfoServiceImpl implements ClassInfoService {
         return classInfoVoList;
     }
 
+    @Override
+    public void deleteByBranchId(List<Integer> id) {
+        Example example = new Example(ClassInfo.class);
+        example.createCriteria().andIn("branchId", id);
+        classInfoMapper.deleteByExample(example);
+    }
+
+    /**
+     * 保存字段
+     *
+     * @param classInfo class
+     */
     private void saveFieldDto(Collection<ClassInfoDto> classInfo) {
         List<ClassField> fields = new ArrayList<>();
         for (ClassInfoDto c : classInfo) {
-            if(c.getFieldList()==null){
+            if (c.getFieldList() == null) {
                 continue;
             }
             fields.addAll(c.getFieldList().stream().map(i -> {
-                ClassField field =classDtoTovo.classFieldDtoToPo(i);
+                ClassField field = classDtoTovo.classFieldDtoToPo(i);
                 field.setClassId(c.getId());
                 field.setCreateTime(new Date());
                 //赋值字段类型

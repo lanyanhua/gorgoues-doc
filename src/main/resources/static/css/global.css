@@ -294,3 +294,7 @@
 .layui-layer-content .layui-input-block{
     margin-left: 130px;
 }
+
+.layui-form-checkbox i {
+    top: 5px!important;
+}

@@ -1,10 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "class_info")
 public class ClassInfo {
@@ -165,18 +162,38 @@ public class ClassInfo {
         this.createTime = createTime;
     }
 
+    /**
+     * 获取项目ID
+     *
+     * @return project_id - 项目ID
+     */
     public Integer getProjectId() {
         return projectId;
     }
 
+    /**
+     * 设置项目ID
+     *
+     * @param projectId 项目ID
+     */
     public void setProjectId(Integer projectId) {
         this.projectId = projectId;
     }
 
+    /**
+     * 获取分支ID
+     *
+     * @return branch_id - 分支ID
+     */
     public Integer getBranchId() {
         return branchId;
     }
 
+    /**
+     * 设置分支ID
+     *
+     * @param branchId 分支ID
+     */
     public void setBranchId(Integer branchId) {
         this.branchId = branchId;
     }

@@ -1,10 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "git_info")
 public class GitInfo {

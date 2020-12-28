@@ -81,8 +81,27 @@ public class ProjectServiceImpl implements ProjectService {
         return projectMapper.selectByPrimaryKey(projectId);
     }
 
+    @Transactional
     @Override
     public void saveProject(Project p) {
-        projectMapper.updateByPrimaryKeySelective(p);
+        Project project = projectMapper.selectByPrimaryKey(p.getId());
+        Assert.notNull(project,"项目不存在");
+        project.setName(p.getName());
+        project.setRemotePath(p.getRemotePath());
+        project.setPort(p.getPort());
+        project.setRemotePath(p.getRemotePath());
+        projectMapper.updateByPrimaryKey(project);
+    }
+
+    @Transactional
+    @Override
+    public void deleteById(Integer id) {
+        projectMapper.deleteByPrimaryKey(id);
+        projectBranchService.deleteByProjectId(id);
+    }
+
+    @Override
+    public List<String> listModelById(Integer id) {
+        return projectMapper.listModelById(id);
     }
 }

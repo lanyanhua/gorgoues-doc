@@ -32,13 +32,22 @@
                             <dd><a href="javascript:" path="jobGroup/jobGroup" tab-id="1-1">项目维护</a></dd>
                         </dl>
                     </li>
-                    <li class="layui-nav-item">
+                    <li class="layui-nav-item layui-nav-itemed">
                         <a href="javascript:">
                             <i class="layui-icon">&#xe62c;</i> 环境管理
                         </a>
                         <dl class="layui-nav-child">
                             <dd><a href="javascript:" path="log/log" tab-id="2-1">git信息</a></dd>
                             <dd><a href="javascript:" path="log/log" tab-id="2-2">环境配置</a></dd>
+                            <dd><a href="javascript:" path="log/log" tab-id="2-3">配置管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a href="javascript:">
+                            <i class="layui-icon">&#xe62c;</i> 公共文件
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:" path="log/log" tab-id="3-1">上传类</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -51,6 +60,8 @@
                     <li lay-id="1-1" class="layui-this">项目维护</li>
                     <li lay-id="2-1" class="">git信息</li>
                     <li lay-id="2-2" class="">环境配置</li>
+                    <li lay-id="2-3" class="">配置管理</li>
+                    <li lay-id="3-1" class="">上传类</li>
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show" tab-id="1-1">
@@ -71,37 +82,112 @@
                     </div>
                     <div class="layui-tab-item " tab-id="2-2">
                         <div class="toolbar">
-                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="openEnvForm()">
-                                添加
-                            </button>
                             <button class="layui-btn layui-btn-sm" onclick="dataTableEnv.reload({});">
                                 <i class="layui-icon layui-icon-refresh"></i>
+                            </button>
+                            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="openEnvForm()">
+                                添加
                             </button>
                         </div>
                         <!--数据表格-->
                         <table class="" id="env-table" lay-filter="env-table-filter"></table>
                     </div>
+                    <div class="layui-tab-item " tab-id="2-3">
+                        <!--模糊搜索区域-->
+                        <div class="layui-row">
+                            <div class="layui-form">
+                                <div class="layui-inline">
+                                    <select id="searchType" class="input-sm">
+                                        <option value=""></option>
+                                        <option value="classTag">classTag</option>
+                                        <option value="methodTag">methodTag</option>
+                                        <option value="methodParamTag">methodParamTag</option>
+                                        <option value="methodReturnTag">methodReturnTag</option>
+                                        <option value="fieldTag">fieldTag</option>
+                                        <option value="classAnnotation">classAnnotation</option>
+                                        <option value="methodAnnotation">methodAnnotation</option>
+                                        <option value="fieldAnnotation">fieldAnnotation</option>
+                                        <option value="baseDataType">baseDataType</option>
+                                        <option value="arrayType">arrayType</option>
+                                    </select>
+                                </div>
+                                <button class="layui-btn layui-btn-sm">
+                                    <i class="layui-icon layui-icon-search"
+                                       onclick="configDataTable.reload({where:{type: $('#searchType').val()}});"></i>
+                                </button>
+
+                                <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="saveConfigBtn()">
+                                    添加
+                                </button>
+                            </div>
+                        </div>
+                        <!--数据表格-->
+                        <table class="" id="config-table" lay-filter="config-table-filter"></table>
+                    </div>
+                    <div class="layui-tab-item " tab-id="3-1">
+                        <div class="layui-col-sm8">
+                            <div id="beanForm" class="layui-form" action="">
+                                <input type="hidden" name="id">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文件</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input " api-parammode="0" api-type="file"
+                                               placeholder="java文件多个"
+                                               name="bean" type="file" multiple="multiple" style="padding: 5px;">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">包地址</label>
+                                    <div class="layui-input-block">
+                                        <input class="layui-input param-value" placeholder="com/lan/api  别写.啊"
+                                               api-parammode="0" api-type="text" name="path" type="text">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn" onclick="uploadBean()">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
+
     </div>
+</div>
 </div>
 </body>
 <div th:include="project/projectAddTemplate.html"></div>
 <div th:include="env/envAddTemplate.html"></div>
+<div th:include="env/configAddTemplate.html"></div>
 <div th:include="common/common.html"></div>
 <script th:src="@{/js/project/project.js}"></script>
 <script th:src="@{/js/git/git.js}"></script>
 <script th:src="@{/js/env/env.js}"></script>
+<script th:src="@{/js/env/notesConfig.js}"></script>
 <script type="text/javascript">
     $(function () {
         $projectForm.addClass("layui-hide");
         $envForm.addClass("layui-hide");
-
+        $configForm.addClass("layui-hide");
+        //tab 切换
+        let currMenuId = localStorage.getItem("CurrMenuId_manage");
+        if (currMenuId) {
+            element.tabChange("ok-tab", currMenuId);
+        }
         $(".layui-nav-child").find("dd").click(function () {
             let tabId = $(this).children('a').attr('tab-id');
             // 切换选项卡
             element.tabChange("ok-tab", tabId);
+            localStorage.setItem("CurrMenuId_manage", tabId);
+        });
+        $(".layui-tab-title li").click(function () {
+            let tabId = $(this).attr('lay-id');
+            localStorage.setItem("CurrMenuId_manage", tabId);
         });
         //项目数据表格
         renderProjectTable();
@@ -120,17 +206,40 @@
         saveEnv(function () {
             layer.closeAll();
             dataTableEnv.reload({});
-            $envForm.addClass("layui-hide");
+            $envForm.hide();
         });
+        //配置
+        renderConfigTable();
+        saveConfigForm(function () {
+            layer.closeAll();
+            configDataTable.reload({type: $('[lay-filter="typeFilter"]').val()});
+            $configForm.addClass("layui-hide");
+        })
     })
 
 </script>
 <script type="text/html" id="project-toolbar">
     <a class="layui-btn layui-btn-xs" lay-event="addBranch">添加分支</a>
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="delete">删除</a>
+</script>
+<script type="text/html" id="branch-template">
+    {{# $.each(d.branchList,(i,v)=>{ }}
+    <div class="layui-table-cell laytable-cell-1-0-3">
+        <div class="layui-col-sm6">{{v.name}}</div>
+        <div class="layui-col-sm6">
+            <i class="layui-icon layui-icon-delete" style="cursor:pointer" onclick="deleteBranch({{v.id}});"></i>
+        </div>
+    </div>
+    {{# }) }}
 </script>
 <script type="text/html" id="env-toolbar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="delete">删除</a>
+</script>
+<script type="text/html" id="config-toolbar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="delete">删除</a>
 </script>
 </html>
 

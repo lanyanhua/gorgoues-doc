@@ -1,0 +1,33 @@
+<form id="configForm" class="layui-form" action="">
+    <input type="hidden" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">项目名</label>
+        <div class="layui-input-block">
+            <select name="type" lay-verify="required" lay-filter="typeFilter">
+                <option value=""></option>
+                <option value="classTag">classTag</option>
+                <option value="methodTag">methodTag</option>
+                <option value="methodParamTag">methodParamTag</option>
+                <option value="methodReturnTag">methodReturnTag</option>
+                <option value="fieldTag">fieldTag</option>
+                <option value="classAnnotation">classAnnotation</option>
+                <option value="methodAnnotation">methodAnnotation</option>
+                <option value="fieldAnnotation">fieldAnnotation</option>
+                <option value="baseDataType">baseDataType</option>
+                <option value="arrayType">arrayType</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">值</label>
+        <div class="layui-input-block">
+            <input type="text" name="notes" value="" required
+                   lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="saveConfigFormBtn">保存</button>
+        </div>
+    </div>
+</form>

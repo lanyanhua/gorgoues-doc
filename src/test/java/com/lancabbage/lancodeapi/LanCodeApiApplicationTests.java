@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class LanCodeApiApplicationTests {
@@ -25,12 +26,13 @@ class LanCodeApiApplicationTests {
 
     @Test
     public void test() throws IOException {
+        //配置读库
         String basePath = "/Users/lanyanhua/Desktop/gittest/qns/master";
 //        String basePath = "/Users/lanyanhua/Desktop/gittest/lan-code-api/master";
         File file = new File(basePath);
         List<String> javaFile = GitUtils.getJavaFile(file);
         ApiInfoUtils classDocUtils = new ApiInfoUtils();
-        List<MenuDto> menuDtoList = classDocUtils.parsingClass(javaFile);
-        System.out.println(JSON.toJSONString(menuDtoList.get(0)));
+        Map<String, List<MenuDto>> menuDtoList = classDocUtils.parsingClass(javaFile);
+        System.out.println(JSON.toJSONString(menuDtoList));
     }
 }

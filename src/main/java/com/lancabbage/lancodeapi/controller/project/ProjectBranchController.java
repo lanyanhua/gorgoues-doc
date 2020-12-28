@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author: lanyanhua
@@ -61,4 +62,15 @@ public class ProjectBranchController {
         branchService.pullProjectBranch(branch);
         return BaseResponse.successInstance("成功");
     }
+
+    /**
+     * 删除分支
+     * @param id 分支ID
+     */
+    @DeleteMapping("/deleteBranchById")
+    public BaseResponse<String> deleteBranchById(@RequestParam Integer id){
+        branchService.deleteBranchById(id);
+        return BaseResponse.successInstance("成功");
+    }
+
 }

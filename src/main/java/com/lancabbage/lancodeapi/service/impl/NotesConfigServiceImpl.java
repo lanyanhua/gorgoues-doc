@@ -3,7 +3,10 @@ package com.lancabbage.lancodeapi.service.impl;
 import com.lancabbage.lancodeapi.bean.po.NotesConfig;
 import com.lancabbage.lancodeapi.mapper.NotesConfigMapper;
 import com.lancabbage.lancodeapi.service.NotesConfigService;
+import com.lancabbage.lancodeapi.utils.doc.NotesConfigUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
@@ -35,6 +38,22 @@ public class NotesConfigServiceImpl implements NotesConfigService {
             return config.getId();
         }
         configMapper.updateByPrimaryKeySelective(config);
+        NotesConfigUtils.refresh();
         return config.getId();
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        configMapper.deleteByPrimaryKey(id);
+        NotesConfigUtils.refresh();
+    }
+
+    @Override
+    public List<NotesConfig> listNotesConfigByType(String type) {
+        Example example = new Example(NotesConfig.class);
+        if(StringUtils.hasLength(type)) {
+            example.createCriteria().andEqualTo("type",type);
+        }
+        return configMapper.selectByExample(example);
     }
 }

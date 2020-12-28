@@ -1,10 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "env_info")
 public class EnvInfo {
@@ -35,6 +32,7 @@ public class EnvInfo {
      */
     @Column(name = "create_time")
     private Date createTime;
+
     /**
      * 是否使用项目端口：1：是 0：否
      */
@@ -137,19 +135,39 @@ public class EnvInfo {
         this.createTime = createTime;
     }
 
+    /**
+     * 获取是否使用项目端口：1：是 0：否
+     *
+     * @return is_port - 是否使用项目端口：1：是 0：否
+     */
     public Boolean getIsPort() {
         return isPort;
     }
 
-    public void setIsPort(Boolean port) {
-        isPort = port;
+    /**
+     * 设置是否使用项目端口：1：是 0：否
+     *
+     * @param isPort 是否使用项目端口：1：是 0：否
+     */
+    public void setIsPort(Boolean isPort) {
+        this.isPort = isPort;
     }
 
+    /**
+     * 获取是否使用项目上下文路径
+     *
+     * @return is_context_path - 是否使用项目上下文路径
+     */
     public Boolean getIsContextPath() {
         return isContextPath;
     }
 
-    public void setIsContextPath(Boolean contextPath) {
-        isContextPath = contextPath;
+    /**
+     * 设置是否使用项目上下文路径
+     *
+     * @param isContextPath 是否使用项目上下文路径
+     */
+    public void setIsContextPath(Boolean isContextPath) {
+        this.isContextPath = isContextPath;
     }
 }

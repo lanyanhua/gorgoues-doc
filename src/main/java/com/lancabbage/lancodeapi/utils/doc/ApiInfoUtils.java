@@ -7,6 +7,7 @@ import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
 import com.sun.javadoc.*;
+import com.sun.tools.javadoc.AnnotatedTypeImpl;
 import com.sun.tools.javadoc.ClassDocImpl;
 import tk.mybatis.mapper.util.StringUtil;
 
@@ -23,14 +24,20 @@ public class ApiInfoUtils {
 
     private final AnnotationUtils annotationUtils;
     private final ClassInfoUtils classInfoUtils;
+    private final List<ApiInfoDto> apiAll;
 
     public ApiInfoUtils() {
         this.annotationUtils = new AnnotationUtils();
         this.classInfoUtils = new ClassInfoUtils(annotationUtils);
+        apiAll = new ArrayList<>();
     }
 
     public Collection<ClassInfoDto> getClassInfoList() {
         return classInfoUtils.getClassMap().values();
+    }
+
+    public List<ApiInfoDto> getApiAll() {
+        return apiAll;
     }
 
     /**
@@ -39,11 +46,11 @@ public class ApiInfoUtils {
      * @param sources 文件路径
      * @return 菜单API
      */
-    public List<MenuDto> parsingClass(List<String> sources) {
+    public Map<String,List<MenuDto>> parsingClass(List<String> sources) {
         ClassDoc[] classes = DocletUtils.getClassDoc(sources);
-
+        Map<String,List<MenuDto>> menuMap = new HashMap<>();
         //组装对象
-        List<MenuDto> menuList = new ArrayList<>();
+//        List<MenuDto> menuList = new ArrayList<>();
         for (ClassDoc classDoc : classes) {
             System.out.println(classDoc);
             ClassDocImpl c = (ClassDocImpl) classDoc;
@@ -55,7 +62,6 @@ public class ApiInfoUtils {
             }
             //组装菜单
             MenuDto m = new MenuDto();
-            menuList.add(m);
             //类名
             m.setClassName(c.name());
             //tag描述
@@ -66,21 +72,35 @@ public class ApiInfoUtils {
             //获取注释
             m.setMenuName(s(annotationDesc, tagDesc, c.commentText(), c.name()));
             //api
-            m.setApiInfos(parsingMethod(controller, c.methods()));
+            m.setApiInfos(parsingMethod(controller, c));
 
+            String path = classDoc.position().file().getPath();
+            int src = path.indexOf("/src/");
+            String key = path.substring(path.lastIndexOf("/", src-1) + 1, src);
+            List<MenuDto> menuDtoList = menuMap.computeIfAbsent(key, k -> new ArrayList<>());
+            menuDtoList.add(m);
         }
-        return menuList;
+        return menuMap;
     }
 
     /**
      * 解析方法
      *
-     * @param cc      controller类信息
-     * @param methods 方法
+     * @param cc controller类信息
+     * @param c  类
      * @return API
      */
-    private List<ApiInfoDto> parsingMethod(AnnotationRes cc, MethodDoc[] methods) {
+    private List<ApiInfoDto> parsingMethod(AnnotationRes cc, ClassDoc c) {
         List<ApiInfoDto> apiInfos = new ArrayList<>();
+        //先读取父类的
+        ClassDoc[] interfaces = c.interfaces();
+        if (interfaces != null && interfaces.length > 0) {
+            for (ClassDoc anInterface : interfaces) {
+                apiInfos.addAll(parsingMethod(cc, anInterface));
+            }
+        }
+        //
+        MethodDoc[] methods = c.methods();
         for (MethodDoc method : methods) {
             //解析注解
             AnnotationDesc[] annotations = method.annotations();
@@ -95,8 +115,11 @@ public class ApiInfoUtils {
             String tagDesc = annotationUtils.getTagDesc(method.tags());
             annotationUtils.setParmTag(NotesConfigUtils.getMethodAnnotation());
             String annotationDesc = annotationUtils.getAnnotationDesc(annotations);
-            apiInfo.setName(s(annotationDesc,tagDesc, method.commentText(),  method.name()));
+            apiInfo.setName(s(annotationDesc, tagDesc, method.commentText(), method.name()));
             apiInfo.setMethod(method.name());
+            if ("batchSaleSignSecondSubmit".equals(apiInfo.getMethod())) {
+                System.out.println("debugger");
+            }
             //接口类型 接口访问路径
             apiInfo.setType(isApi.apiType);
             apiInfo.setPath(cc.path + isApi.path);
@@ -108,6 +131,7 @@ public class ApiInfoUtils {
             //入参
             apiParams.addAll(getInputParam(method));
             apiInfos.add(apiInfo);
+            apiAll.add(apiInfo);
         }
 
         return apiInfos;
@@ -179,6 +203,15 @@ public class ApiInfoUtils {
     }
 
     private void setDataType(ApiParamDto paramDto, Type type) {
+        if (type instanceof AnnotatedTypeImpl) {
+            // ((AnnotatedTypeImpl)parameter.type()).annotations() 字段注解
+            // 这个地方 类型是注解类型类 需要获取底层类型 花里胡哨，
+            // 外边Parameter parameter就能获取到，不知道这框架为啥要怎么设计
+            // 但是这里也有一个比较有意思的东西
+            // AnnotatedType.annotations() 只取到了一个值 @javax.validation.Valid
+            // parameter.annotations() 还能取到 @RequestBody 这类的注解
+            type = ((AnnotatedTypeImpl) type).underlyingType();
+        }
         String typeName = type.typeName();
         ClassInfoDto classInfo = classInfoUtils.getClassInfo(type);
         if (classInfo.getBaseType() != null) {

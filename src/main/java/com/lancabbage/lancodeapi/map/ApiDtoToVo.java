@@ -16,12 +16,13 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface ApiDtoToVo {
-
-    ApiInfo apiInfoDtoToPo(ApiInfoDto dto);
+ 
 
     List<ApiParam> listApiParamDtoToPo(List<ApiParamDto> paramDtoList);
 
     List<ApiInfoVo> listApiInfoToVo(List<ApiInfo> apiInfos);
 
     List<ApiInfoDto> listApiInfoToDto(List<ApiInfo> apiInfos);
+
+    List<ApiInfo> listApiInfoDtoToPo(List<ApiInfoDto> apiInfos);
 }

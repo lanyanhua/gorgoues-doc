@@ -172,7 +172,7 @@ function openSwitch() {
                 $branch.append("<option value=" + b.id + ">" + b.name + "</option>");
             });
             //渲染
-            layui.form.render('select');
+            form.render('select');
         });
         form.on('select(envIdFilter)', function (data) {
             $('.env-div').addClass('layui-hide');

@@ -28,11 +28,13 @@ public class NotesConfigController {
     }
 
     /**
-     * 查询所有配置
+     * 查询配置
+     * @param type 类型
+     * @return 配置数据
      */
-    @GetMapping("/listNotesConfigAll")
-    public BaseResponse<List<NotesConfig>> listNotesConfigAll(){
-        return BaseResponse.successInstance(configService.selectAll());
+    @GetMapping("/listNotesConfigByType")
+    public BaseResponse<List<NotesConfig>> listNotesConfigByType(String type){
+        return BaseResponse.successInstance(configService.listNotesConfigByType(type));
     }
 
     /**
@@ -42,7 +44,17 @@ public class NotesConfigController {
     @PutMapping("/save")
     public BaseResponse<Integer> saveNotesConfig(@RequestBody @Valid NotesConfigSaveVo saveVo){
         NotesConfig config = configDtoToVo.notesConfigSaveVoToPo(saveVo);
-        int id =configService.saveNotesConfig(config);
+        Integer id =configService.saveNotesConfig(config);
         return BaseResponse.successInstance(id);
+    }
+
+    /**
+     * 删除配置
+     * @param id ID
+     */
+    @DeleteMapping("/delete")
+    public BaseResponse<String> delete(@RequestParam Integer id){
+        configService.deleteById(id);
+        return BaseResponse.successInstance("成功");
     }
 }

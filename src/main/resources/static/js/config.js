@@ -7,25 +7,40 @@ let listMenuTest = context + 'js/lancode.json';
 let listProjectAll = context + 'project/listProjectAll';
 //添加项目
 let addProjectUrl = context + 'project/addProject';
-//添加项目
+//保存项目
 let saveProjectUrl = context + 'project/saveProject';
+//删除项目
+let deleteByIdUrl = context + 'project/deleteById';
 //添加分支信息
 let addProjectBranchUrl = context + 'branch/addProjectBranch';
 //更新分支信息
 let pullProjectBranchUrl = context + 'branch/pullProjectBranch';
+//删除分支信息
+let deleteBranchByIdUrl = context + 'branch/deleteBranchById';
 
 //保存环境数据
 let saveEnvUrl = context + 'env/saveEnv';
-//
-let deleteEnv = context + 'env/deleteEnv';
+//删除环境信息
+let deleteEnvUrl = context + 'env/deleteEnvById';
 //所有环境数据
 let listEnvAll = context + 'env/listEnvAll';
+
+//查询所有配置
+let listNotesConfigAllUrl = context + 'config/listNotesConfigAll';
+//查询配置
+let listNotesConfigByTypeUrl = context + 'config/listNotesConfigByType';
+//删除配置
+let deleteConfigUrl = context + 'config/delete';
+//保存注释配置
+let saveConfigUrl = context + 'config/save';
 
 
 //获取git信息
 let getGitInfoUrl = context + 'git/getGitInfo';
 //保存git信息
 let gitSaveUrl = context + 'git/save';
+//上传类
+let uploadBeanUrl = context + 'git/uploadBean';
 
 
 /**
@@ -64,6 +79,7 @@ let BaseType = {
     "Boolean": 'text',
     "Date": 'date',
     "MultipartFile": 'file',
+    "URL": 'text',
 }
 
 //类型是否是数组
@@ -235,11 +251,29 @@ function ajaxError(data){
 }
 
 function parseData(data){
-    console.log(data);
     return {
         'code': data.statusCode == 200 ? 0 : 1,
         'msg': data.statusMsg,
         'data': data.data
-
     };
+}
+
+function deleteFun(url,id,dataTable){
+    layer.confirm('确定要删除吗？', {btn: ['确定']}, () => {
+        $.ajax({
+            type: 'delete',
+            url: url,
+            data: {id: id},
+            dataType: 'json',
+            error: ajaxError,
+            success: function (data) {
+                if (data.statusCode !== 200) {
+                    layer.msg(data.statusMsg);
+                    return;
+                }
+                layer.closeAll();
+                dataTable.reload();
+            }
+        })
+    })
 }

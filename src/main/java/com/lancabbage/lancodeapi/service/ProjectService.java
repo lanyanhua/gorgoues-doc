@@ -39,7 +39,17 @@ public interface ProjectService {
 
     /**
      * 保存项目
-     * @param vo
      */
     void saveProject(Project vo);
+
+    /**
+     * 删除项目
+     * @param id ID
+     */
+    void deleteById(Integer id);
+
+    /**
+     * 查询项目模块名称
+     */
+    List<String> listModelById(Integer id);
 }

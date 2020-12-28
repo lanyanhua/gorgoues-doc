@@ -4,6 +4,7 @@ import com.lancabbage.lancodeapi.bean.dto.MenuDto;
 import com.lancabbage.lancodeapi.bean.po.Menu;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 菜单service
@@ -15,12 +16,17 @@ import java.util.List;
 public interface MenuService {
     /**
      * 新增菜单
-     *
-     * @param menuDtoList 菜单
-     * @param projectId   项目ID
+     *  @param menuDtoList 菜单
      * @param branchId    分支ID
      */
-    void addMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId);
+    void addMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId);
+
+    /**
+     * 保存菜单信息
+     *  @param menuDtoList 菜单
+     * @param branchId    分支ID
+     */
+    void saveMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId);
 
     /**
      * 查询菜单
@@ -39,11 +45,9 @@ public interface MenuService {
 
 
     /**
-     * 保存菜单信息
-     *
-     * @param menuDtoList 菜单
-     * @param projectId   项目ID
-     * @param branchId    分支ID
+     * 删除菜单
+     * @param id 分支ID
      */
-    void saveMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId);
+    void deleteByBranchId(List<Integer> id);
+
 }

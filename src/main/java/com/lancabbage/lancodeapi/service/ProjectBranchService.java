@@ -32,4 +32,16 @@ public interface ProjectBranchService {
      * 拉git代码
      */
     void pullProjectBranch(ProjectBranchDto branch);
+
+    /**
+     * 根据ID删除分支
+     */
+    void deleteBranchById(Integer id);
+
+    /**
+     *  删除分支
+     * @param id 项目ID
+     */
+    void deleteByProjectId(Integer id);
+
 }

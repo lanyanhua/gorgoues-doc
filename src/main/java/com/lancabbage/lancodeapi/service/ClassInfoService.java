@@ -31,4 +31,10 @@ public interface ClassInfoService {
      * @return class
      */
     List<ClassInfoVo> listClassByBranchId(Integer branchId);
+
+    /**
+     * 删除类
+     * @param id 分支ID
+     */
+    void deleteByBranchId(List<Integer> id);
 }

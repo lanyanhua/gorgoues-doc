@@ -15,6 +15,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,23 +38,87 @@ public class MenuServiceImpl implements MenuService {
 
     @Transactional
     @Override
-    public void addMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId) {
-        //新增默认菜单
-        Menu menu = new Menu();
-        menu.setBranchId(branchId);
-        menu.setMenuName("默认");
-        //赋值ID
-        menu.setCreateTime(new Date());
-        menuMapper.insertSelective(menu);
-        for (MenuDto cMenu : menuDtoList) {
-            //父ID
-            cMenu.setParentId(menu.getId());
-            cMenu.setCreateTime(new Date());
-            menuMapper.insertSelective(cMenu);
-            //先保存API信息
-            saveApiMenu(projectId, branchId, cMenu, cMenu.getApiInfos());
-        }
+    public void addMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId) {
+        menuDtoList.forEach((k, v) -> {
+            String menuName = k;
+            if (menuDtoList.size() == 1) {
+                menuName = "默认";
+            }
+            addBranchMenu(menuName, v, branchId);
+        });
     }
+
+
+    @Transactional
+    @Override
+    public void saveMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId) {
+        menuDtoList.forEach((k, v) -> {
+            String menuName = k;
+            if (menuDtoList.size() == 1) {
+                menuName = "默认";
+            }
+            Example example = new Example(Menu.class);
+            example.createCriteria().andEqualTo("branchId", branchId)
+                    .andEqualTo("menuName", menuName);
+            Menu menu = menuMapper.selectOneByExample(example);
+            if (menu == null) {
+                //为空新增当前菜单
+                addBranchMenu(menuName, v, branchId);
+                return;
+            }
+            //原来的controller 菜单
+            example = new Example(Menu.class);
+            example.createCriteria().andEqualTo("parentId", menu.getId());
+            List<Menu> menus = menuMapper.selectByExample(example);
+            //删除原来的菜单
+            menuMapper.deleteByExample(example);
+            //加载当前分支下所有的API API关联的菜单
+            List<ApiInfo> apiList = apiInfoService.listApiInfoByBranchId(branchId);
+            List<Integer> aIds = apiList.stream().map(ApiInfo::getId).collect(Collectors.toList());
+            List<Menu> apiMenus = listApiMenuByApiId(aIds);
+            //修改
+            for (MenuDto cMenu : v) {
+                //controller级别重新新增 父ID
+                cMenu.setParentId(menu.getId());
+                cMenu.setCreateTime(new Date());
+                menuMapper.insertSelective(cMenu);
+                List<ApiInfoDto> apiInfos = cMenu.getApiInfos();
+                if (apiInfos.isEmpty()) {
+                    continue;
+                }
+                //修改
+                List<ApiInfoDto> apiInfoAdds = new ArrayList<>();
+                for (ApiInfoDto a : apiInfos) {
+                    List<ApiInfo> collect = apiList.stream()
+                            .filter(i -> i.getPath().equals(a.getPath())
+                                    && i.getType().equals(a.getType()))
+                            .collect(Collectors.toList());
+                    //不存在 就新增
+                    if (collect.isEmpty()) {
+                        apiInfoAdds.add(a);
+                        continue;
+                    }
+                    //存在修改当前API信息 已经关联的菜单信息 关联菜单是默认菜单的修改
+                    ApiInfo apiInfo = collect.get(0);
+                    // 1.当前API 修改名称 2.同时判断是否是默认菜单修改为新菜单
+                    apiMenus.stream()
+                            .filter(i -> i.getApiId().equals(apiInfo.getId()))
+                            .peek(i -> {
+                                //修改名称
+                                i.setMenuName(a.getName());
+                                //父菜单是默认菜单修改为新菜单
+                                if (menus.stream().anyMatch(p -> p.getId().equals(i.getParentId()))) {
+                                    i.setParentId(cMenu.getId());
+                                }
+                            })
+                            .forEach(menuMapper::updateByPrimaryKeySelective);
+                }
+                //新增菜单
+                saveApiMenu(cMenu, apiInfoAdds);
+            }
+        });
+    }
+
 
     @Override
     public List<MenuDto> listMenuByBranchId(Integer branchId) {
@@ -74,28 +139,29 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.selectByExample(example);
     }
 
-
-    @Transactional
     @Override
-    public void saveMenuList(List<MenuDto> menuDtoList, Integer projectId, Integer branchId) {
+    public void deleteByBranchId(List<Integer> id) {
         Example example = new Example(Menu.class);
-        example.createCriteria().andEqualTo("branchId", branchId)
-                .andEqualTo("menuName", "默认");
-        Menu menu = menuMapper.selectOneByExample(example);
-        //原来的controller 菜单
-        example = new Example(Menu.class);
-        example.createCriteria().andEqualTo("parentId", menu.getId());
-        List<Menu> menus = menuMapper.selectByExample(example);
-        menuMapper.deleteByExample(example);
-        //加载当前分支下所有的API API关联的菜单 class
-        List<ApiInfo> apiList = apiInfoService.listApiInfoByBranchId(branchId);
-        List<Integer> aIds = apiList.stream().map(ApiInfo::getId).collect(Collectors.toList());
-        List<Menu> apiMenus = listApiMenuByApiId(aIds);
-        //对比不相同就更新
-        //主菜单 查询
-        //controller 菜单 API菜单 删除
-        //对现在的controller 菜单进行新增 -修改API -class -查询出现在的API菜单进行修改 从新指向 父ID为当前
-        for (MenuDto cMenu : menuDtoList) {
+        example.createCriteria().andIn("branchId", id);
+        List<Menu> menuList = menuMapper.selectByExample(example);
+        deleteChildrenMenu(menuList);
+    }
+
+    /**
+     * 添加分支菜单
+     * @param menuName 菜单名称
+     * @param v 菜单
+     * @param branchId 分支ID
+     */
+    private void addBranchMenu(String menuName, List<MenuDto> v, Integer branchId) {
+        //新增默认菜单
+        Menu menu = new Menu();
+        menu.setBranchId(branchId);
+        menu.setMenuName(menuName);
+        //赋值ID
+        menu.setCreateTime(new Date());
+        menuMapper.insertSelective(menu);
+        for (MenuDto cMenu : v) {
             //父ID
             cMenu.setParentId(menu.getId());
             cMenu.setCreateTime(new Date());
@@ -105,53 +171,20 @@ public class MenuServiceImpl implements MenuService {
             if (apiInfos.isEmpty()) {
                 continue;
             }
-
-            List<ApiInfoDto> apiInfoAdds = new ArrayList<>();
-            for (ApiInfoDto a : apiInfos) {
-                List<ApiInfo> collect = apiList.stream()
-                        .filter(i -> i.getPath().equals(a.getPath())
-                                && i.getType().equals(a.getType()))
-                        .collect(Collectors.toList());
-                //不存在新增
-                if (collect.isEmpty()) {
-                    //父ID
-                    apiInfoAdds.add(a);
-                    continue;
-                }
-                //存在修改当前API信息 已经关联的菜单信息 关联菜单是默认菜单的修改
-                ApiInfo apiInfo = collect.get(0);
-                // 1.当前API 修改名称 2.同时判断是否是默认菜单修改为新菜单
-                apiMenus.stream()
-                        .filter(i -> i.getApiId().equals(apiInfo.getId()))
-                        .peek(i ->{
-                            //修改名称
-                            i.setMenuName(a.getName());
-                            //父菜单是默认菜单修改为新菜单
-                            if(menus.stream().anyMatch(p -> p.getId().equals(i.getParentId()))){
-                                i.setParentId(cMenu.getId());
-                            }
-                        })
-                        .forEach(menuMapper::updateByPrimaryKeySelective);
-                //修改API信息
-                apiInfoService.updateApi(apiInfo, a);
-            }
-            saveApiMenu(projectId, branchId, cMenu, apiInfoAdds);
+            saveApiMenu(cMenu, apiInfos);
         }
     }
 
     /**
      * 保存API菜单
      *
-     * @param projectId 项目ID
-     * @param branchId  分支ID
-     * @param cMenu     父ID
-     * @param apiInfos  API信息
+     * @param cMenu    父ID
+     * @param apiInfos API信息
      */
-    private void saveApiMenu(Integer projectId, Integer branchId, MenuDto cMenu, List<ApiInfoDto> apiInfos) {
+    private void saveApiMenu(MenuDto cMenu, List<ApiInfoDto> apiInfos) {
         if (apiInfos.isEmpty()) {
             return;
         }
-        apiInfoService.saveApiList(apiInfos, projectId, branchId);
         List<Menu> menuList = apiInfos.stream().map(i -> {
             Menu m = new Menu();
             m.setParentId(cMenu.getId());
@@ -190,5 +223,25 @@ public class MenuServiceImpl implements MenuService {
         }
         //赋值下一级子菜单
         setChildrenMenu(childrenList);
+    }
+
+    /**
+     * 删除子菜单
+     */
+    private void deleteChildrenMenu(List<Menu> menuList) {
+        List<Integer> idList = menuList.stream().map(Menu::getId).collect(Collectors.toList());
+        //删除
+        Example exampleD = new Example(Menu.class);
+        exampleD.createCriteria().andIn("id",idList);
+        menuMapper.deleteByExample(exampleD);
+        //查询子菜单
+        Example example = new Example(Menu.class);
+        example.createCriteria().andIn("parentId", idList);
+        List<Menu> menuList1 = menuMapper.selectByExample(example);
+        if (menuList1.isEmpty()) {
+            return;
+        }
+        //递归继续
+        deleteChildrenMenu(menuList1);
     }
 }

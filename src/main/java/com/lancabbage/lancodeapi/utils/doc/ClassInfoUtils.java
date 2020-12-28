@@ -9,7 +9,10 @@ import com.sun.javadoc.Type;
 import com.sun.javadoc.TypeVariable;
 import com.sun.tools.javadoc.ParameterizedTypeImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.lancabbage.lancodeapi.utils.doc.NotesConfigUtils.s;
@@ -21,10 +24,9 @@ import static com.lancabbage.lancodeapi.utils.doc.NotesConfigUtils.s;
  */
 public class ClassInfoUtils {
 
-    public static List<String> baseDataType = Arrays.asList("void", "String", "Object", "byte", "Byte", "short", "Short", "int", "Integer", "long", "Long",
-            "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean", "Date", "MultipartFile", "BigDecimal");
-    public static List<String> notSetField = Arrays.asList("HttpServletResponse", "HttpServletRequest", "LinkedHashMap", "HashMap", "URL");
-    public static List<String> arrayType = Arrays.asList("List", "Set", "array");
+    public final List<String> baseDataType;
+    //    public static List<String> notSetField = Arrays.asList();
+    public final List<String> arrayType;
     /**
      * class Map
      */
@@ -35,6 +37,9 @@ public class ClassInfoUtils {
     public ClassInfoUtils(AnnotationUtils annotationUtils) {
         this.annotationUtils = annotationUtils;
         classMap = new HashMap<>();
+        this.baseDataType = NotesConfigUtils.getBaseDataType();
+        this.arrayType = NotesConfigUtils.getArrayType();
+
     }
 
     public Map<ClassKey, ClassInfoDto> getClassMap() {
@@ -68,17 +73,12 @@ public class ClassInfoUtils {
         ClassKey classKey = new ClassKey();
         classKey.setName(className);
         classKey.setPackagePath(packagePath);
-        //从classMap中获取class
-        classInfoDto = classMap.get(classKey);
-        if (classInfoDto != null) {
-            return classInfoDto;
-        }
-        classInfoDto = new ClassInfoDto();
         //当前类
         ClassDoc doc = type.asClassDoc();
         //父类
         Type superclass = null;
         //范型
+        List<ClassInfoDto> paradigmList = new ArrayList<>();
         if (type instanceof ParameterizedTypeImpl) {
             //范型 c.type.getTypeArguments()
             ParameterizedTypeImpl parameterizedType = ((ParameterizedTypeImpl) type);
@@ -87,17 +87,15 @@ public class ClassInfoUtils {
             Type[] types = parameterizedType.typeArguments();
             //类型变量
             TypeVariable[] tv = doc.typeParameters();
-            List<ClassInfoDto> paradigmList = new ArrayList<>(tv.length);
-            classInfoDto.setParadigmList(paradigmList);
             //范型包地址
-            boolean isPutPac= false;
+            boolean isPutPac = false;
             for (int i = 0; i < tv.length; i++) {
-                ClassInfoDto v ;
-                if (types != null && types.length > 0 ) {
+                ClassInfoDto v;
+                if (types != null && types.length > 0) {
                     //  java.util.List<T> T存在类型 修改包名
-                    if( (v = paradigmMap.get(types[i].typeName()))!=null){
+                    if ((v = paradigmMap.get(types[i].typeName())) != null) {
                         isPutPac = true;
-                    }else {
+                    } else {
                         v = getClassInfo(types[i]);
                     }
                 } else {
@@ -111,13 +109,21 @@ public class ClassInfoUtils {
             if (arrayType.contains(className)) {
                 classKey.setName(paradigmList.get(0).getClassName() + "[]");
             }
-            if(isPutPac) {
-                packagePath = packagePath.substring(0, packagePath.indexOf("<")) +"<"+
+            if (isPutPac) {
+                //  java.util.List<T> 修改包名
+                packagePath = packagePath.substring(0, packagePath.indexOf("<")) + "<" +
                         paradigmList.stream().map(ClassInfo::getPackagePath).collect(Collectors.joining(","))
-                        +">";
+                        + ">";
                 classKey.setPackagePath(packagePath);
             }
         }
+        //从classMap中获取class
+        classInfoDto = classMap.get(classKey);
+        if (classInfoDto != null) {
+            return classInfoDto;
+        }
+        classInfoDto = new ClassInfoDto();
+        classInfoDto.setParadigmList(paradigmList);
 
         //先申明对象放入classMap中 解决循环依赖问题
         classMap.put(classKey, classInfoDto);
@@ -129,7 +135,7 @@ public class ClassInfoUtils {
         if (doc == null) {
             return classInfoDto;
         }
-        if(superclass == null){
+        if (superclass == null) {
             superclass = doc.superclass();
         }
         //描述
@@ -140,22 +146,25 @@ public class ClassInfoUtils {
         classInfoDto.setFieldList(fieldDtoList);
         //数组赋值类型
         if (arrayType.contains(className) || isArr) {
-            //[] 表示是数组
             ClassFieldDto fieldDto = new ClassFieldDto();
             fieldDtoList.add(fieldDto);
             fieldDto.setParamName("value");
             fieldDto.setParamDescribe("");
             ClassInfoDto c;
             if (isArr) {
+                //数组
                 c = getClassInfo(type.getElementType());
+                fieldDto.setTypeClass(c);
+                fieldDto.setType(c.getClassName());
+            } else if (!paradigmMap.values().isEmpty()) {
+                //范型
+                c = paradigmMap.values().iterator().next();
+                fieldDto.setTypeClass(c);
+                fieldDto.setType(c.getClassName());
             } else {
-                c = paradigmMap.values().isEmpty() ? new ClassInfoDto("Object") : paradigmMap.values().iterator().next();
+                fieldDto.setType("Object");
             }
-            fieldDto.setTypeClass(c);
-            fieldDto.setType(s(c.getClassName(), c.getBaseType()));
-        }
-        //是否需要赋值字段
-        else if (!notSetField.contains(className)) {
+        } else {
             //字段
             FieldDoc[] fields = doc.fields(false);
             for (FieldDoc field : fields) {

@@ -1,10 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "class_field")
 public class ClassField {
@@ -136,8 +133,9 @@ public class ClassField {
      *
      * @param type 数据类型
      */
-    public String setType(String type) {
-        return this.type = type;
+    public ClassField setType(String type) {
+        this.type = type;
+        return this;
     }
 
     /**
@@ -154,8 +152,8 @@ public class ClassField {
      *
      * @param typeId ID不为null 关联class表
      */
-    public Integer setTypeId(Integer typeId) {
-        return this.typeId = typeId;
+    public void setTypeId(Integer typeId) {
+        this.typeId = typeId;
     }
 
     /**

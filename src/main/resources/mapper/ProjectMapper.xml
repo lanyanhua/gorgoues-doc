@@ -9,7 +9,6 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="remote_path" property="remotePath" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="project_id" jdbcType="INTEGER" property="projectId" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -17,4 +16,8 @@
     -->
     id, `name`, remote_path, create_time
   </sql>
+
+  <select id="listModelById" resultType="java.lang.String">
+
+  </select>
 </mapper>

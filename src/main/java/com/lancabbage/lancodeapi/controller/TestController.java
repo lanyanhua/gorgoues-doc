@@ -18,7 +18,7 @@ import java.util.List;
  * @Description: 测试API
  */
 @RestController
-public class TestController {
+public class TestController  implements ITestClient{
 
 
     @PostMapping("testUpload")
@@ -107,5 +107,19 @@ public class TestController {
     public BaseResponse<PageInfo<MenuDto>> testDoubleParadigms(@RequestBody List<MenuDto> menuDtos) {
         return BaseResponse.successInstance(new PageInfo<>(menuDtos));
     }
+    /**
+     * 测试范型不加类
+     *
+     * @return 001
+     */
+    @PostMapping("testParadigmsNotType")
+    public BaseResponse<PageInfo> testParadigmsNotType(@RequestBody List menuDtos) {
+        return BaseResponse.successInstance(new PageInfo(menuDtos));
+    }
 
+
+    @Override
+    public BaseResponse<Integer> testInterface(Integer id) {
+        return BaseResponse.successInstance(id);
+    }
 }

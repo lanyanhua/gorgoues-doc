@@ -1,10 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "api_info")
 public class ApiInfo {
@@ -160,7 +157,6 @@ public class ApiInfo {
     public void setPath(String path) {
         this.path = path;
     }
-
 
     /**
      * 获取项目ID

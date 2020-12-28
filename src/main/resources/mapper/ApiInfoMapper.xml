@@ -20,4 +20,5 @@
     -->
     id, `name`, `type`, `method`, create_time, `path`
   </sql>
+
 </mapper>

@@ -25,6 +25,7 @@ function projectAll(fun) {
 function saveProject(fun) {
     //监听提交
     form.on('submit(projectFormBtn)', function (data) {
+        NProgress.start();
         $.ajax({
             type: 'post',
             url: data.field.id ? saveProjectUrl : addProjectUrl,
@@ -33,6 +34,7 @@ function saveProject(fun) {
             dataType: 'json',
             error: ajaxError,
             success: function (data) {
+                NProgress.done();
                 if (data.statusCode !== 200) {
                     layer.msg(data.statusMsg);
                     return;
@@ -88,6 +90,10 @@ function pullProjectBranch(projectId, branchId) {
     })
 }
 
+function deleteBranch(id){
+    deleteFun(deleteBranchByIdUrl,id,dataTable);
+}
+
 let dataTable;
 let $projectForm = $('#projectForm');
 
@@ -102,19 +108,12 @@ function renderProjectTable() {
             {type: 'checkbox'}
             , {field: 'id', title: 'ID', sort: true, width: 60}
             , {field: 'name', title: '名称', width: 160}
-            , {field: 'contextPath', title: '上下文路径'}
-            , {field: 'port', title: '端口'}
-            , {field: 'remotePath', title: 'git地址'}
-            , {
-                field: 'branchList', title: '分支', templet: d => {
-                    return d.branchList.map(i => i.name).join(",")
-                }
-            }
-            , {fixed: 'right', width: 150, align: 'center', toolbar: '#project-toolbar'}
+            , {field: 'remotePath', title: 'git地址',width: 280}
+            , {field: 'branchList', title: '分支',width: 200, templet: '#branch-template'}
+            , {field: 'port', title: '端口', width: 100}
+            , {field: 'contextPath', title: '上下文路径', width: 160}
+            , {fixed: 'right', width: 200, align: 'center', toolbar: '#project-toolbar'}
         ]],
-        done: function (res, curr, count) {
-            $("#countNum").text(count);
-        },
         parseData: parseData
     });
     table.on('tool(project-table-filter)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
@@ -131,29 +130,31 @@ function renderProjectTable() {
                     dataTable.reload({});
                 })
             });
-        }
-        if (layEvent === 'edit') {
+        }else if (layEvent === 'edit') {
             addProjectBtn(data);
+        }else if (layEvent === 'delete') {
+            deleteFun(deleteByIdUrl,id,dataTable);
         }
     });
 }
 
 function addProjectBtn(data) {
-
     if (data == null) {
         data = {id: '', name: '', remotePath: '', header: '', branchName: ''}
-        $projectForm.find('[name=branchName]').show();
+        $projectForm.find('[name=branchName]').parents('.layui-form-item').show();
     }else {
-        $projectForm.find('[name=branchName]').hide();
+        $projectForm.find('[name=branchName]').parents('.layui-form-item').hide();
     }
     $projectForm.find('[name=id]').val(data.id);
     $projectForm.find('[name=name]').val(data.name);
     $projectForm.find('[name=remotePath]').val(data.remotePath);
+    $projectForm.find('[name=contextPath]').val(data.contextPath);
+    $projectForm.find('[name=port]').val(data.port);
 
     layer.open({
         title: '添加项目'
         , type: 1
-        , area: ['50%', '300px']
+        , area: ['50%', '400px']
         , content: $projectForm
         , btn: []
     });

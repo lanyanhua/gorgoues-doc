@@ -1,9 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "notes_config")
 public class NotesConfig {
@@ -11,20 +9,21 @@ public class NotesConfig {
      * ID
      */
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     /**
      * 自定义：
-     * 注释 @Description:
-     * classTag
-     * methodTag
-     * methodParamTag
-     * methodReturnTag
-     * fieldTag
-     * 注解 @Api(tags)
-     * classAnnotation
-     * methodAnnotation
-     * fieldAnnotation
+注释 @Description:
+classTag
+methodTag
+methodParamTag
+methodReturnTag
+fieldTag
+注解 @Api(tags)
+classAnnotation
+methodAnnotation
+fieldAnnotation
      */
     private String type;
 
@@ -59,28 +58,28 @@ public class NotesConfig {
 
     /**
      * 获取自定义：
-     * 注释 @Description:
-     * classTag
-     * methodTag
-     * methodParamTag
-     * methodReturnTag
-     * fieldTag
-     * 注解 @Api(tags)
-     * classAnnotation
-     * methodAnnotation
-     * fieldAnnotation
+注释 @Description:
+classTag
+methodTag
+methodParamTag
+methodReturnTag
+fieldTag
+注解 @Api(tags)
+classAnnotation
+methodAnnotation
+fieldAnnotation
      *
      * @return type - 自定义：
-     * 注释 @Description:
-     * classTag
-     * methodTag
-     * methodParamTag
-     * methodReturnTag
-     * fieldTag
-     * 注解 @Api(tags)
-     * classAnnotation
-     * methodAnnotation
-     * fieldAnnotation
+注释 @Description:
+classTag
+methodTag
+methodParamTag
+methodReturnTag
+fieldTag
+注解 @Api(tags)
+classAnnotation
+methodAnnotation
+fieldAnnotation
      */
     public String getType() {
         return type;
@@ -88,28 +87,28 @@ public class NotesConfig {
 
     /**
      * 设置自定义：
-     * 注释 @Description:
-     * classTag
-     * methodTag
-     * methodParamTag
-     * methodReturnTag
-     * fieldTag
-     * 注解 @Api(tags)
-     * classAnnotation
-     * methodAnnotation
-     * fieldAnnotation
+注释 @Description:
+classTag
+methodTag
+methodParamTag
+methodReturnTag
+fieldTag
+注解 @Api(tags)
+classAnnotation
+methodAnnotation
+fieldAnnotation
      *
      * @param type 自定义：
-     *             注释 @Description:
-     *             classTag
-     *             methodTag
-     *             methodParamTag
-     *             methodReturnTag
-     *             fieldTag
-     *             注解 @Api(tags)
-     *             classAnnotation
-     *             methodAnnotation
-     *             fieldAnnotation
+注释 @Description:
+classTag
+methodTag
+methodParamTag
+methodReturnTag
+fieldTag
+注解 @Api(tags)
+classAnnotation
+methodAnnotation
+fieldAnnotation
      */
     public void setType(String type) {
         this.type = type;

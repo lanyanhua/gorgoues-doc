@@ -33,8 +33,8 @@ function getEnvAll(fun) {
 function saveEnv(fun) {
     //监听提交
     form.on('submit(envFormBtn)', function (data) {
-        data.field.isPort = data.field.isPort ==='on';
-        data.field.isContextPath = data.field.isContextPath ==='on';
+        data.field.isPort = $envForm.find('[name=isPort]')[0].checked;
+        data.field.isContextPath = $envForm.find('[name=isContextPath]')[0].checked;
         $.ajax({
             type: 'put',
             url: saveEnvUrl,
@@ -78,9 +78,6 @@ function renderEnvTable() {
             , {field: 'isContextPath', title: '是否使用上下文路径'}
             , {fixed: 'right', width: 150, align: 'center', toolbar: '#env-toolbar'}
         ]],
-        done: function (res, curr, count) {
-            $("#countNum").text(count);
-        },
         parseData: parseData
     });
     table.on('tool(env-table-filter)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
@@ -89,6 +86,8 @@ function renderEnvTable() {
         let tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
         if (layEvent === 'edit') {
             openEnvForm(data);
+        }else if(layEvent ==='delete'){
+            deleteFun(deleteEnvUrl,data.id,dataTableEnv);
         }
     });
 }
@@ -101,9 +100,10 @@ function openEnvForm(data) {
     $envForm.find('[name=name]').val(data.name).attr(data.name ? 'readonly' : '');
     $envForm.find('[name=domain]').val(data.domain);
     $envForm.find('[name=header]').val(data.header);
-    $envForm.find('[name=isPort]').val(data.isPort);
-    $envForm.find('[name=isContextPath]').val(data.isContextPath);
-    $envForm.removeClass("layui-hide");
+    $envForm.find('[name=isPort]').val(data.isPort)[0].checked = data.isPort;
+    $envForm.find('[name=isContextPath]').val(data.isContextPath)[0].checked = data.isContextPath;
+    form.render('checkbox');
+    $envForm.removeClass("layui-hide").hide();
     layer.open({
         title: '添加项目'
         , type: 1

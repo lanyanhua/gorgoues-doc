@@ -1,9 +1,7 @@
 package com.lancabbage.lancodeapi.bean.po;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.Date;
+import javax.persistence.*;
 
 public class Menu {
     /**
@@ -135,15 +133,24 @@ public class Menu {
      *
      * @param parentId 父菜单ID
      */
-    public Menu setParentId(Integer parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
-        return this;
     }
 
+    /**
+     * 获取当前菜单对应API ID
+     *
+     * @return api_id - 当前菜单对应API ID
+     */
     public Integer getApiId() {
         return apiId;
     }
 
+    /**
+     * 设置当前菜单对应API ID
+     *
+     * @param apiId 当前菜单对应API ID
+     */
     public void setApiId(Integer apiId) {
         this.apiId = apiId;
     }

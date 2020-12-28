@@ -21,8 +21,4 @@
         id, class_name, class_describe, package_path, class_path, create_time
     </sql>
 
-    <select id="selectId" resultType="int">
-        select ifnull(max(id), 1)
-        from class_info
-    </select>
 </mapper>

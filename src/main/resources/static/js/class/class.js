@@ -79,6 +79,9 @@ function jsonValue(type) {
     if (type === 'Date') {
         return dateFormat(new Date(), 'yyyy-MM-dd hh:mm:ss');
     }
+    if (type === 'Map') {
+        return {};
+    }
     if (isArr(type)) {
         return [];
     }

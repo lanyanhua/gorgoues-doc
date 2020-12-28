@@ -82,7 +82,6 @@ function commitApi(id) {
         $response.removeClass("layui-hide");
         $api.find('.response-path').text(url);
         $api.find('.response-show').text(formatJson1(data));
-        debugger
         let apiBody = $('.api-body');
         apiBody.animate({
             scrollTop: apiBody.children().height()
