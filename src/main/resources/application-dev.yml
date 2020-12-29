@@ -1,0 +1,41 @@
+server:
+  port: 5160
+  servlet:
+    context-path: /lApi
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lan-code-api?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: AAaa123456
+  servlet:
+    multipart:
+      enabled: true #是否启用http上传处理
+      max-request-size: 100MB #最大请求文件的大小
+      max-file-size: 20MB #设置单个文件最大长度
+      file-size-threshold: 20MB #当文件达到多少时进行磁盘写入
+  thymeleaf:
+    mode: HTML5
+    encoding: utf-8
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
+  # 日期格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  aop:
+    auto: true
+  mvc:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  typeAliasesPackage: com.lancabbage.lancodeapi.bean.po
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level.com.lancabbage.lancodeapi: debug
