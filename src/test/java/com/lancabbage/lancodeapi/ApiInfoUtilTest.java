@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +25,7 @@ public class ApiInfoUtilTest {
 
     @Test
     public void test() throws IOException {
+
         //注释不读库
         List<NotesConfig> notesConfigList = new ArrayList<>();
         notesConfigList.add(NotesConfigUtils.notesConfig("classTag", "@Description:"));
@@ -40,7 +40,7 @@ public class ApiInfoUtilTest {
                 "int", "Integer", "long", "Long", "double", "Double", "float", "Float", "char", "Char", "boolean", "Boolean",
                 "Date", "MultipartFile", "BigDecimal", "URL", "HttpServletResponse", "HttpServletRequest",
                 "LinkedHashMap", "HashMap", "Map")
-                .map(i->NotesConfigUtils.notesConfig("baseDataType",i)).collect(Collectors.toList()));
+                .map(i -> NotesConfigUtils.notesConfig("baseDataType", i)).collect(Collectors.toList()));
         NotesConfigUtils.notesConfigList = notesConfigList;
 //        String basePath = "/Users/lanyanhua/Desktop/gittest/gyl/master";
 //        String basePath = "/Users/lanyanhua/Desktop/gittest/qns/2.4.3";
@@ -51,7 +51,8 @@ public class ApiInfoUtilTest {
         File file = new File(basePath);
         File publicFile = new File(publicPath);
         List<String> javaFile = GitUtils.getJavaFile(file);
-         javaFile.addAll( GitUtils.getJavaFile(publicFile));
+        javaFile.addAll(GitUtils.getJavaFile(publicFile));
+
 //        javaFile.add("/Users/lanyanhua/Desktop/gittest/public/main/java/com/jaagro/utils/BaseResponse.java");
         ApiInfoUtils classDocUtils = new ApiInfoUtils();
         Map<String, List<MenuDto>> menuDtoList = classDocUtils.parsingClass(javaFile);

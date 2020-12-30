@@ -125,7 +125,9 @@ function renderProjectTable() {
                 title: '添加分支',
                 area: ['50%', '300px']
             }, function (value, index, elem) {
+                NProgress.start();
                 addProjectBranch(data.id, value, function () {
+                    NProgress.done();
                     layer.closeAll();
                     dataTable.reload({});
                 })

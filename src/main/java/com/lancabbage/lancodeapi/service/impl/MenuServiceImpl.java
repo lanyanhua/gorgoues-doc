@@ -89,9 +89,8 @@ public class MenuServiceImpl implements MenuService {
                 //修改
                 List<ApiInfoDto> apiInfoAdds = new ArrayList<>();
                 for (ApiInfoDto a : apiInfos) {
-                    List<ApiInfo> collect = apiList.stream()
-                            .filter(i -> i.getPath().equals(a.getPath())
-                                    && i.getType().equals(a.getType()))
+                    List<Menu> collect = apiMenus.stream()
+                            .filter(i -> i.getApiId().equals(a.getId()))
                             .collect(Collectors.toList());
                     //不存在 就新增
                     if (collect.isEmpty()) {
@@ -99,11 +98,8 @@ public class MenuServiceImpl implements MenuService {
                         continue;
                     }
                     //存在修改当前API信息 已经关联的菜单信息 关联菜单是默认菜单的修改
-                    ApiInfo apiInfo = collect.get(0);
                     // 1.当前API 修改名称 2.同时判断是否是默认菜单修改为新菜单
-                    apiMenus.stream()
-                            .filter(i -> i.getApiId().equals(apiInfo.getId()))
-                            .peek(i -> {
+                    collect.stream().peek(i -> {
                                 //修改名称
                                 i.setMenuName(a.getName());
                                 //父菜单是默认菜单修改为新菜单

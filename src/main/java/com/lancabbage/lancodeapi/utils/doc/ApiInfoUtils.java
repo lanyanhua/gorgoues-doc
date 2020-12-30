@@ -8,6 +8,7 @@ import com.lancabbage.lancodeapi.enums.ParamModeEnum;
 import com.lancabbage.lancodeapi.enums.ParamTypeEnum;
 import com.sun.javadoc.*;
 import com.sun.tools.javadoc.AnnotatedTypeImpl;
+import com.sun.tools.javadoc.AnnotationTypeDocImpl;
 import com.sun.tools.javadoc.ClassDocImpl;
 import tk.mybatis.mapper.util.StringUtil;
 
@@ -57,7 +58,7 @@ public class ApiInfoUtils {
             AnnotationDesc[] annotations = c.annotations();
             AnnotationRes controller = annotationUtils.isController(annotations);
             //注解 判断是否是controller RestController 还有路径RequestMapping({"/jobGroup"})
-            if (!controller.isController) {
+            if (!controller.isController || classDoc instanceof AnnotationTypeDocImpl) {
                 continue;
             }
             //组装菜单
