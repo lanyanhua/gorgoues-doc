@@ -133,7 +133,7 @@ function renderProjectTable() {
         }else if (layEvent === 'edit') {
             addProjectBtn(data);
         }else if (layEvent === 'delete') {
-            deleteFun(deleteByIdUrl,id,dataTable);
+            deleteFun(deleteByIdUrl,data.id,dataTable);
         }
     });
 }
