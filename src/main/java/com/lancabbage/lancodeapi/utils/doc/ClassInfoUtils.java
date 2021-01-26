@@ -61,9 +61,9 @@ public class ClassInfoUtils {
         String packagePath = type.toString();
         ClassInfoDto classInfoDto;
         boolean isArr = packagePath.endsWith("[]");
-//        if (isArr) {
-//            System.out.println("debugger");
-//        }
+        if (isArr) {
+            System.out.println("debugger");
+        }
         String className = isArr ? packagePath.substring(packagePath.lastIndexOf(".") + 1) : type.typeName();
         //基本数据类型直接返回
         if (baseDataType.contains(className) && !isArr) {
@@ -75,6 +75,7 @@ public class ClassInfoUtils {
         classKey.setPackagePath(packagePath);
         //当前类
         ClassDoc doc = type.asClassDoc();
+//        doc = doc == null ? type.at
         //父类
         Type superclass = null;
         //范型
@@ -131,17 +132,7 @@ public class ClassInfoUtils {
         //class路径不为null，价值class信息
         classInfoDto.setClassPath(classKey.getPackagePath());
         classInfoDto.setPackagePath(classKey.getPackagePath());
-        //基本数据类型会为空
-        if (doc == null) {
-            return classInfoDto;
-        }
-        if (superclass == null) {
-            superclass = doc.superclass();
-        }
-        //描述
-        classInfoDto.setClassDescribe(doc.commentText());
         //不用赋值字段的赋值范型，用赋值字段的范型当字段数据类型用
-
         List<ClassFieldDto> fieldDtoList = new ArrayList<>();
         classInfoDto.setFieldList(fieldDtoList);
         //数组赋值类型
@@ -164,55 +155,66 @@ public class ClassInfoUtils {
             } else {
                 fieldDto.setType("Object");
             }
-        } else {
-            //字段
-            FieldDoc[] fields = doc.fields(false);
-            for (FieldDoc field : fields) {
-                ClassFieldDto fieldDto = new ClassFieldDto();
-                fieldDtoList.add(fieldDto);
-                fieldDto.setParamName(field.name());
-                //字段注释
-                annotationUtils.setParmTag(NotesConfigUtils.getFieldTag());
-                String tagDesc = annotationUtils.getTagDesc(field.tags());
-                annotationUtils.setParmTag(NotesConfigUtils.getFieldAnnotation());
-                String annotationDesc = annotationUtils.getAnnotationDesc(field.annotations());
-                fieldDto.setParamDescribe(s(annotationDesc, tagDesc, field.commentText()));
-                Type fType = field.type();
-                String name = fType.typeName();
+            return classInfoDto;
+        }
 
-                //数据类型
-                ClassInfoDto dataType;
-                if ((dataType = paradigmMap.get(name)) == null) {
-                    //当前字段是范型字段 并且引用了当前范型 赋值范型
-                    Map<String, ClassInfoDto> paradigmMap1 = new HashMap<>();
-                    if (fType instanceof ParameterizedTypeImpl) {
-                        Type[] types = fType.asParameterizedType().typeArguments();
-                        for (Type type1 : types) {
-                            if (paradigmMap.containsKey(type1.typeName())) {
-                                paradigmMap1 = paradigmMap;
-                                break;
-                            }
+        //基本数据类型会为空
+        if (doc == null) {
+            return classInfoDto;
+        }
+        if (superclass == null) {
+            superclass = doc.superclass();
+        }
+        //描述
+        classInfoDto.setClassDescribe(doc.commentText());
+        //字段
+        FieldDoc[] fields = doc.fields(false);
+        for (FieldDoc field : fields) {
+            ClassFieldDto fieldDto = new ClassFieldDto();
+            fieldDtoList.add(fieldDto);
+            fieldDto.setParamName(field.name());
+            //字段注释
+            annotationUtils.setParmTag(NotesConfigUtils.getFieldTag());
+            String tagDesc = annotationUtils.getTagDesc(field.tags());
+            annotationUtils.setParmTag(NotesConfigUtils.getFieldAnnotation());
+            String annotationDesc = annotationUtils.getAnnotationDesc(field.annotations());
+            fieldDto.setParamDescribe(s(annotationDesc, tagDesc, field.commentText()));
+            Type fType = field.type();
+            String name = fType.typeName();
+
+            //数据类型
+            ClassInfoDto dataType;
+            if ((dataType = paradigmMap.get(name)) == null) {
+                //当前字段是范型字段 并且引用了当前范型 赋值范型
+                Map<String, ClassInfoDto> paradigmMap1 = new HashMap<>();
+                if (fType instanceof ParameterizedTypeImpl) {
+                    Type[] types = fType.asParameterizedType().typeArguments();
+                    for (Type type1 : types) {
+                        if (paradigmMap.containsKey(type1.typeName())) {
+                            paradigmMap1 = paradigmMap;
+                            break;
                         }
                     }
-                    //paradigmMap get 为null 就调用getClassInfo获取
-                    dataType = getClassInfo(fType, paradigmMap1);
                 }
-                //为基本数据类型
-                if (fieldDto.setType(dataType.getBaseType()) == null) {
-                    //为引用数据类型
-                    fieldDto.setTypeClass(dataType);
-                    fieldDto.setType(dataType.getClassName());
-                }
+                //paradigmMap get 为null 就调用getClassInfo获取
+                dataType = getClassInfo(fType, paradigmMap1);
             }
-            //父类字段
-            if (superclass != null && !superclass.toString().contains("java.lang.")) {
-                //获取父类字段
-                ClassInfoDto classInfo = getClassInfo(superclass);
-                if (classInfo.getFieldList() != null) {
-                    fieldDtoList.addAll(classInfo.getFieldList());
-                }
+            //为基本数据类型
+            if (fieldDto.setType(dataType.getBaseType()) == null) {
+                //为引用数据类型
+                fieldDto.setTypeClass(dataType);
+                fieldDto.setType(dataType.getClassName());
             }
         }
+        //父类字段
+        if (superclass != null && !superclass.toString().contains("java.lang.")) {
+            //获取父类字段
+            ClassInfoDto classInfo = getClassInfo(superclass);
+            if (classInfo.getFieldList() != null) {
+                fieldDtoList.addAll(classInfo.getFieldList());
+            }
+        }
+
         return classInfoDto;
     }
 
