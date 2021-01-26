@@ -35,4 +35,13 @@ class LanCodeApiApplicationTests {
         Map<String, List<MenuDto>> menuDtoList = classDocUtils.parsingClass(javaFile);
         System.out.println(JSON.toJSONString(menuDtoList));
     }
+
+    @Test
+    public void test01(){
+        int a = -1;
+        int b = 5;
+        System.out.println(a& b);
+        System.out.println(a| b);
+        System.out.println(a^ b);
+    }
 }
