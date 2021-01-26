@@ -1,13 +1,5 @@
-server:
-  port: 5160
-  servlet:
-    context-path: /lApi
+
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.16.31.161:3306/lan-code-api?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
-    username: root
-    password: jaagro
   servlet:
     multipart:
       enabled: true #是否启用http上传处理
