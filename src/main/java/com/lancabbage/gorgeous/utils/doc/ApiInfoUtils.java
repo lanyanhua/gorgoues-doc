@@ -76,8 +76,10 @@ public class ApiInfoUtils {
             m.setApiInfos(parsingMethod(controller, c));
 
             String path = classDoc.position().file().getPath();
-            int src = path.indexOf("/src/");
-            String key = path.substring(path.lastIndexOf("/", src-1) + 1, src);
+            //win linux获取的路径不同
+            int src = path.indexOf("/src/") & path.indexOf("\\src\\");
+            int n =path.lastIndexOf("/", src-1) & path.lastIndexOf("\\", src-1);
+            String key = path.substring(n+ 1, src);
             List<MenuDto> menuDtoList = menuMap.computeIfAbsent(key, k -> new ArrayList<>());
             menuDtoList.add(m);
         }

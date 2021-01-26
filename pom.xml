@@ -146,7 +146,6 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
-
         </plugins>
         <finalName>gorgeous-doc</finalName>
     </build>
