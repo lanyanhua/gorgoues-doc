@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lancabbage.lancodeapi.mapper.MenuMapper" >
-  <resultMap id="BaseResultMap" type="com.lancabbage.lancodeapi.bean.po.Menu" >
+<mapper namespace="com.lancabbage.gorgeous.mapper.MenuMapper" >
+  <resultMap id="BaseResultMap" type="com.lancabbage.gorgeous.bean.po.Menu" >
     <!--
       WARNING - @mbggenerated
     -->
