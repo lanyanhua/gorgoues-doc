@@ -1,4 +1,4 @@
-
+#默认配置 config/application.properties发布时用
 spring:
   servlet:
     multipart:
