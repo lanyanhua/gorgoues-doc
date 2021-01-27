@@ -1,8 +1,8 @@
 package com.lancabbage.gorgeous.controller;
 
 import com.lancabbage.gorgeous.bean.po.EnvInfo;
-import com.lancabbage.gorgeous.bean.po.GitInfo;
 import com.lancabbage.gorgeous.bean.vo.project.ProjectVo;
+import com.lancabbage.gorgeous.config.GitInfoConfig;
 import com.lancabbage.gorgeous.service.EnvInfoService;
 import com.lancabbage.gorgeous.service.GitService;
 import com.lancabbage.gorgeous.service.ProjectService;
@@ -31,7 +31,7 @@ public class RouteController {
 
     @GetMapping("/docs")
     public String doc() {
-        GitInfo gitInfo = gitService.getGitInfo();
+        GitInfoConfig gitInfo = gitService.getGitInfo();
         if (gitInfo == null) {
             return "steps/steps";
         }

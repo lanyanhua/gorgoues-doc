@@ -1,5 +1,6 @@
 package com.lancabbage.gorgeous.utils.git;
 
+import com.lancabbage.gorgeous.config.GitInfoConfig;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullResult;
@@ -59,8 +60,9 @@ public class GitUtils {
         this.password = password;
     }
 
-    public static GitUtils getInstance(String remotePath, String localPath, String project, String branch, String username, String password) {
-        return new GitUtils(remotePath, localPath, project, branch, username, password);
+    public static GitUtils getInstance(String remotePath, String project, String branch, GitInfoConfig gitInfoConfig) {
+        return new GitUtils(remotePath, gitInfoConfig.getRepositoryPath(), project, branch,
+                gitInfoConfig.getUsername(), gitInfoConfig.getPassword());
     }
 
     public static GitUtils getInstance(String repositoryPath) {
@@ -146,11 +148,11 @@ public class GitUtils {
     }
 
     public String getPath() {
-        return localPath +"/"+ project + "/" + branch;
+        return localPath + "/" + project + "/" + branch;
     }
 
     public String getPublicPath() {
-        return localPath +"/"+ publicBean+"/src/main/java";
+        return localPath + "/" + publicBean + "/src/main/java";
     }
 
 }

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 /**
  * @author: lanyanhua
  * @date: 2021/1/27 9:47 上午
- * @Description:
+ * @Description: git信息
  */
 @Component
-@ConfigurationProperties(prefix ="gitInfo")
+@ConfigurationProperties(prefix ="git-info")
 public class GitInfoConfig {
 
     /**

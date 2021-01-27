@@ -73,9 +73,6 @@
         stepsFun.steps = steps;
         //git
         stepsFun.getNext(0);
-        saveGit(function () {
-            stepsFun.getNext(0);
-        });
         saveProject(function () {
             stepsFun.getNext(0);
         });

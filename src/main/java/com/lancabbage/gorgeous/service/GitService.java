@@ -1,8 +1,7 @@
 package com.lancabbage.gorgeous.service;
 
-import com.lancabbage.gorgeous.bean.po.GitInfo;
 import com.lancabbage.gorgeous.bean.po.Project;
-import com.lancabbage.gorgeous.bean.vo.git.GitInfoSaveVo;
+import com.lancabbage.gorgeous.config.GitInfoConfig;
 
 import java.util.List;
 
@@ -27,12 +26,7 @@ public interface GitService {
     /**
      * 获取git配置信息
      */
-    GitInfo getGitInfo();
-
-    /**
-     * 保存git信息
-     */
-    void save(GitInfoSaveVo gitInfo);
+    GitInfoConfig getGitInfo();
 
     /**
      * 获取公共类路径

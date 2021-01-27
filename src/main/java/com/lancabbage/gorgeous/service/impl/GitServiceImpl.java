@@ -1,18 +1,13 @@
 package com.lancabbage.gorgeous.service.impl;
 
-import com.lancabbage.gorgeous.bean.po.GitInfo;
 import com.lancabbage.gorgeous.bean.po.Project;
-import com.lancabbage.gorgeous.bean.vo.git.GitInfoSaveVo;
+import com.lancabbage.gorgeous.config.GitInfoConfig;
 import com.lancabbage.gorgeous.exception.BusinessException;
-import com.lancabbage.gorgeous.map.GitInfoDtoToVo;
-import com.lancabbage.gorgeous.mapper.GitInfoMapper;
 import com.lancabbage.gorgeous.service.GitService;
 import com.lancabbage.gorgeous.utils.git.GitUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,21 +18,15 @@ import java.util.List;
 @Service
 public class GitServiceImpl implements GitService {
 
-    private final GitInfoMapper gitInfoMapper;
-    private final GitInfoDtoToVo gitInfoDtoToVo;
+    private final GitInfoConfig gitInfoConfig;
 
-    public GitServiceImpl(GitInfoMapper gitInfoMapper, GitInfoDtoToVo gitInfoDtoToVo) {
-        this.gitInfoMapper = gitInfoMapper;
-        this.gitInfoDtoToVo = gitInfoDtoToVo;
+    public GitServiceImpl(GitInfoConfig gitInfoConfig) {
+        this.gitInfoConfig = gitInfoConfig;
     }
 
     @Override
     public List<String> cloneCode(Project project, String branch) {
-        List<GitInfo> gitInfoList = gitInfoMapper.selectAll();
-        Assert.isTrue(!gitInfoList.isEmpty(),"无git配置信息");
-        GitInfo gitInfo = gitInfoList.get(0);
-        GitUtils gitUtils = GitUtils.getInstance(project.getRemotePath(), gitInfo.getRepositoryPath()
-                , project.getName(), branch, gitInfo.getUsername(), gitInfo.getPassword());
+        GitUtils gitUtils = GitUtils.getInstance(project.getRemotePath(), project.getName(), branch, gitInfoConfig);
         try {
             String basePath = gitUtils.getPath();
             //读取java
@@ -55,30 +44,13 @@ public class GitServiceImpl implements GitService {
     }
 
     @Override
-    public GitInfo getGitInfo() {
-        List<GitInfo> gitInfo = gitInfoMapper.selectAll();
-        if (gitInfo.isEmpty()) {
-            return null;
-        }
-        return gitInfo.get(0);
+    public GitInfoConfig getGitInfo() {
+        return gitInfoConfig;
     }
 
-    @Override
-    public void save(GitInfoSaveVo vo) {
-        List<GitInfo> gitInfoList = gitInfoMapper.selectAll();
-        GitInfo gitInfo = gitInfoDtoToVo.gitInfoSaveVoToPo(vo);
-        if (gitInfoList.isEmpty()) {
-            gitInfo.setCreateTime(new Date());
-            gitInfoMapper.insert(gitInfo);
-        } else {
-            gitInfo.setId(gitInfoList.get(0).getId());
-            gitInfoMapper.updateByPrimaryKeySelective(gitInfo);
-        }
-    }
 
     public String getPublicPath() {
-        GitInfo gitInfo = gitInfoMapper.selectAll().get(0);
-        GitUtils gitUtils = GitUtils.getInstance(gitInfo.getRepositoryPath());
+        GitUtils gitUtils = GitUtils.getInstance(gitInfoConfig.getRepositoryPath());
         return gitUtils.getPublicPath();
     }
 
