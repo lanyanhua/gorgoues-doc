@@ -3,6 +3,7 @@ package com.lancabbage.gorgeous.controller.git;
 import com.lancabbage.gorgeous.bean.po.GitInfo;
 import com.lancabbage.gorgeous.bean.vo.base.BaseResponse;
 import com.lancabbage.gorgeous.bean.vo.git.GitInfoSaveVo;
+import com.lancabbage.gorgeous.config.GitInfoConfig;
 import com.lancabbage.gorgeous.service.GitService;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,11 @@ import java.io.IOException;
 public class GitController {
 
     private final GitService gitService;
+    private final GitInfoConfig gitInfoConfig;
 
-    public GitController(GitService gitService) {
+    public GitController(GitService gitService, GitInfoConfig gitInfoConfig) {
         this.gitService = gitService;
+        this.gitInfoConfig = gitInfoConfig;
     }
 
     /**
@@ -63,5 +66,10 @@ public class GitController {
             f.transferTo(new File(publicPath+fileName));
         }
         return BaseResponse.successInstance("成功");
+    }
+
+    @GetMapping("/gitInfoConfig")
+    public GitInfoConfig gitInfoConfig(){
+        return gitInfoConfig;
     }
 }

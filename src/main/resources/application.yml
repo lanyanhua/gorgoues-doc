@@ -1,5 +1,7 @@
 #默认配置 config/application.properties发布时用
 spring:
+  profiles:
+    active: dev
   servlet:
     multipart:
       enabled: true #是否启用http上传处理
@@ -31,3 +33,4 @@ mybatis:
 
 logging:
   level.com.lancabbage.lancodeapi: debug
+

@@ -110,9 +110,9 @@ fi
 echo "$JAVA ${JAVA_OPT}"
 
 if [[ "${MODE}" == "standalone" ]]; then
-    echo "nacos is starting with standalone"
+    echo "gorgeous is starting with standalone"
 else
-    echo "nacos is starting with cluster"
+    echo "gorgeous is starting with cluster"
 fi
 
 # check the start.out log output file
