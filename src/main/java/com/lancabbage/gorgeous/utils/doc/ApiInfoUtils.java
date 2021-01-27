@@ -120,9 +120,7 @@ public class ApiInfoUtils {
             String annotationDesc = annotationUtils.getAnnotationDesc(annotations);
             apiInfo.setName(s(annotationDesc, tagDesc, method.commentText(), method.name()));
             apiInfo.setMethod(method.name());
-            if ("batchSaleSignSecondSubmit".equals(apiInfo.getMethod())) {
-                System.out.println("debugger");
-            }
+
             //接口类型 接口访问路径
             apiInfo.setType(isApi.apiType);
             apiInfo.setPath(cc.path + isApi.path);

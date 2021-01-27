@@ -35,7 +35,8 @@ public class NotesConfigUtils {
     public void initNotesConfigService(NotesConfigService service) {
         if (NotesConfigUtils.service == null) {
             NotesConfigUtils.service = service;
-            refresh();
+            //修改刷新位置到启动配置中
+//            refresh();
         }
     }
     public static void refresh(){

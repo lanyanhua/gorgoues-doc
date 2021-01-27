@@ -82,7 +82,7 @@ public class DocletTest extends Doclet {
 
         //java源文件的路径
         ArrayList<String> sources = new ArrayList<>();
-        sources.add("/Users/lanyanhua/Documents/workspace/lan-code-api/src/test/java/com/lancabbage/lancodeapi/gitTest.java");
+        sources.add("/Users/lanyanhua/Documents/workspace/lan-code-api/src/test/java/com/lancabbage/gorgeous/gitTest.java");
 
         //读取class
         ClassDoc[] classDoc = getClassDoc(sources);

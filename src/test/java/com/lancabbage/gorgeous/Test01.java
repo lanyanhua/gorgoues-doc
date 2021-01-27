@@ -1,4 +1,4 @@
-package com.lancabbage.lancodeapi;
+package com.lancabbage.gorgeous;
 
 import org.junit.jupiter.api.Test;
 

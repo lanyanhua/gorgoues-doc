@@ -61,9 +61,7 @@ public class ClassInfoUtils {
         String packagePath = type.toString();
         ClassInfoDto classInfoDto;
         boolean isArr = packagePath.endsWith("[]");
-        if (isArr) {
-            System.out.println("debugger");
-        }
+
         String className = isArr ? packagePath.substring(packagePath.lastIndexOf(".") + 1) : type.typeName();
         //基本数据类型直接返回
         if (baseDataType.contains(className) && !isArr) {

@@ -78,7 +78,12 @@ done
 export JAVA_HOME
 export JAVA="$JAVA_HOME/bin/java"
 export BASE_DIR=`cd $(dirname $0)/..; pwd`
+#配置文件
 export CUSTOM_SEARCH_LOCATIONS=file:${BASE_DIR}/conf/application.properties
+#仓库地址
+export REPOSITORY_PATH="${BASE_DIR}/repository"
+#数据库文件
+export GORGEOUS_DATABASE="${BASE_DIR}/conf/database.sql"
 
 #===========================================================================================
 # JVM Configuration
@@ -101,6 +106,8 @@ JAVA_OPT="${JAVA_OPT} -Dloader.path=${BASE_DIR}/plugins/health,${BASE_DIR}/plugi
 JAVA_OPT="${JAVA_OPT} -jar ${BASE_DIR}/target/${SERVER}.jar"
 JAVA_OPT="${JAVA_OPT} ${JAVA_OPT_EXT}"
 JAVA_OPT="${JAVA_OPT} --spring.config.location=${CUSTOM_SEARCH_LOCATIONS}"
+JAVA_OPT="${JAVA_OPT} --gitInfo.repository-path=${REPOSITORY_PATH}"
+JAVA_OPT="${JAVA_OPT} --gorgeous-database=${GORGEOUS_DATABASE}"
 JAVA_OPT="${JAVA_OPT} --server.max-http-header-size=524288"
 
 if [ ! -d "${BASE_DIR}/logs" ]; then

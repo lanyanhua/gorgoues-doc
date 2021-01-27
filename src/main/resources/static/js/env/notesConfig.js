@@ -3,7 +3,6 @@
 function saveConfigForm(fun){
     //监听提交
     form.on('submit(saveConfigFormBtn)', function (data) {
-        debugger
         $.ajax({
             type: 'put',
             url: saveConfigUrl,
