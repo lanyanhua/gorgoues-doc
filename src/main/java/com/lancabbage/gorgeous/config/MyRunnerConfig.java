@@ -41,8 +41,8 @@ public class MyRunnerConfig implements CommandLineRunner {
 
     private void gitInfoConfig() {
         log.info("--开始检测git配置信息--");
-        Assert.isTrue(!StringUtils.hasLength(gitInfoConfig.getUsername()), "git username为空，请检测application.properties");
-        Assert.isTrue(!StringUtils.hasLength(gitInfoConfig.getPassword()), "git password为空，请检测application.properties");
+        Assert.isTrue(StringUtils.hasLength(gitInfoConfig.getUsername()), "git username为空，请检测application.properties");
+        Assert.isTrue(StringUtils.hasLength(gitInfoConfig.getPassword()), "git password为空，请检测application.properties");
     }
 
     private void datasource(String... args) throws Exception {
