@@ -28,7 +28,6 @@ error_exit ()
 }
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=$HOME/jdk/java
 [ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/usr/java
-[ ! -e "$JAVA_HOME/bin/java" ] && JAVA_HOME=/opt/taobao/java
 [ ! -e "$JAVA_HOME/bin/java" ] && unset JAVA_HOME
 
 if [ -z "$JAVA_HOME" ]; then
@@ -88,17 +87,14 @@ export GORGEOUS_DATABASE="${BASE_DIR}/conf/database.sql"
 #===========================================================================================
 # JVM Configuration
 #===========================================================================================
-if [[ "${MODE}" == "standalone" ]]; then
-    JAVA_OPT="${JAVA_OPT} -Xms512m -Xmx512m -Xmn256m"
-else
-    if [[ "${EMBEDDED_STORAGE}" == "embedded" ]]; then
-        JAVA_OPT="${JAVA_OPT} -DembeddedStorage=true"
-    fi
-    JAVA_OPT="${JAVA_OPT} -server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
-    JAVA_OPT="${JAVA_OPT} -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${BASE_DIR}/logs/java_heapdump.hprof"
-    JAVA_OPT="${JAVA_OPT} -XX:-UseLargePages"
 
+if [[ "${EMBEDDED_STORAGE}" == "embedded" ]]; then
+    JAVA_OPT="${JAVA_OPT} -DembeddedStorage=true"
 fi
+JAVA_OPT="${JAVA_OPT} -server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m"
+JAVA_OPT="${JAVA_OPT} -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${BASE_DIR}/logs/java_heapdump.hprof"
+JAVA_OPT="${JAVA_OPT} -XX:-UseLargePages"
+
 
 
 

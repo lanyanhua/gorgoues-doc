@@ -22,11 +22,13 @@ rem removed the last 5 chars(which means \bin\) to get the base DIR.
 set BASE_DIR="%BASE_DIR:~0,-5%"
 
 set DEFAULT_SEARCH_LOCATIONS="classpath:/,classpath:/config/,file:./,file:./config/"
-set CUSTOM_SEARCH_LOCATIONS=file:%BASE_DIR%/conf/,%DEFAULT_SEARCH_LOCATIONS%
+
+set CUSTOM_SEARCH_LOCATIONS="file:%BASE_DIR%/conf/application.properties"
+
 
 set MODE="standalone"
 set FUNCTION_MODE="all"
-set SERVER=nacos-server
+set SERVER=gorgeous-doc
 set MODE_INDEX=-1
 set FUNCTION_MODE_INDEX=-1
 set SERVER_INDEX=-1
@@ -87,7 +89,7 @@ rem set nacos spring config location
 set "NACOS_CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
 
 rem set nacos log4j file location
-set "NACOS_LOG4J_OPTS=--logging.config=%BASE_DIR%/conf/nacos-logback.xml"
+REM set "NACOS_LOG4J_OPTS=--logging.config=%BASE_DIR%/conf/nacos-logback.xml"
 
 
 set COMMAND="%JAVA%" %NACOS_JVM_OPTS% %NACOS_OPTS% %NACOS_CONFIG_OPTS% %NACOS_LOG4J_OPTS% nacos.nacos %*
