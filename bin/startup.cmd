@@ -22,9 +22,12 @@ rem removed the last 5 chars(which means \bin\) to get the base DIR.
 set BASE_DIR="%BASE_DIR:~0,-5%"
 
 set DEFAULT_SEARCH_LOCATIONS="classpath:/,classpath:/config/,file:./,file:./config/"
-
+REM 配置文件
 set CUSTOM_SEARCH_LOCATIONS="file:%BASE_DIR%/conf/application.properties"
-
+REM 仓库地址
+set REPOSITORY_PATH="%BASE_DIR%/repository"
+REM 数据库文件
+set GORGEOUS_DATABASE="%BASE_DIR%/conf/database.sql"
 
 set MODE="standalone"
 set FUNCTION_MODE="all"
@@ -57,7 +60,7 @@ for %%a in (%*) do (
 rem if nacos startup mode is standalone
 if %MODE% == "standalone" (
     echo "nacos is starting with standalone"
-	  set "NACOS_OPTS=-Dnacos.standalone=true"
+	  set "GORGEOUS_JAVA_OPTS=-Dnacos.standalone=true"
     set "NACOS_JVM_OPTS=-Xms512m -Xmx512m -Xmn256m"
 )
 
@@ -65,7 +68,7 @@ rem if nacos startup mode is cluster
 if %MODE% == "cluster" (
     echo "nacos is starting with cluster"
 	  if %EMBEDDED_STORAGE% == "embedded" (
-	      set "NACOS_OPTS=-DembeddedStorage=true"
+	      set "GORGEOUS_JAVA_OPTS=-DembeddedStorage=true"
 	  )
 
     set "NACOS_JVM_OPTS=-server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=%BASE_DIR%\logs\java_heapdump.hprof -XX:-UseLargePages"
@@ -73,26 +76,26 @@ if %MODE% == "cluster" (
 
 rem set nacos's functionMode
 if %FUNCTION_MODE% == "config" (
-    set "NACOS_OPTS=%NACOS_OPTS% -Dnacos.functionMode=config"
+    set "GORGEOUS_JAVA_OPTS=%JAVA_OPTS% -Dnacos.functionMode=config"
 )
 
 if %FUNCTION_MODE% == "naming" (
-    set "NACOS_OPTS=%NACOS_OPTS% -Dnacos.functionMode=naming"
+    set "GORGEOUS_JAVA_OPTS=%JAVA_OPTS% -Dnacos.functionMode=naming"
 )
 
 rem set nacos options
-set "NACOS_OPTS=%NACOS_OPTS% -Dloader.path=%BASE_DIR%/plugins/health,%BASE_DIR%/plugins/cmdb"
-set "NACOS_OPTS=%NACOS_OPTS% -Dnacos.home=%BASE_DIR%"
-set "NACOS_OPTS=%NACOS_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
+set "GORGEOUS_JAVA_OPTS=%GORGEOUS_JAVA_OPTS% -Dloader.path=%BASE_DIR%/plugins/health,%BASE_DIR%/plugins/cmdb"
+set "GORGEOUS_JAVA_OPTS=%GORGEOUS_JAVA_OPTS% -Dnacos.home=%BASE_DIR%"
+set "GORGEOUS_JAVA_OPTS=%GORGEOUS_JAVA_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
 
 rem set nacos spring config location
-set "NACOS_CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
+set "CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
 
 rem set nacos log4j file location
 REM set "NACOS_LOG4J_OPTS=--logging.config=%BASE_DIR%/conf/nacos-logback.xml"
 
 
-set COMMAND="%JAVA%" %NACOS_JVM_OPTS% %NACOS_OPTS% %NACOS_CONFIG_OPTS% %NACOS_LOG4J_OPTS% nacos.nacos %*
+set COMMAND="%JAVA%" %NACOS_JVM_OPTS% %GORGEOUS_JAVA_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% nacos.nacos %*
 
-rem start nacos command
+rem start gorgeous command
 %COMMAND%
