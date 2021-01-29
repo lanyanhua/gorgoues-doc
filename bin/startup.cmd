@@ -60,7 +60,7 @@ for %%a in (%*) do (
 rem if nacos startup mode is standalone
 if %MODE% == "standalone" (
     echo "nacos is starting with standalone"
-	  set "GORGEOUS_JAVA_OPTS=-Dnacos.standalone=true"
+	  set "NACOS_OPTS=-Dnacos.standalone=true"
     set "NACOS_JVM_OPTS=-Xms512m -Xmx512m -Xmn256m"
 )
 
@@ -68,7 +68,7 @@ rem if nacos startup mode is cluster
 if %MODE% == "cluster" (
     echo "nacos is starting with cluster"
 	  if %EMBEDDED_STORAGE% == "embedded" (
-	      set "GORGEOUS_JAVA_OPTS=-DembeddedStorage=true"
+	      set "NACOS_OPTS=-DembeddedStorage=true"
 	  )
 
     set "NACOS_JVM_OPTS=-server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=%BASE_DIR%\logs\java_heapdump.hprof -XX:-UseLargePages"
@@ -76,17 +76,17 @@ if %MODE% == "cluster" (
 
 rem set nacos's functionMode
 if %FUNCTION_MODE% == "config" (
-    set "GORGEOUS_JAVA_OPTS=%JAVA_OPTS% -Dnacos.functionMode=config"
+    set "NACOS_OPTS=%JAVA_OPTS% -Dnacos.functionMode=config"
 )
 
 if %FUNCTION_MODE% == "naming" (
-    set "GORGEOUS_JAVA_OPTS=%JAVA_OPTS% -Dnacos.functionMode=naming"
+    set "NACOS_OPTS=%JAVA_OPTS% -Dnacos.functionMode=naming"
 )
 
 rem set nacos options
-set "GORGEOUS_JAVA_OPTS=%GORGEOUS_JAVA_OPTS% -Dloader.path=%BASE_DIR%/plugins/health,%BASE_DIR%/plugins/cmdb"
-set "GORGEOUS_JAVA_OPTS=%GORGEOUS_JAVA_OPTS% -Dnacos.home=%BASE_DIR%"
-set "GORGEOUS_JAVA_OPTS=%GORGEOUS_JAVA_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
+set "NACOS_OPTS=%NACOS_OPTS% -Dloader.path=%BASE_DIR%/plugins/health,%BASE_DIR%/plugins/cmdb"
+set "NACOS_OPTS=%NACOS_OPTS% -Dnacos.home=%BASE_DIR%"
+set "NACOS_OPTS=%NACOS_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
 
 rem set nacos spring config location
 set "CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
@@ -95,7 +95,7 @@ rem set nacos log4j file location
 REM set "NACOS_LOG4J_OPTS=--logging.config=%BASE_DIR%/conf/nacos-logback.xml"
 
 
-set COMMAND="%JAVA%" %NACOS_JVM_OPTS% %GORGEOUS_JAVA_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% nacos.nacos %*
+set COMMAND="%JAVA%" %NACOS_JVM_OPTS% %NACOS_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% nacos.nacos %*
 
 rem start gorgeous command
 %COMMAND%
