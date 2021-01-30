@@ -1,4 +1,5 @@
 @echo off
+chcp 65001
 rem Copyright 1999-2018 Alibaba Group Holding Ltd.
 rem Licensed under the Apache License, Version 2.0 (the "License");
 rem you may not use this file except in compliance with the License.
@@ -22,80 +23,33 @@ rem removed the last 5 chars(which means \bin\) to get the base DIR.
 set BASE_DIR="%BASE_DIR:~0,-5%"
 
 set DEFAULT_SEARCH_LOCATIONS="classpath:/,classpath:/config/,file:./,file:./config/"
-REM 配置文件
+REM configuration file
 set CUSTOM_SEARCH_LOCATIONS="file:%BASE_DIR%/conf/application.properties"
-REM 仓库地址
+REM git local repository path
 set REPOSITORY_PATH="%BASE_DIR%/repository"
-REM 数据库文件
+REM database sql
 set GORGEOUS_DATABASE="%BASE_DIR%/conf/database.sql"
 
-set MODE="standalone"
-set FUNCTION_MODE="all"
+
 set SERVER=gorgeous-doc
-set MODE_INDEX=-1
-set FUNCTION_MODE_INDEX=-1
-set SERVER_INDEX=-1
-set EMBEDDED_STORAGE_INDEX=-1
-set EMBEDDED_STORAGE=""
+
+set "GORGEOUS_JVM_OPTS=-Xms512m -Xmx512m -Xmn256m"
 
 
-set i=0
-for %%a in (%*) do (
-    if "%%a" == "-m" ( set /a MODE_INDEX=!i!+1 )
-    if "%%a" == "-f" ( set /a FUNCTION_MODE_INDEX=!i!+1 )
-    if "%%a" == "-s" ( set /a SERVER_INDEX=!i!+1 )
-    if "%%a" == "-p" ( set /a EMBEDDED_STORAGE_INDEX=!i!+1 )
-    set /a i+=1
-)
-
-set i=0
-for %%a in (%*) do (
-    if %MODE_INDEX% == !i! ( set MODE="%%a" )
-    if %FUNCTION_MODE_INDEX% == !i! ( set FUNCTION_MODE="%%a" )
-    if %SERVER_INDEX% == !i! (set SERVER="%%a")
-    if %EMBEDDED_STORAGE_INDEX% == !i! (set EMBEDDED_STORAGE="%%a")
-    set /a i+=1
-)
-
-rem if nacos startup mode is standalone
-if %MODE% == "standalone" (
-    echo "nacos is starting with standalone"
-	  set "NACOS_OPTS=-Dnacos.standalone=true"
-    set "NACOS_JVM_OPTS=-Xms512m -Xmx512m -Xmn256m"
-)
-
-rem if nacos startup mode is cluster
-if %MODE% == "cluster" (
-    echo "nacos is starting with cluster"
-	  if %EMBEDDED_STORAGE% == "embedded" (
-	      set "NACOS_OPTS=-DembeddedStorage=true"
-	  )
-
-    set "NACOS_JVM_OPTS=-server -Xms2g -Xmx2g -Xmn1g -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=320m -XX:-OmitStackTraceInFastThrow -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=%BASE_DIR%\logs\java_heapdump.hprof -XX:-UseLargePages"
-)
-
-rem set nacos's functionMode
-if %FUNCTION_MODE% == "config" (
-    set "NACOS_OPTS=%JAVA_OPTS% -Dnacos.functionMode=config"
-)
-
-if %FUNCTION_MODE% == "naming" (
-    set "NACOS_OPTS=%JAVA_OPTS% -Dnacos.functionMode=naming"
-)
-
-rem set nacos options
-set "NACOS_OPTS=%NACOS_OPTS% -Dloader.path=%BASE_DIR%/plugins/health,%BASE_DIR%/plugins/cmdb"
-set "NACOS_OPTS=%NACOS_OPTS% -Dnacos.home=%BASE_DIR%"
-set "NACOS_OPTS=%NACOS_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
-
-rem set nacos spring config location
+rem set gorgeous options
+set "GORGEOUS_OPTS=%GORGEOUS_OPTS% -Dloader.path=%BASE_DIR%/plugins/health,%BASE_DIR%/plugins/cmdb"
+set "GORGEOUS_OPTS=%GORGEOUS_OPTS% -Dfile.encoding=utf-8"
+set "GORGEOUS_OPTS=%GORGEOUS_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
+rem set gorgeous spring config location
+set "GORGEOUS_OPTS=%GORGEOUS_OPTS% --gitInfo.repository-path=%REPOSITORY_PATH%"
+set "GORGEOUS_OPTS=%GORGEOUS_OPTS% --gorgeous-database=%GORGEOUS_DATABASE%"
 set "CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
 
-rem set nacos log4j file location
+rem set gorgeous log4j file location
 REM set "NACOS_LOG4J_OPTS=--logging.config=%BASE_DIR%/conf/nacos-logback.xml"
 
 
-set COMMAND="%JAVA%" %NACOS_JVM_OPTS% %NACOS_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% nacos.nacos %*
+set COMMAND="%JAVA%" %GORGEOUS_JVM_OPTS% %GORGEOUS_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% gorgeous.gorgeous %*
 
 rem start gorgeous command
 %COMMAND%
