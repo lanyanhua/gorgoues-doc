@@ -6,43 +6,35 @@
 通过git拉去项目文件进行解析注释注解生成API文档  
 零侵入，无需任何配置，独立运行，注释生成文档，支持读取swagger注解，自定义注释配置，在线调试  
 
-切换： 
+无损替换： 
 项目已引用swagger注解包，可以读取swagger注释  
 支持自定义注释读取，使用特定注释读取项目也可以无损替换  
 
 #### 安装教程
 
-1.  数据库配置
+启动地址：域名:[端口]/[上下文]/docs  
+例子：http://localhost:5160/gorgeous/docs  
+端口、上下文可在配置文件中修改  
+默认端口：5160  
+默认上下文：/gorgeous 
 
-application.yml
-```
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lan-code-api?useSSL=true&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-    username: root
-    password: AAaa123456
-```
-[database.sql](https://gitee.com/lanyanhua/lan-code-api/blob/master/database.sql)  
-启动项目访问地址 http://localhost:5160/lApi/docs
-![初始化页面](https://images.gitee.com/uploads/images/2020/1222/125336_1ce8bcfd_1793098.png "屏幕截图.png")  
 
-2.  git配置
+### 发布版
 
-git数据在库里只会有一条数据。现在没有开发用户项目组方面的，我给这个项目的定位是一个项目组一个API项目互不干涉  
+[https://gitee.com/lanyanhua/gorgeous-doc/releases ](http://)
 
-字段  
-本地仓库地址：拉取代码存放的地址。docker发布的朋友记得将这个文件夹共享到宿主机  
-用户名：git用户名 拉取代码时需要地址在项目上配置  
-密码：git用户密码  
+### docker发布
+这个我后面在弄一下，这次改了git的拉去方式
 
-3.  项目配置
+#### 使用说明
+
+### 项目配置
 
 字段  
 项目名：项目名  
 git地址：git地址  
 分支名称：分支  
-上下文路径：配置 server.servlet.context-path 值  
+上下文路径：配置文件 server.servlet.context-path 的值  
 端口：端口  
 
 上下文路径、端口这两个配置是配合环境配置使用  
@@ -51,7 +43,7 @@ git地址：git地址
 本地 通过端口和项目名访问的  http:localhost:8080/user  
 网关 只需要项目名就可以了  http:test.lan.com/user  
 
-4.  环境配置
+### 环境配置
 
 字段  
 名称：环境名称  
@@ -65,22 +57,11 @@ headerKey：ajax请求携带的header值
 微服务架构  
 建议环境配置 local、dev、test  
 local本地开发 域名：http://localhost 使用项目端口 使用项目路径  
-dev开发环境 域名：http://{{开发网管地址}} 使用项目路径  
+dev开发环境 域名：http://{{开发网关地址}} 使用项目路径  
 test开发环境 同上  
 
 
-5.  注释配置
-
-
-#### 使用说明
-
-1.  API页面
-2.  搜索
-3.  切换
-4.  更新
-5.  设置
-
-#### 注释规范
+### 注释配置
 
 支持注释自定义配置，项目对注释规范这块要求其实不是很高。
 默认的注释读取  
@@ -112,12 +93,20 @@ private String name;
 ```
 
 
+#### 界面说明
 
-6.  跨域问题
+1.  API页面
+2.  搜索
+3.  切换
+4.  更新
+5.  设置
 
 
+#### 跨域问题
 
-后端项目添加一下配置  
+
+后端项目添加一下配置
+
 
 ```
 import org.springframework.context.annotation.Bean;
@@ -148,12 +137,6 @@ public class AdditionalWebConfig {
 
 
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
 
 #### 联系方式
 
