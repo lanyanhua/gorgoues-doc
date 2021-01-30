@@ -24,14 +24,14 @@ set BASE_DIR="%BASE_DIR:~0,-5%"
 
 set DEFAULT_SEARCH_LOCATIONS="classpath:/,classpath:/config/,file:./,file:./config/"
 REM configuration file
-set CUSTOM_SEARCH_LOCATIONS="file:%BASE_DIR%/conf/application.properties"
+set CUSTOM_SEARCH_LOCATIONS="file:%BASE_DIR%\conf\application.properties"
 REM git local repository path
-set REPOSITORY_PATH="%BASE_DIR%/repository"
+set REPOSITORY_PATH="%BASE_DIR%\repository"
 REM database sql
-set GORGEOUS_DATABASE="%BASE_DIR%/conf/gorgeous-logback.xml"
+set GORGEOUS_DATABASE="%BASE_DIR%\conf\database.sql"
 REM logback config
-set GORGEOUS_LOG_CONFIG="%BASE_DIR%/conf/database.sql"
-set GORGEOUS_LOG_HOME="%BASE_DIR%/logs"
+set GORGEOUS_LOG_CONFIG="%BASE_DIR%\conf\gorgeous-logback.xml"
+set GORGEOUS_LOG_HOME="%BASE_DIR%\logs"
 
 set SERVER=gorgeous-doc
 
@@ -45,10 +45,11 @@ set "GORGEOUS_OPTS=%GORGEOUS_OPTS% -jar %BASE_DIR%\target\%SERVER%.jar"
 rem set gorgeous spring config location
 set "GORGEOUS_OPTS=%GORGEOUS_OPTS% --gitInfo.repository-path=%REPOSITORY_PATH%"
 set "GORGEOUS_OPTS=%GORGEOUS_OPTS% --gorgeous-database=%GORGEOUS_DATABASE%"
+
+REM config
 set "CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
-REM logback config
-set "JAVA_OPT=%JAVA_OPT% --logging.config=%GORGEOUS_LOG_CONFIG%"
-set "JAVA_OPT=%JAVA_OPT% --GORGEOUS_LOG_HOME=%GORGEOUS_LOG_HOME%"
+set "CONFIG_OPTS=%CONFIG_OPTS% --logging.config=%GORGEOUS_LOG_CONFIG%"
+set "CONFIG_OPTS=%CONFIG_OPTS% --GORGEOUS_LOG_HOME=%GORGEOUS_LOG_HOME%"
 
 
 set COMMAND="%JAVA%" %GORGEOUS_JVM_OPTS% %GORGEOUS_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% gorgeous.gorgeous %*
