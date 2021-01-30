@@ -1,62 +1,14 @@
-controller 所在包
-解析 controller注解类
 
-接口信息
-明细（入参，出参）
+###数据库
+--gorgeous-database=/Users/lanyanhua/Desktop/gorgeous/conf/database.sql
+###日志
+--logging.config=file:/Users/lanyanhua/Desktop/gorgeous/conf/gorgeous-logback.xml
+###日志输出地址
+--GORGEOUS_LOG_HOME=/Users/lanyanhua/Desktop/gorgeous/logs
+### 配置文件
+set CUSTOM_SEARCH_LOCATIONS=file:%BASE_DIR%/conf/application.properties
 
-入参出参关联类
-类信息
-
-
-API：
-标明（项目ID 分支ID ）
-唯一：访问路径
-
-项目》分支》菜单
-菜单：默认生成controller菜单
-自定义菜单：新增菜单对应API
-自定义菜单切换分支：取新分支path一样的接口，无提示到前端
-
-可以隐藏分支
-删除分支：需判断自定义菜单是否还有管理当前分支API
-
-
-class
-/**
- * {{优先级1}}
- * @author: lanyanhua
- * @date: 2020/12/4 8:38 下午
- * @Description: {{优先级2}}
- */
-public class ProjectController {
-}
-
-方法
- /**
-  * {{方法名称}}
-  * @param {{参数名称}} {{参数描述}}
-  * @return {{返回值描述}}
-  */
-public BaseResponse<Integer> addProject(@RequestBody ProjectAddVo vo) {
-}
-
-字段
-
-/**
- * {{字段描述}}
- */
-private String name;
-
-自定义：
-注释 @Description:
-classTag
-methodTag
-methodParamTag
-methodReturnTag
-fieldTag
-注解 @Api(tags)
-classAnnotation
-methodAnnotation
-fieldAnnotation
-
-
+### 仓库地址
+set REPOSITORY_PATH=%BASE_DIR%/repository
+### 数据库文件
+set GORGEOUS_DATABASE=%BASE_DIR%/conf/database.sql

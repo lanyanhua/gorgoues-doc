@@ -83,6 +83,10 @@ export CUSTOM_SEARCH_LOCATIONS=file:${BASE_DIR}/conf/application.properties
 export REPOSITORY_PATH="${BASE_DIR}/repository"
 #数据库文件
 export GORGEOUS_DATABASE="${BASE_DIR}/conf/database.sql"
+#日志
+export GORGEOUS_LOG_CONFIG="file:${BASE_DIR}/conf/gorgeous-logback.xml"
+#日志输出地址
+export GORGEOUS_LOG_HOME="${BASE_DIR}/logs"
 
 #===========================================================================================
 # JVM Configuration
@@ -104,6 +108,8 @@ JAVA_OPT="${JAVA_OPT} ${JAVA_OPT_EXT}"
 JAVA_OPT="${JAVA_OPT} --spring.config.location=${CUSTOM_SEARCH_LOCATIONS}"
 JAVA_OPT="${JAVA_OPT} --gitInfo.repository-path=${REPOSITORY_PATH}"
 JAVA_OPT="${JAVA_OPT} --gorgeous-database=${GORGEOUS_DATABASE}"
+JAVA_OPT="${JAVA_OPT} --logging.config=${GORGEOUS_LOG_CONFIG}"
+JAVA_OPT="${JAVA_OPT} --GORGEOUS_LOG_HOME=${GORGEOUS_LOG_HOME}"
 JAVA_OPT="${JAVA_OPT} --server.max-http-header-size=524288"
 
 if [ ! -d "${BASE_DIR}/logs" ]; then

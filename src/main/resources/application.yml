@@ -32,3 +32,5 @@ mybatis:
 logging:
   level.com.lancabbage.gorgeous: debug
 
+log:
+  home: /Users/lanyanhua/Documents/workspace/gorgeous-doc/log

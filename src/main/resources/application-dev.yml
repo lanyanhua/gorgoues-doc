@@ -13,3 +13,9 @@ git-info:
   username: gorgeous-test
   password: AAaa123456
   repository-path: /Users/lanyanhua/Desktop/gittest
+
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: file:/Users/lanyanhua/Documents/workspace/gorgeous-doc/log/
+

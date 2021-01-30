@@ -28,8 +28,10 @@ set CUSTOM_SEARCH_LOCATIONS="file:%BASE_DIR%/conf/application.properties"
 REM git local repository path
 set REPOSITORY_PATH="%BASE_DIR%/repository"
 REM database sql
-set GORGEOUS_DATABASE="%BASE_DIR%/conf/database.sql"
-
+set GORGEOUS_DATABASE="%BASE_DIR%/conf/gorgeous-logback.xml"
+REM logback config
+set GORGEOUS_LOG_CONFIG="%BASE_DIR%/conf/database.sql"
+set GORGEOUS_LOG_HOME="%BASE_DIR%/logs"
 
 set SERVER=gorgeous-doc
 
@@ -44,9 +46,9 @@ rem set gorgeous spring config location
 set "GORGEOUS_OPTS=%GORGEOUS_OPTS% --gitInfo.repository-path=%REPOSITORY_PATH%"
 set "GORGEOUS_OPTS=%GORGEOUS_OPTS% --gorgeous-database=%GORGEOUS_DATABASE%"
 set "CONFIG_OPTS=--spring.config.location=%CUSTOM_SEARCH_LOCATIONS%"
-
-rem set gorgeous log4j file location
-REM set "NACOS_LOG4J_OPTS=--logging.config=%BASE_DIR%/conf/nacos-logback.xml"
+REM logback config
+set "JAVA_OPT=%JAVA_OPT% --logging.config=%GORGEOUS_LOG_CONFIG%"
+set "JAVA_OPT=%JAVA_OPT% --GORGEOUS_LOG_HOME=%GORGEOUS_LOG_HOME%"
 
 
 set COMMAND="%JAVA%" %GORGEOUS_JVM_OPTS% %GORGEOUS_OPTS% %CONFIG_OPTS% %NACOS_LOG4J_OPTS% gorgeous.gorgeous %*
