@@ -21,7 +21,7 @@
 
 #### 发布版
 
-[https://gitee.com/lanyanhua/gorgeous-doc/releases ](http://)
+[https://gitee.com/lanyanhua/gorgeous-doc/releases/2.0](http://)
 
 #### docker发布
 这个我后面在弄一下，这次改了git的拉去方式
