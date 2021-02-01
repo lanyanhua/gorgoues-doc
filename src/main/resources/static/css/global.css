@@ -298,3 +298,10 @@
 .layui-form-checkbox i {
     top: 5px!important;
 }
+
+.g-select {
+    padding: 3px 2px;
+    height: 28px;
+    width: 100px;
+    color: #393D4A;
+}

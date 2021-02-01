@@ -5,11 +5,13 @@
         <small class="version">{{d.env.name}}</small>
     </div>
     <ul class="layui-nav layui-layout-left">
-        {{# $.each(d.menuList,(i,menu)=>{ }}
-        <li class="layui-nav-item {{# if(menu.id == d.currHeaderMenuId){ }}layui-this{{# } }}">
-            <a href="javascript:switchMenu({{menu.id}});">{{menu.menuName}}</a>
+        <li class="layui-nav-item1 ">
+            <select class="g-select">
+                {{# $.each(d.menuList,(i,menu)=>{ }}
+                <option value="{{menu.id}}">{{menu.menuName}}</option>
+                {{# }) }}
+            </select>
         </li>
-        {{# }) }}
         <li class="layui-nav-item1 layui-form component">
             <input id="menu-filter" class="layui-input " onchange="menuFilter(this)" placeholder="筛选菜单-回车"/>
         </li>
