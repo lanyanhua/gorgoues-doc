@@ -140,6 +140,6 @@ public class AdditionalWebConfig {
 
 #### 联系方式
 
-qq: 3092575337 (推荐)
-wx: lanyanhua1024
-邮箱: lanyanhua1024@163.com
+qq: 3092575337 (推荐)  
+wx: lanyanhua1024  
+邮箱: lanyanhua1024@163.com  
