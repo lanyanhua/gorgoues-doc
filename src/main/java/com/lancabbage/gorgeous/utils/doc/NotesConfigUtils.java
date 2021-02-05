@@ -2,6 +2,7 @@ package com.lancabbage.gorgeous.utils.doc;
 
 import com.lancabbage.gorgeous.bean.po.NotesConfig;
 import com.lancabbage.gorgeous.service.NotesConfigService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

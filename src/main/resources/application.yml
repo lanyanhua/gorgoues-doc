@@ -1,4 +1,5 @@
 #默认配置 config/application.properties发布时用
+#指定环境在idea里面进行指定
 spring:
   servlet:
     multipart:
