@@ -22,6 +22,13 @@ let classTypeArrJson = {
         //数组
         if (isArr(c.className)) {
             let typeC = c.classFieldList[0];
+            debugger
+            //记录当前类型防止互相依赖死循环
+            // let typeValue = this.typeMap[p.typeId];
+            // if (typeValue) {
+            //     jo[p.paramName] = typeValue;
+            //     continue;
+            // }
             if (typeC.typeId == null) {
                 //基本类型数组
                 let value = jsonValue(typeC.type);
