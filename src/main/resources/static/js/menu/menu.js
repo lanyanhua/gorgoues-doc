@@ -100,7 +100,7 @@ function openTab(id) {
             typeArr = typeArr.concat(res.typeList);
         }
     }
-    let data = $.extend({typeList: typeArr}, menu);
+    let data = $.extend({typeList: typeArr}, menu, currProject, {projectList: projectData}, {envList: envData});
     console.log(data);
     let apiTemplate = $("#apiTemplate").html();
     laytpl(apiTemplate).render(data, html => {
@@ -112,6 +112,7 @@ function openTab(id) {
 
         // 切换选项卡
         element.tabChange("api-tab", id);
+        form.render();
     });
 }
 
