@@ -29,6 +29,11 @@ public class RouteController {
         this.envInfoService = envInfoService;
     }
 
+    @GetMapping("/")
+    public String main() {
+        return "redirect:/docs";
+    }
+
     @GetMapping("/docs")
     public String doc() {
         GitInfoConfig gitInfo = gitService.getGitInfo();
