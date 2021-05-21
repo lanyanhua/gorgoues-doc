@@ -77,6 +77,16 @@ public class TestController  implements ITestClient{
     }
 
     /**
+     * 测试数组参数复杂类型
+     *
+     * @return 001
+     */
+    @PostMapping("testArrParamPostObj")
+    public BaseResponse<MenuVo> testParamPostObjNoBody(MenuVo menuVo) {
+        return BaseResponse.successInstance(menuVo);
+    }
+
+    /**
      * 测试文件上传
      *
      * @return 001

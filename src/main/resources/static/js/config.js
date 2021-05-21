@@ -44,11 +44,10 @@ let uploadBeanUrl = context + 'git/uploadBean';
 
 
 /**
- * API类型
+ * API类型  0: 'ALL',
  * @type {{"0": string, "1": string, "2": string, "3": string, "4": string}}
  */
 let ApiType = {
-    0: 'ALL',
     1: 'POST',
     2: 'GET',
     3: 'DELETE',

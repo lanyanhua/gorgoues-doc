@@ -4,10 +4,10 @@ server:
     context-path: /gorgeous
 spring:
   datasource:
-    driver-class-name:
-    url:
-    username:
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.100.15.244:3306/gorgeous-dev?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    username: root
+    password: 123456
 
 git-info:
   username:

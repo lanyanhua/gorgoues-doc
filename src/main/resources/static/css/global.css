@@ -253,10 +253,10 @@
 }
 
 .json-text {
-    width: 70%;
-    height: 150px;
+    width: 90%;
+    /*height: 250px;*/
     font-size: 13px;
-    min-height: 100px;
+    min-height: 300px;
     font-family: inherit;
     line-height: 20px;
     border-radius: 2px;
@@ -305,4 +305,12 @@
     width: 100px;
     color: #393D4A;
     opacity: 0.9;
+}
+.param-div{
+    max-height: 350px;
+}
+.layui-icon-addition-max{
+    float: right;
+    color: #5FB878;
+    cursor: pointer;
 }

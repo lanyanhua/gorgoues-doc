@@ -1,6 +1,7 @@
 //获取接口路径
-function getPath(path) {
-    let env = currProjectData.env;
+function getPath(path, env) {
+    //不传环境信息就取全局
+    env = env || currProjectData.env;
     let domain = pathFormat(env.domain);
     if (env.isPort && currProjectData.project.port) {
         domain = domain + ':' + currProjectData.project.port;
@@ -22,78 +23,95 @@ function pathFormat(s) {
     return s;
 }
 
+/**
+ * 接口提交方法
+ * @param id
+ */
 function commitApi(id) {
     NProgress.start();
     let $api = $('.api-tab-content-id-' + id);
-    let url = $api.find('.api-path').text();
-    let type = $api.find('.apiType').text();
-    type = type === ApiType[0] ? "post" : type;
+    let type = $api.find('.apiType').val();
+    let url = $api.find('.apiPath').val();
     // header
     let headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE',
     };
-
-    $.each($api.find('.env-header'), (i, v) => {
+    //遍历tr
+    $.each($api.find('.req-param-header tr'), (i, v) => {
         v = $(v);
-        let key = v.attr('header-key');
-        headers[key] = v.text();
+        let enable = v.find('input[name="enable"]');
+        let headerKey = v.find('input[name="headerKey"]').val();
+        let headerValue = v.find('input[name="headerValue"]').val();
+        //启用 && 值不为空
+        if (enable.length > 0 && enable[0].checked && headerValue) {
+            headers[headerKey] = headerValue;
+        }
     })
-    //json
-    let data = $api.find('.req-json').val();
-    //文件
-    let formData = new FormData();
+    //form data
     let isFile = false;
-    let param_value = $api.find('.param-value');
-
-    $.each(param_value, (i, v) => {
+    let formData = new FormData();
+    $.each($api.find('.req-param-form-data tr'), (i, v) => {
         v = $(v);
-        let name = v.attr('name');
-        let val = v.val();
-        let paramMode = v.attr('api-paramMode');
-        if (paramMode == ParamMode.path) {
-            url = url.replace('{' + name + '}', val);
+        let enable = v.find('input[name="enable"]');
+        let paramName = v.find('input[name="paramName"]').val();
+        let paramValue = v.find('input[name="paramValue"]');
+        if (enable.length < 1 || !enable[0].checked || paramValue.length < 1) {
             return true;
         }
-        if (paramMode == ParamMode.json) {
-            url.replace(name, val);
-            return true;
-        }
-        let type = v.attr('api-type');
-        if (type == 'file') {
+        //参数类型 为文件
+        let paramType = v.find('[name="paramType"]').val();
+        if (paramType == 'File') {
             isFile = true;
-            for (let i = 0; i < v[0].files.length; i++) {
-                formData.append(name, v[0].files[i]);
+            for (let i = 0; i < paramValue[0].files.length; i++) {
+                formData.append(paramName, paramValue[0].files[i]);
             }
+            return true;
+        }
+        paramValue = paramValue.val();
+        //参数传输方式
+        let paramMode = v.attr('data-paramMode');
+        if (paramMode == ParamMode.path) {
+            url = url.replace('{' + paramName + '}', paramValue);
             return true;
         }
         if (url.indexOf("?") === -1) {
             url += '?';
         }
-        url += name + '=' + encodeURI(val) + '&';
+        url += paramName + '=' + encodeURI(paramValue) + '&';
     })
+    //json
+    let contentType;
+    let data = $api.find('.req-param-json').val();
+    if (data) {
+        try {
+            let jsonObj = JSON.parse(data);
+            data = JSON.stringify(jsonObj);
+        } catch (e) {
+            console.log('JSON 字符串格式不对～')
+        }
+        contentType = 'application/json;charset=utf-8'
+    }
+    //回调函数
+    let fun = function (data) {
+        debugger
+        //最好这里成判断ajax返回的格式（下载文件）
+        let $response = $api.find('.responseJson');
+        $response.text(formatJson1(data));
+        NProgress.done();
+    }
+    //上传文件参数
     let file = {
         data: formData,
         processData: false,
         contentType: false
     }
-    let fun = function (data) {
-        let $response = $api.find('.api-response');
-        $response.removeClass("layui-hide");
-        $api.find('.response-path').text(url);
-        $api.find('.response-show').text(formatJson1(data));
-        let apiBody = $('.api-body');
-        apiBody.animate({
-            scrollTop: apiBody.children().height()
-        }, 0);
-        NProgress.done();
-    }
     let ajaxParam = {
         type: type,
         url: url,
         headers: headers,
-        contentType: "application/json;charset=utf-8",
-        xhrFields: { withCredentials: true },
+        contentType: contentType,
+        xhrFields: {withCredentials: true},
         data: data,
         dataType: 'json',
         error: fun,
@@ -103,4 +121,46 @@ function commitApi(id) {
         ajaxParam = $.extend(ajaxParam, file);
     }
     $.ajax(ajaxParam);
+}
+
+/**
+ * 添加from data tr
+ */
+function addFromDataTr() {
+    let $table = $(this.event.currentTarget).parents('table');
+    $table.append('<tr data-paramMode="0">' +
+        '    <td><input type="checkbox" name="enable" lay-skin="switch" checked="checked"></td>' +
+        '    <td><input class="layui-input param-value" api-paramMode="" api-type=""' +
+        '               name="paramName" type="text" value=""/>' +
+        '    </td>' +
+        '    <td><input class="layui-input param-value" api-paramMode="" api-type=""' +
+        '               name="paramValue" type="text" value=""/>' +
+        '    </td>' +
+        '    <td>' +
+        '        <select class="input-sm" name="paramType">' +
+        '            <option value="Text">Text</option>' +
+        '            <option value="File">File</option>' +
+        '        </select>' +
+        '    </td>' +
+        '    <td>' +
+        '    </td>' +
+        '</tr>');
+    form.render();
+}
+
+/**
+ * 添加Header data tr
+ */
+function addHeaderTr() {
+    let $table = $(this.event.currentTarget).parents('table');
+    $table.append('<tr class="header-data-key">' +
+        '    <td><input type="checkbox" name="enable" lay-skin="switch" checked="true"></td>' +
+        '    <td><input class="layui-input header-key" ' +
+        '               name="headerKey" type="text" value=""/>' +
+        '    </td>' +
+        '    <td><input class="layui-input header-value" ' +
+        '               name="headerValue" type="text" value=""/>' +
+        '    </td>' +
+        '</tr>');
+    form.render();
 }

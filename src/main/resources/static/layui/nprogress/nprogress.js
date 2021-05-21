@@ -97,7 +97,7 @@
             NProgress.remove();
             next();
           }, speed);
-        }, speed);
+        }, speed < 1000 ? 1000 : speed);
       } else {
         setTimeout(next, speed);
       }

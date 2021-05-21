@@ -10,7 +10,7 @@ let classTypeArrJson = {
         this.classSet = {};
         let res=  this.getParamAllClass(c);
         res.typeList.push({type: this.paramType, paramMode: this.paramMode, typeJson: res.typeJson});
-        res.typeList.dis
+        // res.typeList.dis
         return res;
     },
     /**
