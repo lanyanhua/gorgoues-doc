@@ -81,7 +81,7 @@ public class TestController  implements ITestClient{
      *
      * @return 001
      */
-    @PostMapping("testArrParamPostObj")
+    @PostMapping("testParamPostObjNoBody")
     public BaseResponse<MenuVo> testParamPostObjNoBody(MenuVo menuVo) {
         return BaseResponse.successInstance(menuVo);
     }
