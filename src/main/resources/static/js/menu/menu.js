@@ -88,19 +88,43 @@ function openTab(id) {
     }
     //添加选项卡
     let menu = findMenu(branchMenuData.menuList, id);
-    // class 入参 字段 - 出参
+    //class 入参 字段 - 出参
     let typeArr = [];
+    //from data 字段
+    let formDataFields = [];
     for (let p of menu.api.apiParamList) {
+        //引用数据类型
         if (p.classId != null) {
             let c = branchMenuData.classInfoList.find(i => i.id === p.classId);
             p.className = c.className;
             let res = classTypeArrJson.getTypeArrJson(c, p);
             //基本类型数组
-            p.isBaseTypeArr = p.paramMode === ParamMode.form_data ? res.isBaseTypeArr : '';
+            p.isBaseTypeArr = res.isBaseTypeArr;
+            //添加当前类里面的所有数据类型
             typeArr = typeArr.concat(res.typeList);
         }
+        //入参 不为JSON
+        if (p.type == 1 && p.paramMode != ParamMode.json) {
+            formDataFields.push({
+                paramName: p.paramName,
+                paramDescribe: p.paramDescribe,
+                type: p.isBaseTypeArr || p.dataType
+            });
+        }
     }
-    let data = $.extend({typeList: typeArr}, menu, currProject, {projectList: projectData}, {envList: envData});
+    //class 字段
+    for (let t of typeArr) {
+        //入参 & 当前传参数非json
+        if (t.type == 2 || t.paramMode == ParamMode.json || t.classFieldList == null) {
+            continue;
+        }
+        formDataFields = formDataFields.concat(t.classFieldList);
+    }
+    let data = $.extend({typeList: typeArr}, menu, currProject, {
+        projectList: projectData,
+        envList: envData,
+        formDataFields: formDataFields
+    });
     console.log(data);
     let apiTemplate = $("#apiTemplate").html();
     laytpl(apiTemplate).render(data, html => {
@@ -109,44 +133,11 @@ function openTab(id) {
             content: html,
             id: id
         });
-
         // 切换选项卡
         element.tabChange("api-tab", id);
         form.render();
         //绑定切换环境事件
-        form.on('select(envApiFilter)', function (data) {
-            console.log('api env select ', data.value)
-            let $env = $(data.elem);
-            let $apiPath = $env.parent().next().find('.apiPath');
-            //当前选择的环境
-            let currId = $env.data('id');
-            let currEnv = envData.find(i => i.id == data.value);
-            //获取访问路径
-            let path = getPath($apiPath.data('path'), currEnv);
-            $apiPath.val(path);
-            //处理环境header data
-            let reqDiv = 'tab-req-param-' + currId;
-            element.tabChange(reqDiv, 'header');
-            let $header = $('.' + reqDiv + ' .req-param-header');
-            $.each((currEnv.headerMap || []), (i, v) => {
-                let $key = $header.find('.header-data-' + v.key);
-                if ($key.length > 0) {
-                    $key.find('.header-value').val(v.value)
-                } else {
-                    $header.append(
-                        ' <tr class="header-data-'+v.key+'">' +
-                        '    <td><input type="checkbox" name="enable" lay-skin="switch" checked="true"></td>' +
-                        '    <td><input class="layui-input header-key" api-paramMode="" api-type=""' +
-                        '               name="headerKey" type="text" value="'+v.key+'"/>' +
-                        '    </td>' +
-                        '    <td><input class="layui-input header-value" api-paramMode="" api-type=""' +
-                        '               name="headerValue" type="text" value="'+v.value+'"/>' +
-                        '    </td>' +
-                        '</tr>');
-                    form.render('checkbox');
-                }
-            });
-        });
+        envSelectHeaderData();
     });
 }
 

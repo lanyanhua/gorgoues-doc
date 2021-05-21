@@ -43,9 +43,9 @@
                         <li lay-id="header">Header</li>
                         <li class="{{# if(isJsonParam){ }}layui-this {{# } }}">JSON</li>
                     </ul>
-                    <div class="layui-tab-content">
+                    <div class="layui-tab-content ">
                         <!-- FormData 参数 -->
-                        <div class="layui-tab-item req-param-form-data {{# if(!typeJsonObj){ }}layui-show {{# } }}">
+                        <div class="layui-tab-item req-param-form-data {{!isJsonParam?'layui-show':''}}">
                             <table class="layui-table layui-form" lay-size="sm">
                                 <thead>
                                 <th width="4%"><i class="layui-icon layui-icon-addition layui-icon-addition-max"
@@ -55,23 +55,25 @@
                                 <th width="10%">类型</th>
                                 <th>描述</th>
                                 </thead>
-                                <tr data-paramMode="0">
-                                    <td><input type="checkbox" name="enable" lay-skin="switch"></td>
+                                {{# $.each((d.formDataFields) ,(i,v)=>{ }}
+                                <tr data-paramMode="{{v.paramMode||0}}">
+                                    <td><input type="checkbox" name="enable" lay-skin="switch" checked="checked"></td>
                                     <td><input class="layui-input param-value" api-paramMode="" api-type=""
-                                               name="paramName" type="text" value=""/>
+                                               name="paramName" type="text" value="{{v.paramName}}"/>
                                     </td>
                                     <td><input class="layui-input param-value" api-paramMode="" api-type=""
-                                               name="paramValue" type="text" value=""/>
+                                               name="paramValue" type="{{BaseType[v.type]||'text'}}" multiple="multiple" value=""/>
                                     </td>
                                     <td>
                                         <select class="input-sm" name="paramType">
-                                            <option value="Text">Text</option>
-                                            <option value="File">File</option>
+                                            <option value="{{BaseType[v.type]||'text'}}" selected >{{BaseType[v.type]||'text'}}</option>
+                                            <option value="text">Text</option>
+                                            <option value="file">File</option>
                                         </select>
                                     </td>
-                                    <td>
-                                    </td>
+                                    <td>{{v.type}}，{{v.paramDescribe||''}}</td>
                                 </tr>
+                                {{# }) }}
                             </table>
                         </div>
                         <!-- Header 参数 -->
@@ -98,9 +100,7 @@
                         </div>
                         <!-- JSON 参数 -->
                         <div class="layui-tab-item {{# if(isJsonParam){ }}layui-show {{# } }}">
-                            {{# if(isJsonParam){ }}
-                            <textarea class="json-text req-param-json">{{formatJson1(typeJsonObj.typeJson)}}</textarea>
-                            {{# } }}
+                            <textarea class="json-text req-param-json">{{formatJson1(isJsonParam?typeJsonObj.typeJson:'')}}</textarea>
                         </div>
                     </div>
                 </div>
@@ -180,9 +180,7 @@
                         </div>
                         <div class="layui-tab-item ">
                             <!--                        JSON字符串请求参数 -->
-                            {{# if(typeJsonObj){ }}
-                            <textarea class="json-text">{{formatJson1(typeJsonObj.typeJson)}}</textarea>
-                            {{# } }}
+                            <textarea class="json-text">{{formatJson1((typeJsonObj||'').typeJson)}}</textarea>
                         </div>
                     </div>
                 </div>

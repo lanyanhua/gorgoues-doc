@@ -164,3 +164,39 @@ function addHeaderTr() {
         '</tr>');
     form.render();
 }
+
+function envSelectHeaderData(){
+    form.on('select(envApiFilter)', function (data) {
+        console.log('api env select ', data.value)
+        let $env = $(data.elem);
+        let $apiPath = $env.parent().next().find('.apiPath');
+        //当前选择的环境
+        let currId = $env.data('id');
+        let currEnv = envData.find(i => i.id == data.value);
+        //获取访问路径
+        let path = getPath($apiPath.data('path'), currEnv);
+        $apiPath.val(path);
+        //处理环境header data
+        let reqDiv = 'tab-req-param-' + currId;
+        element.tabChange(reqDiv, 'header');
+        let $header = $('.' + reqDiv + ' .req-param-header');
+        $.each((currEnv.headerMap || []), (i, v) => {
+            let $key = $header.find('.header-data-' + v.key);
+            if ($key.length > 0) {
+                $key.find('.header-value').val(v.value)
+            } else {
+                $header.append(
+                    ' <tr class="header-data-' + v.key + '">' +
+                    '    <td><input type="checkbox" name="enable" lay-skin="switch" checked="true"></td>' +
+                    '    <td><input class="layui-input header-key" api-paramMode="" api-type=""' +
+                    '               name="headerKey" type="text" value="' + v.key + '"/>' +
+                    '    </td>' +
+                    '    <td><input class="layui-input header-value" api-paramMode="" api-type=""' +
+                    '               name="headerValue" type="text" value="' + v.value + '"/>' +
+                    '    </td>' +
+                    '</tr>');
+                form.render('checkbox');
+            }
+        });
+    });
+}
