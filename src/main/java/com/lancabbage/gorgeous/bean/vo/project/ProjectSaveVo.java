@@ -1,14 +1,18 @@
 package com.lancabbage.gorgeous.bean.vo.project;
 
 
+import com.lancabbage.gorgeous.bean.po.ProjectConfig;
+
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: lanyanhua
  * @date: 2020/12/5 5:26 下午
  * @Description:
  */
-public class ProjectSaveVo {
+public class ProjectSaveVo implements Serializable {
 
     /**
      * ID
@@ -27,15 +31,7 @@ public class ProjectSaveVo {
     @NotNull
     private String remotePath;
 
-    /**
-     * 上下文路径
-     */
-    private String contextPath;
-
-    /**
-     * 端口
-     */
-    private Integer port;
+    private List<ProjectConfig> projectConfigs;
 
 
     public Integer getId() {
@@ -54,27 +50,19 @@ public class ProjectSaveVo {
         this.name = name;
     }
 
-    public String getContextPath() {
-        return contextPath;
-    }
-
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
     public String getRemotePath() {
         return remotePath;
     }
 
     public void setRemotePath(String remotePath) {
         this.remotePath = remotePath;
+    }
+
+    public List<ProjectConfig> getProjectConfigs() {
+        return projectConfigs;
+    }
+
+    public void setProjectConfigs(List<ProjectConfig> projectConfigs) {
+        this.projectConfigs = projectConfigs;
     }
 }

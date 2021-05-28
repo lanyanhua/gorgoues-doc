@@ -1,5 +1,7 @@
 package com.lancabbage.gorgeous.bean.vo.project;
 
+import com.lancabbage.gorgeous.bean.po.ProjectConfig;
+
 import java.util.List;
 
 /**
@@ -17,24 +19,18 @@ public class ProjectVo {
      * 项目名称
      */
     private String name;
-
-    /**
-     * 上下文路径
-     */
-    private String contextPath;
     /**
      * 远程库路径
      */
     private String remotePath;
-
-    /**
-     * 端口
-     */
-    private Integer port;
     /**
      * 分支
      */
     private List<ProjectBranchVo> branchList;
+    /**
+     * 项目配置
+     */
+    private List<ProjectConfig> projectConfigs;
 
     public Integer getId() {
         return id;
@@ -50,22 +46,6 @@ public class ProjectVo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getContextPath() {
-        return contextPath;
-    }
-
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
     }
 
     public String getRemotePath() {
@@ -84,4 +64,11 @@ public class ProjectVo {
         this.branchList = branchList;
     }
 
+    public List<ProjectConfig> getProjectConfigs() {
+        return projectConfigs;
+    }
+
+    public void setProjectConfigs(List<ProjectConfig> projectConfigs) {
+        this.projectConfigs = projectConfigs;
+    }
 }

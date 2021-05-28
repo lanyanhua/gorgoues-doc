@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lancabbage.gorgeous.mapper.ProjectConfigMapper">
+    <resultMap id="BaseResultMap" type="com.lancabbage.gorgeous.bean.po.ProjectConfig">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="project_id" jdbcType="INTEGER" property="projectId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="context_path" jdbcType="VARCHAR" property="contextPath"/>
+        <result column="port" jdbcType="INTEGER" property="port"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="menu_name" jdbcType="VARCHAR" property="menuName"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        id, project_id, `name`, context_path, port, create_time, menu_name
+    </sql>
+
+    <select id="listByProjectIds" resultMap="BaseResultMap">
+        select distinct pb.project_id,
+               m.menu_name,
+               pc.id,
+               pc.name,
+               pc.context_path,
+               pc.port,
+               pc.create_time
+        from project_branch pb
+                     left join menu m on pb.id = m.branch_id and m.parent_id is null
+                     left join project_config pc on m.menu_name = pc.menu_name
+        where pb.project_id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+    </select>
+</mapper>

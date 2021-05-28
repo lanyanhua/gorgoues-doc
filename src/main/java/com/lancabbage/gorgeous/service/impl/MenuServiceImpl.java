@@ -4,6 +4,7 @@ import com.lancabbage.gorgeous.bean.dto.ApiInfoDto;
 import com.lancabbage.gorgeous.bean.dto.MenuDto;
 import com.lancabbage.gorgeous.bean.po.ApiInfo;
 import com.lancabbage.gorgeous.bean.po.Menu;
+import com.lancabbage.gorgeous.bean.po.ProjectBranch;
 import com.lancabbage.gorgeous.map.MenuDtoToVo;
 import com.lancabbage.gorgeous.mapper.MenuMapper;
 import com.lancabbage.gorgeous.service.ApiInfoService;
@@ -38,32 +39,25 @@ public class MenuServiceImpl implements MenuService {
 
     @Transactional
     @Override
-    public void addMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId) {
+    public void addMenuList(Map<String, List<MenuDto>> menuDtoList, ProjectBranch branch) {
         menuDtoList.forEach((k, v) -> {
-            String menuName = k;
-            if (menuDtoList.size() == 1) {
-                menuName = "默认";
-            }
-            addBranchMenu(menuName, v, branchId);
+            addBranchMenu(k, v, branch.getId());
         });
     }
 
 
     @Transactional
     @Override
-    public void saveMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId) {
+    public void saveMenuList(Map<String, List<MenuDto>> menuDtoList, ProjectBranch b) {
+        Integer branchId = b.getId();
         menuDtoList.forEach((k, v) -> {
-            String menuName = k;
-            if (menuDtoList.size() == 1) {
-                menuName = "默认";
-            }
             Example example = new Example(Menu.class);
             example.createCriteria().andEqualTo("branchId", branchId)
-                    .andEqualTo("menuName", menuName);
+                    .andEqualTo("menuName", k);
             Menu menu = menuMapper.selectOneByExample(example);
             if (menu == null) {
                 //为空新增当前菜单
-                addBranchMenu(menuName, v, branchId);
+                addBranchMenu(k, v, branchId);
                 return;
             }
             //原来的controller 菜单

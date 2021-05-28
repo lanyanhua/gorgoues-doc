@@ -15,7 +15,8 @@
   var NProgress = {};
 
   NProgress.version = '0.2.0';
-
+  //添加遮挡
+  let shade = '<div class="layui-layer-shade" id="layui-layer-shade3" times="3" style="z-index: 19891016; background-color: rgb(0, 0, 0); opacity: 0.3;"></div>';
   var Settings = NProgress.settings = {
     minimum: 0.08,
     easing: 'linear',
@@ -27,7 +28,7 @@
     barSelector: '[role="bar"]',
     spinnerSelector: '[role="spinner"]',
     parent: 'body',
-    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+    template: '<div class="bar" role="bar"><div class="peg"></div></div><div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'+shade
   };
 
   /**
@@ -89,14 +90,14 @@
         progress.offsetWidth; /* Repaint */
 
         setTimeout(function() {
-          css(progress, {
-            transition: 'all ' + speed + 'ms linear',
-            opacity: 0
-          });
-          setTimeout(function() {
+          // css(progress, {
+          //   transition: 'all ' + speed + 'ms linear',
+          //   opacity: 0
+          // });
+          // setTimeout(function() {
             NProgress.remove();
             next();
-          }, speed);
+          // }, speed);
         }, speed < 1000 ? 1000 : speed);
       } else {
         setTimeout(next, speed);
@@ -471,7 +472,6 @@
   /**
    * (Internal) Removes an element from the DOM.
    */
-
   function removeElement(element) {
     element && element.parentNode && element.parentNode.removeChild(element);
   }

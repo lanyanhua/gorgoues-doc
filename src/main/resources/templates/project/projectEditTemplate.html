@@ -1,0 +1,54 @@
+<script type="text/html" id="projectEditTemplate">
+    <form id="projectEditForm" class="layui-form" action="">
+        <input type="hidden" name="id" value="{{d.id}}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名</label>
+            <div class="layui-input-block">
+                <input type="text" name="projectName" value="{{d.name}}" required
+                       lay-verify="required" autocomplete="off" class="layui-input ">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">git地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="remotePath" value="{{d.remotePath}}" required
+                       lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">配置</label>
+            <div class="layui-input-block">
+                <table class="layui-table layui-form projectConfigTable" style="margin: 0" lay-size="sm">
+                    <thead>
+                    <th width="25%">模块</th>
+                    <th width="25%">展示名称</th>
+                    <th width="20%">端口</th>
+                    <th width="30%">上下文路径</th>
+                    </thead>
+                    {{# d.projectConfigs.forEach(v => { }}
+                    <tr data-id="{{v.id||''}}">
+                        <td><input name="menuName" type="text" class="layui-input" value="{{v.menuName}}" /></td>
+                        <td><input name="name" type="text" class="layui-input" value="{{v.name || ''}}" /></td>
+                        <td><input name="port" type="number" class="layui-input" value="{{v.port || ''}}" /></td>
+                        <td><input name="contextPath" type="text" class="layui-input" value="{{v.contextPath || ''}}" /></td>
+                    </tr>
+                    {{# }) }}
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分支</label>
+            <div class="layui-input-block">
+                {{# $.each(d.branchList,(i,v)=>{ }}
+                <div class="layui-table-cell laytable-cell-1-0-3">
+                    <div class="layui-col-sm6">{{v.name}}</div>
+                    <div class="layui-col-sm6">
+                        <i class="layui-icon layui-icon-delete" style="cursor:pointer"
+                           onclick="deleteBranch({{v.id}});"></i>
+                    </div>
+                </div>
+                {{# }) }}
+            </div>
+        </div>
+    </form>
+</script>

@@ -2,6 +2,7 @@ package com.lancabbage.gorgeous.service;
 
 import com.lancabbage.gorgeous.bean.dto.MenuDto;
 import com.lancabbage.gorgeous.bean.po.Menu;
+import com.lancabbage.gorgeous.bean.po.ProjectBranch;
 
 import java.util.List;
 import java.util.Map;
@@ -17,16 +18,17 @@ public interface MenuService {
     /**
      * 新增菜单
      *  @param menuDtoList 菜单
-     * @param branchId    分支ID
+     * @param branch    分支
      */
-    void addMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId);
+    void addMenuList(Map<String, List<MenuDto>> menuDtoList, ProjectBranch branch);
 
     /**
      * 保存菜单信息
-     *  @param menuDtoList 菜单
-     * @param branchId    分支ID
+     *
+     * @param menuDtoList 菜单
+     * @param b           分支
      */
-    void saveMenuList(Map<String, List<MenuDto>> menuDtoList, Integer branchId);
+    void saveMenuList(Map<String, List<MenuDto>> menuDtoList, ProjectBranch b);
 
     /**
      * 查询菜单
@@ -46,6 +48,7 @@ public interface MenuService {
 
     /**
      * 删除菜单
+     *
      * @param id 分支ID
      */
     void deleteByBranchId(List<Integer> id);

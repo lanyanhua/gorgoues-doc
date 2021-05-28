@@ -29,17 +29,6 @@ public class Project {
     private Date createTime;
 
     /**
-     * 上下文路径
-     */
-    @Column(name = "context_path")
-    private String contextPath;
-
-    /**
-     * 端口
-     */
-    private Integer port;
-
-    /**
      * 获取ID
      *
      * @return id - ID
@@ -109,41 +98,5 @@ public class Project {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    /**
-     * 获取上下文路径
-     *
-     * @return context_path - 上下文路径
-     */
-    public String getContextPath() {
-        return contextPath;
-    }
-
-    /**
-     * 设置上下文路径
-     *
-     * @param contextPath 上下文路径
-     */
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
-    }
-
-    /**
-     * 获取端口
-     *
-     * @return port - 端口
-     */
-    public Integer getPort() {
-        return port;
-    }
-
-    /**
-     * 设置端口
-     *
-     * @param port 端口
-     */
-    public void setPort(Integer port) {
-        this.port = port;
     }
 }

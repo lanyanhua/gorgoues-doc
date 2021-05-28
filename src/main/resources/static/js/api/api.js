@@ -94,7 +94,7 @@ function commitApi(id) {
     }
     //回调函数
     let fun = function (data) {
-        debugger
+        // debugger
         //最好这里成判断ajax返回的格式（下载文件）
         let $response = $api.find('.responseJson');
         $response.text(formatJson1(data));
@@ -165,7 +165,10 @@ function addHeaderTr() {
     form.render();
 }
 
-function envSelectHeaderData(){
+/**
+ * 环境选择时更新header data值
+ */
+function envSelectHeaderData() {
     form.on('select(envApiFilter)', function (data) {
         console.log('api env select ', data.value)
         let $env = $(data.elem);
@@ -180,12 +183,15 @@ function envSelectHeaderData(){
         let reqDiv = 'tab-req-param-' + currId;
         element.tabChange(reqDiv, 'header');
         let $header = $('.' + reqDiv + ' .req-param-header');
+        //展示在前面
+        let $headerTr = $header.find('tr:eq(0)');
         $.each((currEnv.headerMap || []), (i, v) => {
             let $key = $header.find('.header-data-' + v.key);
             if ($key.length > 0) {
+                $headerTr = $key;
                 $key.find('.header-value').val(v.value)
             } else {
-                $header.append(
+                $headerTr.after(
                     ' <tr class="header-data-' + v.key + '">' +
                     '    <td><input type="checkbox" name="enable" lay-skin="switch" checked="true"></td>' +
                     '    <td><input class="layui-input header-key" api-paramMode="" api-type=""' +
@@ -195,6 +201,7 @@ function envSelectHeaderData(){
                     '               name="headerValue" type="text" value="' + v.value + '"/>' +
                     '    </td>' +
                     '</tr>');
+                $headerTr = $header.find('.header-data-' + v.key);
                 form.render('checkbox');
             }
         });

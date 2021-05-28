@@ -308,9 +308,16 @@
 }
 .param-div{
     max-height: 350px;
+    overflow: auto;
 }
 .layui-icon-addition-max{
     float: right;
     color: #5FB878;
     cursor: pointer;
+}
+.layui-table-view .layui-table td{
+    vertical-align: top;
+}
+.layui-table-cell {
+    height: auto;
 }

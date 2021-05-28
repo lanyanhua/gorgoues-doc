@@ -6,14 +6,18 @@
     </div>
     <ul class="layui-nav layui-layout-left">
         <li class="layui-nav-item1 ">
-            <select class="g-select">
+            <select class="g-select" oninput="switchMenu(this)">
                 {{# $.each(d.menuList,(i,menu)=>{ }}
-                <option value="{{menu.id}}">{{menu.menuName}}</option>
+                {{# let conf = d.projectConfig.find(i=> i.menuName == menu.menuName)||{} }}
+                <option value="{{menu.id}}" {{ menu.id == d.currHeaderMenuId?'selected':'' }}
+                        data-contextPath="{{conf.contextPath||''}}" data-port="{{conf.port||''}}">
+                    {{conf.name||menu.menuName}}
+                </option>
                 {{# }) }}
             </select>
         </li>
         <li class="layui-nav-item1 layui-form component">
-            <input id="menu-filter" class="layui-input " onchange="menuFilter(this)" placeholder="筛选菜单-回车"/>
+            <input id="menu-filter" class="layui-input " oninput="menuFilter(this)" placeholder="筛选菜单"/>
         </li>
     </ul>
 </script>
