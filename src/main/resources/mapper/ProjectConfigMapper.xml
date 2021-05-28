@@ -30,7 +30,7 @@
                pc.create_time
         from project_branch pb
                      left join menu m on pb.id = m.branch_id and m.parent_id is null
-                     left join project_config pc on m.menu_name = pc.menu_name
+                     left join project_config pc on m.menu_name = pc.menu_name  and pb.project_id = pc.project_id
         where pb.project_id in
             <foreach collection="ids" item="id" open="(" separator="," close=")">
                 #{id}
