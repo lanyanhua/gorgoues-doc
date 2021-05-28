@@ -62,9 +62,9 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         classInfoService.addClass(classInfoList, projectId, branch.getId());
         //保存API信息
         List<ApiInfoDto> apiAll = classDocUtils.getApiAll();
-        apiInfoService.addApiList(apiAll,projectId, branch.getId());
+        apiInfoService.addApiList(apiAll, projectId, branch.getId());
         //保存
-        menuService.addMenuList(menuDtoList, branch.getId());
+        menuService.addMenuList(menuDtoList, branch);
         return branch.getId();
     }
 
@@ -85,7 +85,7 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
         List<ApiInfoDto> apiAll = classDocUtils.getApiAll();
         apiInfoService.saveApiList(apiAll, b.getProjectId(), dto.getId());
         //保存菜单
-        menuService.saveMenuList(menuDtoList, dto.getId());
+        menuService.saveMenuList(menuDtoList, b);
     }
 
     @Transactional
@@ -101,9 +101,9 @@ public class ProjectBranchServiceImpl implements ProjectBranchService {
     @Override
     public void deleteByProjectId(Integer id) {
         Example example = new Example(ProjectBranch.class);
-        example.createCriteria().andEqualTo("projectId",id);
+        example.createCriteria().andEqualTo("projectId", id);
         List<ProjectBranch> projectBranches = projectBranchMapper.selectByExample(example);
-        if(projectBranches.isEmpty()){
+        if (projectBranches.isEmpty()) {
             return;
         }
         projectBranchMapper.deleteByExample(example);

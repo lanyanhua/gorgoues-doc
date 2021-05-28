@@ -1,7 +1,9 @@
 package com.lancabbage.gorgeous.service;
 
 import com.lancabbage.gorgeous.bean.po.Project;
+import com.lancabbage.gorgeous.bean.po.ProjectConfig;
 import com.lancabbage.gorgeous.bean.vo.project.ProjectAddVo;
+import com.lancabbage.gorgeous.bean.vo.project.ProjectSaveVo;
 import com.lancabbage.gorgeous.bean.vo.project.ProjectVo;
 
 import java.util.List;
@@ -40,10 +42,11 @@ public interface ProjectService {
     /**
      * 保存项目
      */
-    void saveProject(Project vo);
+    void saveProject(ProjectSaveVo vo);
 
     /**
      * 删除项目
+     *
      * @param id ID
      */
     void deleteById(Integer id);
@@ -52,4 +55,17 @@ public interface ProjectService {
      * 查询项目模块名称
      */
     List<String> listModelById(Integer id);
+
+    /**
+     * 当前项目数量
+     */
+    long count();
+
+    /**
+     * 查询项目模块名称
+     *
+     * @param id ID
+     * @return 端口、上下文路径
+     */
+    List<ProjectConfig> listProjectConfigById(Integer id);
 }

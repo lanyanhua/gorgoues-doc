@@ -35,9 +35,9 @@ public class NotesConfigServiceImpl implements NotesConfigService {
         if(config.getId() == null){
             config.setCreateTime(new Date());
             configMapper.insert(config);
-            return config.getId();
+        }else {
+            configMapper.updateByPrimaryKeySelective(config);
         }
-        configMapper.updateByPrimaryKeySelective(config);
         NotesConfigUtils.refresh();
         return config.getId();
     }

@@ -28,6 +28,7 @@ function getMenuByBranchId(branchId) {
     }
 }
 
+//递归查询ID菜单
 function findMenu(branchMenuData, id) {
     for (let m of branchMenuData) {
         if (m.id === id) {
@@ -61,10 +62,19 @@ function renderMenu() {
     //加载当前
     getMenuByBranchId(currProject.branchId);
     let currHeaderMenuId = getCurrHeaderMenuId(currProject.branchId);
+    let menu = {};
     if (currHeaderMenuId == null) {
-        currHeaderMenuId = setCurrHeaderMenuId(branchMenuData.menuList[0].id);
+        menu = branchMenuData.menuList[0];
+        setCurrHeaderMenuId(currProject.branchId, menu.id);
+    } else {
+        menu = branchMenuData.menuList.find(i => i.id == currHeaderMenuId);
     }
-    let data = $.extend({currHeaderMenuId: currHeaderMenuId}, currProjectData, branchMenuData);
+    //切换项目配置
+    let conf = currProjectData.projectConfig.find(i => i.menuName == menu.menuName) || {}
+    currProjectData.project.port = conf.port;
+    currProjectData.project.contextPath = conf.contextPath;
+
+    let data = $.extend({currHeaderMenuId: menu.id}, currProjectData, branchMenuData);
     console.log(data);
     //渲染
     let headerTemplate = $("#headerTemplate").html();
@@ -88,19 +98,43 @@ function openTab(id) {
     }
     //添加选项卡
     let menu = findMenu(branchMenuData.menuList, id);
-    // class 入参 字段 - 出参
+    //class 入参 字段 - 出参
     let typeArr = [];
+    //from data 字段
+    let formDataFields = [];
     for (let p of menu.api.apiParamList) {
+        //引用数据类型
         if (p.classId != null) {
             let c = branchMenuData.classInfoList.find(i => i.id === p.classId);
             p.className = c.className;
             let res = classTypeArrJson.getTypeArrJson(c, p);
             //基本类型数组
-            p.isBaseTypeArr = p.paramMode === ParamMode.form_data ? res.isBaseTypeArr : '';
+            p.isBaseTypeArr = res.isBaseTypeArr;
+            //添加当前类里面的所有数据类型
             typeArr = typeArr.concat(res.typeList);
         }
+        //入参 不为JSON
+        if (p.type == 1 && p.paramMode != ParamMode.json && (p.isBaseTypeArr)) {
+            formDataFields.push({
+                paramName: p.paramName,
+                paramDescribe: p.paramDescribe,
+                type: p.isBaseTypeArr || p.dataType
+            });
+        }
     }
-    let data = $.extend({typeList: typeArr}, menu);
+    //class 字段
+    for (let t of typeArr) {
+        //入参 & 当前传参数非json
+        if (t.type == 2 || t.paramMode == ParamMode.json || t.classFieldList == null) {
+            continue;
+        }
+        formDataFields = formDataFields.concat(t.classFieldList);
+    }
+    let data = $.extend({typeList: typeArr}, menu, currProject, {
+        projectList: projectData,
+        envList: envData,
+        formDataFields: formDataFields
+    });
     console.log(data);
     let apiTemplate = $("#apiTemplate").html();
     laytpl(apiTemplate).render(data, html => {
@@ -109,17 +143,26 @@ function openTab(id) {
             content: html,
             id: id
         });
-
         // 切换选项卡
         element.tabChange("api-tab", id);
+        form.render();
+        //绑定切换环境事件
+        envSelectHeaderData();
     });
 }
 
 //切换菜单
-function switchMenu(id) {
-    setCurrHeaderMenuId(id);
+function switchMenu(t) {
+    t = $(t).find('option:selected');
+    let id = t.val();
+    //设置当前菜单 刷新默认选择
+    setCurrHeaderMenuId(currBranchId, id);
+    //展示菜单
     $('#menu-div .layui-side').addClass('layui-hide');
     $('#menu-dev-' + id).removeClass('layui-hide');
+    //切换项目配置
+    currProjectData.project.port = t.attr('data-port');
+    currProjectData.project.contextPath = t.attr('data-contextPath');
 }
 
 /**
@@ -127,6 +170,10 @@ function switchMenu(id) {
  */
 function openSwitch() {
     // 切换项目 分支 环境
+    //更新项目、环境数据
+    getEnvAll(data => envData = data)
+    projectAll(data => projectData = data);
+    //合并数据渲染
     let data = $.extend({}, currProject, {projectList: projectData}, {envList: envData});
     console.log(data);
     let switchTemplate = $("#switchTemplate").html();
@@ -153,12 +200,15 @@ function openSwitch() {
                     let key = $(v).attr('key');
                     if (key != null) {
                         envMap[key] = v.value
-                        currProjectData.env.headerMap.push(JSON.parse('{ "' + v.name + '" : "' + v.value + '" }'));
+                        currProjectData.env.headerMap.push(JSON.parse('{ "key":"' + v.name + '","value" : "' + v.value + '" }'));
                     }
                 });
                 setEnvMap(envMap);
-                //渲染菜单
-                location.reload();
+                //渲染菜单 这里改为不刷新页面
+                // location.reload();
+                //显示菜单
+                renderMenu();
+                layer.closeAll();
             }
         });
         //渲染

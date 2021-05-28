@@ -29,14 +29,19 @@ public class RouteController {
         this.envInfoService = envInfoService;
     }
 
+    @GetMapping("/")
+    public String main() {
+        return "redirect:/docs";
+    }
+
     @GetMapping("/docs")
     public String doc() {
         GitInfoConfig gitInfo = gitService.getGitInfo();
         if (gitInfo == null) {
             return "steps/steps";
         }
-        List<ProjectVo> projectVos = projectService.listProjectAll();
-        if (projectVos.isEmpty()) {
+        long count = projectService.count();
+        if (count == 0) {
             return "steps/steps";
         }
         List<EnvInfo> envInfos = envInfoService.listEnvAll();

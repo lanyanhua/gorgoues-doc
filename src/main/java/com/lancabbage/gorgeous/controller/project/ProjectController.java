@@ -1,8 +1,10 @@
 package com.lancabbage.gorgeous.controller.project;
 
 import com.lancabbage.gorgeous.bean.po.Project;
+import com.lancabbage.gorgeous.bean.po.ProjectConfig;
 import com.lancabbage.gorgeous.bean.vo.base.BaseResponse;
 import com.lancabbage.gorgeous.bean.vo.project.ProjectAddVo;
+import com.lancabbage.gorgeous.bean.vo.project.ProjectSaveVo;
 import com.lancabbage.gorgeous.bean.vo.project.ProjectVo;
 import com.lancabbage.gorgeous.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +44,7 @@ public class ProjectController {
      * @return ID
      */
     @PostMapping("/saveProject")
-    public BaseResponse<String> saveProject(@RequestBody Project p) {
+    public BaseResponse<String> saveProject(@RequestBody ProjectSaveVo p) {
         projectService.saveProject(p);
         return BaseResponse.successInstance("成功");
     }
@@ -60,23 +62,37 @@ public class ProjectController {
 
     /**
      * 删除项目
+     *
      * @param id ID
      */
     @DeleteMapping("/deleteById")
-    public BaseResponse<String> deleteById(@RequestParam Integer id){
+    public BaseResponse<String> deleteById(@RequestParam Integer id) {
         projectService.deleteById(id);
         return BaseResponse.successInstance("成功");
     }
 
 
     /**
+     * 查询项目配置信息
+     *
+     * @param id ID
+     * @return 端口、上下文路径
+     */
+    @GetMapping("/listProjectConfigById")
+    public BaseResponse<List<ProjectConfig>> listProjectConfigById(@RequestParam Integer id) {
+        List<ProjectConfig> pcs = projectService.listProjectConfigById(id);
+        return BaseResponse.successInstance(pcs);
+    }
+
+    /**
      * 查询项目模块名称
+     *
      * @param id ID
      * @return 模块名称
      */
     @GetMapping("/listModelById")
-    public BaseResponse<List<String>> listModelById(@RequestParam Integer id){
-        List<String> modelList =projectService.listModelById(id);
+    public BaseResponse<List<String>> listModelById(@RequestParam Integer id) {
+        List<String> modelList = projectService.listModelById(id);
         return BaseResponse.successInstance(modelList);
     }
 

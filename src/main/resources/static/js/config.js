@@ -9,6 +9,8 @@ let listProjectAll = context + 'project/listProjectAll';
 let addProjectUrl = context + 'project/addProject';
 //保存项目
 let saveProjectUrl = context + 'project/saveProject';
+//查询项目配置信息
+let listProjectConfigByIdUrl = context + 'project/listProjectConfigById';
 //删除项目
 let deleteByIdUrl = context + 'project/deleteById';
 //添加分支信息
@@ -60,24 +62,24 @@ let ApiType = {
 let BaseType = {
     "String": 'text',
     "Object": 'text',
-    "byte": 'number',
-    "Byte": 'number',
-    "short": 'number',
-    "Short": 'number',
-    "int": 'number',
-    "Integer": 'number',
-    "long": 'number',
-    "Long": 'number',
-    "double": 'number',
-    "Double": 'number',
-    "float": 'number',
-    "Float": 'number',
-    "char": 'number',
-    "Char": 'number',
-    "BigDecimal": 'number',
+    "byte": 'text',
+    "Byte": 'text',
+    "short": 'text',
+    "Short": 'text',
+    "int": 'text',
+    "Integer": 'text',
+    "long": 'text',
+    "Long": 'text',
+    "double": 'text',
+    "Double": 'text',
+    "float": 'text',
+    "Float": 'text',
+    "char": 'text',
+    "Char": 'text',
+    "BigDecimal": 'text',
     "boolean": 'text',
     "Boolean": 'text',
-    "Date": 'date',
+    "Date": 'text',
     "MultipartFile": 'file',
     "URL": 'text',
 }
@@ -121,19 +123,25 @@ function setCurrProjectData(currProject) {
         setCurrProjectData0()
         return;
     }
+    //项目
     let project = projectData.find(i => i.id == currProject.projectId);
     if (project == null) {
         setCurrProjectData0()
         return;
     }
+    //分支 环境
     let branch = project.branchList.find(i => i.id == currProject.branchId);
     let env = envData.find(i => i.id == currProject.envId);
     if (branch == null || env == null) {
         setCurrProjectData0()
         return;
     }
+    let projectConfig = [];
+    //项目配置
+    getProjectConfig(currProject.projectId, data => projectConfig=data)
     currProjectData = {
         project: project,
+        projectConfig: projectConfig,
         branch: branch,
         env: env,
     }
@@ -159,8 +167,8 @@ function getCurrHeaderMenuId(branchId) {
 /**
  * 设置当前抬头菜单
  */
-function setCurrHeaderMenuId(menuId) {
-    localStorage.setItem("CurrHeaderMenuId", menuId);
+function setCurrHeaderMenuId(branchId, menuId) {
+    localStorage.setItem("CurrHeaderMenuId_" + branchId, menuId);
     return menuId;
 }
 
@@ -188,29 +196,30 @@ function setEnvMap(envValue) {
  * 获取当前打开的菜单
  */
 function getCurrMenuId(branchId) {
-    let temp = localStorage.getItem("CurrMenuId_"+branchId);
+    let temp = localStorage.getItem("CurrMenuId_" + branchId);
     return temp != null ? Number(temp) : null;
 }
 
 /**
  * 设置当前打开的菜单
  */
-function setCurrMenuId(branchId,id) {
-    localStorage.setItem("CurrMenuId_"+branchId, id);
+function setCurrMenuId(branchId, id) {
+    localStorage.setItem("CurrMenuId_" + branchId, id);
 }
 
 /**
  * 格式化json
  */
 function formatJson1(json) {
-    if(!json){
+    if (!json) {
         return "";
     }
     if (typeof json == 'string') {
         json = JSON.parse(json);
     }
-    return JSON.stringify(json,null,2)
+    return JSON.stringify(json, null, 2)
 }
+
 /**
  * 格式化json
  */
@@ -246,11 +255,12 @@ function formatJson(json) {
     return outStr;
 }
 
-function ajaxError(data){
+function ajaxError(data) {
+    NProgress.done();
     layer.msg(data.responseJSON.message);
 }
 
-function parseData(data){
+function parseData(data) {
     return {
         'code': data.statusCode == 200 ? 0 : 1,
         'msg': data.statusMsg,
@@ -258,7 +268,7 @@ function parseData(data){
     };
 }
 
-function deleteFun(url,id,dataTable){
+function deleteFun(url, id, dataTable) {
     layer.confirm('确定要删除吗？', {btn: ['确定']}, () => {
         $.ajax({
             type: 'delete',

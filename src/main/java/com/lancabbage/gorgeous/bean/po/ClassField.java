@@ -134,8 +134,7 @@ public class ClassField {
      * @param type 数据类型
      */
     public String setType(String type) {
-        this.type = type;
-        return type;
+       return this.type = type;
     }
 
     /**

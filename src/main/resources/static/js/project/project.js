@@ -5,6 +5,7 @@ function projectAll(fun) {
     $.ajax({
         type: 'get',
         url: listProjectAll,
+        async: false,
         dataType: 'json',
         error: ajaxError,
         success: function (data) {
@@ -21,6 +22,28 @@ function projectAll(fun) {
     })
 }
 
+/**
+ * 查询项目信息
+ */
+function getProjectConfig(id,fun) {
+    $.ajax({
+        type: 'get',
+        url: listProjectConfigByIdUrl+"?id="+id,
+        async: false,
+        dataType: 'json',
+        error: ajaxError,
+        success: function (data) {
+            if (data.statusCode !== 200) {
+                layer.msg(data.statusMsg);
+                return;
+            }
+            fun(data.data);
+        }
+    })
+}
+
+
+
 //保存项目
 function saveProject(fun) {
     //监听提交
@@ -28,7 +51,7 @@ function saveProject(fun) {
         NProgress.start();
         $.ajax({
             type: 'post',
-            url: data.field.id ? saveProjectUrl : addProjectUrl,
+            url: addProjectUrl,
             data: JSON.stringify(data.field),
             contentType: "application/json;charset=utf-8",
             dataType: 'json',
@@ -73,6 +96,11 @@ function addProjectBranch(projectId, name, fun) {
     })
 }
 
+/**
+ * 更新项目分支
+ * @param projectId
+ * @param branchId
+ */
 function pullProjectBranch(projectId, branchId) {
     NProgress.start();
     $.ajax({
@@ -90,8 +118,9 @@ function pullProjectBranch(projectId, branchId) {
     })
 }
 
-function deleteBranch(id){
-    deleteFun(deleteBranchByIdUrl,id,dataTable);
+//删除分支
+function deleteBranch(id) {
+    deleteFun(deleteBranchByIdUrl, id, dataTable);
 }
 
 let dataTable;
@@ -108,10 +137,22 @@ function renderProjectTable() {
             {type: 'checkbox'}
             , {field: 'id', title: 'ID', sort: true, width: 60}
             , {field: 'name', title: '名称', width: 160}
-            , {field: 'remotePath', title: 'git地址',width: 280}
-            , {field: 'branchList', title: '分支',width: 200, templet: '#branch-template'}
-            , {field: 'port', title: '端口', width: 100}
-            , {field: 'contextPath', title: '上下文路径', width: 160}
+            , {field: 'remotePath', title: 'git地址', width: 280}
+            , {field: 'branchList', title: '分支', width: 200, templet: d => d.branchList.map(i => i.name)}
+            , {
+                field: 'projectConfigs', title: '项目配置(模块名｜端口｜上下文路径)', templet: d => {
+                    let s = '<table class="layui-table layui-form" style="width:97%;margin-left: 5px;" lay-size="sm">';
+                    d.projectConfigs.forEach(v => {
+                        s += '<tr>' +
+                            '     <td>' + (v.name || v.menuName) + '</td>' +
+                            '     <td>' + (v.port || '无') + '</td>' +
+                            '     <td>' + (v.contextPath || '无') + '</td>' +
+                            '</tr>';
+                    })
+                    s += '</table>'
+                    return s;
+                }
+            }
             , {fixed: 'right', width: 200, align: 'center', toolbar: '#project-toolbar'}
         ]],
         parseData: parseData
@@ -132,27 +173,21 @@ function renderProjectTable() {
                     dataTable.reload({});
                 })
             });
-        }else if (layEvent === 'edit') {
-            addProjectBtn(data);
-        }else if (layEvent === 'delete') {
-            deleteFun(deleteByIdUrl,data.id,dataTable);
+        } else if (layEvent === 'edit') {
+            editProject(data);
+        } else if (layEvent === 'delete') {
+            deleteFun(deleteByIdUrl, data.id, dataTable);
         }
     });
 }
 
-function addProjectBtn(data) {
-    if (data == null) {
-        data = {id: '', name: '', remotePath: '', header: '', branchName: ''}
-        $projectForm.find('[name=branchName]').parents('.layui-form-item').show();
-    }else {
-        $projectForm.find('[name=branchName]').parents('.layui-form-item').hide();
-    }
-    $projectForm.find('[name=id]').val(data.id);
-    $projectForm.find('[name=name]').val(data.name);
-    $projectForm.find('[name=remotePath]').val(data.remotePath);
-    $projectForm.find('[name=contextPath]').val(data.contextPath);
-    $projectForm.find('[name=port]').val(data.port);
-
+/**
+ * 添加项目
+ */
+function addProjectBtn() {
+    $projectForm.find('[name=name]').val('');
+    $projectForm.find('[name=remotePath]').val('');
+    $projectForm.find('[name=branchName]').val('');
     layer.open({
         title: '添加项目'
         , type: 1
@@ -161,4 +196,60 @@ function addProjectBtn(data) {
         , btn: []
     });
     $projectForm.removeClass("layui-hide");
+}
+
+/**
+ * 编辑项目
+ * @param data
+ */
+function editProject(data){
+    let projectEditTemplate = $("#projectEditTemplate").html();
+    console.log(data);
+    laytpl(projectEditTemplate).render(data, html => {
+        //弹框
+        layer.open({
+            title: '切换'
+            , area: ['50%', '450px']
+            , content: html
+            , btn: ["提交"]
+            , yes: function () {
+                NProgress.start();
+                //获取表单内容
+                let $form = $('#projectEditForm');
+                let data = {
+                    id : $form.find('[name=id]').val(),
+                    name : $form.find('[name=projectName]').val(),
+                    remotePath : $form.find('[name=remotePath]').val(),
+                    projectConfigs: []
+                }
+                $.each($form.find('.projectConfigTable tr:gt(0)'),(i,v)=>{
+                    v = $(v);
+                    data.projectConfigs.push({
+                        id: v.attr('data-id'),
+                        menuName: v.find('[name=menuName]').val(),
+                        name: v.find('[name=name]').val(),
+                        port: v.find('[name=port]').val(),
+                        contextPath: v.find('[name=contextPath]').val(),
+                    })
+                });
+                $.ajax({
+                    type: 'post',
+                    url: saveProjectUrl,
+                    data: JSON.stringify(data),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: 'json',
+                    error: ajaxError,
+                    success: function (data) {
+                        NProgress.done();
+                        if (data.statusCode !== 200) {
+                            layer.msg(data.statusMsg);
+                            return;
+                        }
+                        layer.closeAll();
+                        dataTable.reload();
+                    }
+                })
+            }
+        });
+    });
 }

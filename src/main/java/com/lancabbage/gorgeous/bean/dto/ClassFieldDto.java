@@ -20,4 +20,5 @@ public class ClassFieldDto extends ClassField {
     public void setTypeClass(ClassInfoDto typeClass) {
         this.typeClass = typeClass;
     }
+
 }
