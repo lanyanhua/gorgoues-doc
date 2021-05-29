@@ -25,8 +25,8 @@ spring:
       date: yyyy-MM-dd HH:mm:ss
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  typeAliasesPackage: com.lancabbage.gorgeous.entity
+  mapper-locations: classpath*:mapper/*.xml
+  typeAliasesPackage: com.lancabbage.gorgeous.bean.po
   configuration:
     map-underscore-to-camel-case: true
 

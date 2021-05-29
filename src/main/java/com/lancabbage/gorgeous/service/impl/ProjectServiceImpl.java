@@ -59,7 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(Project::getId).collect(Collectors.toList());
         List<ProjectBranch> projectBranches = projectBranchService.listProjectBranchById(ids);
         //查询项目配置
-        List<ProjectConfig> pcs = projectConfigMapper.listByProjectIds(ids);
+        List<ProjectConfig> pcs = projectConfigMapper.listByProjectId();
         for (ProjectVo projectVo : projectVos) {
             List<ProjectBranch> collect = projectBranches.stream()
                     .filter(i -> i.getProjectId().equals(projectVo.getId()))
