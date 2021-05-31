@@ -114,7 +114,7 @@ function openTab(id) {
             typeArr = typeArr.concat(res.typeList);
         }
         //入参 不为JSON
-        if (p.type == 1 && p.paramMode != ParamMode.json && (p.isBaseTypeArr)) {
+        if (p.type == 1 && p.paramMode != ParamMode.json && (p.classId == null || p.isBaseTypeArr)) {
             formDataFields.push({
                 paramName: p.paramName,
                 paramDescribe: p.paramDescribe,

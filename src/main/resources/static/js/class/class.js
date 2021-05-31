@@ -28,7 +28,7 @@ let classTypeArrJson = {
         //数组
         if (isArr(c.className)) {
             let typeC = c.classFieldList[0];
-            debugger
+            //debugger
             //记录当前类型防止互相依赖死循环
             // let typeValue = this.typeMap[p.typeId];
             // if (typeValue) {

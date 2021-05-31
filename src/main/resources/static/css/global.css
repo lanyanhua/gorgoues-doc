@@ -308,6 +308,7 @@
 }
 .param-div{
     max-height: 350px;
+    min-height: 210px;
     overflow: auto;
 }
 .layui-icon-addition-max{

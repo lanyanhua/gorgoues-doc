@@ -10,8 +10,8 @@ spring:
     password: AAaa123456
 
 git-info:
-#  username:
-#  password:
-  username: gorgeous-test
-  password: AAaa123456
+  username: lanyanhua1024@163.com
+  password: zxcvbnm5306
+#  username: gorgeous-test
+#  password: AAaa123456
   repository-path: /Users/lanyanhua/Desktop/gittest
