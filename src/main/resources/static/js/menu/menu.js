@@ -158,8 +158,8 @@ function switchMenu(t) {
     //设置当前菜单 刷新默认选择
     setCurrHeaderMenuId(currBranchId, id);
     //展示菜单
-    $('#menu-div .layui-side').addClass('layui-hide');
-    $('#menu-dev-' + id).removeClass('layui-hide');
+    $('#menu-div .layui-side').addClass('layui-hide').removeClass('layui-show');
+    $('#menu-dev-' + id).removeClass('layui-hide').addClass("layui-show");
     //切换项目配置
     currProjectData.project.port = t.attr('data-port');
     currProjectData.project.contextPath = t.attr('data-contextPath');
