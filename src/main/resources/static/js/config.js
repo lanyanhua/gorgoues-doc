@@ -148,8 +148,12 @@ function setCurrProjectData(currProject) {
 }
 
 function setCurrProjectData0() {
+    let projectConfig = [];
+    //项目配置
+    getProjectConfig(projectData[0].id, data => projectConfig=data)
     currProjectData = {
         project: projectData[0],
+        projectConfig: projectConfig,
         branch: projectData[0].branchList[0],
         env: envData[0],
     }

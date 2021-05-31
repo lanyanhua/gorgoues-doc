@@ -70,6 +70,7 @@ function renderMenu() {
         menu = branchMenuData.menuList.find(i => i.id == currHeaderMenuId);
     }
     //切换项目配置
+    debugger
     let conf = currProjectData.projectConfig.find(i => i.menuName == menu.menuName) || {}
     currProjectData.project.port = conf.port;
     currProjectData.project.contextPath = conf.contextPath;
