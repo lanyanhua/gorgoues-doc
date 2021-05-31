@@ -18,5 +18,4 @@ public interface ProjectConfigMapper extends BaseMapper<ProjectConfig> {
      * @return 上下文、端口
      */
     List<ProjectConfig> listByProjectIds(@Param("ids") List<Integer> ids);
-    List<ProjectConfig> listByProjectId();
 }
