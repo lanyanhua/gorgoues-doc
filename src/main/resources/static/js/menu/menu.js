@@ -118,7 +118,8 @@ function openTab(id) {
             formDataFields.push({
                 paramName: p.paramName,
                 paramDescribe: p.paramDescribe,
-                type: p.isBaseTypeArr || p.dataType
+                type: p.isBaseTypeArr || p.dataType,
+                paramMode: p.paramMode,
             });
         }
     }
